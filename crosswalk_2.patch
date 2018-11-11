@@ -1,0 +1,116 @@
+commit f80ee6640acb112c2d3c34bcb552a21ef1161bc0
+Author: kanghua <jjykh@hotmail.com>
+Date:   Sun Nov 11 18:06:01 2018 +0800
+
+    remove WebKit/payments
+
+diff --git a/third_party/WebKit/Source/modules/modules.gypi b/third_party/WebKit/Source/modules/modules.gypi
+index 7c68d5e4abaf..dc79fbfcf2c8 100644
+--- a/third_party/WebKit/Source/modules/modules.gypi
++++ b/third_party/WebKit/Source/modules/modules.gypi
+@@ -128,10 +128,6 @@
+       'notifications/NotificationEvent.idl',
+       'notifications/NotificationPermissionCallback.idl',
+       'offscreencanvas2d/OffscreenCanvasRenderingContext2D.idl',
+-      'payments/PaymentAddress.idl',
+-      'payments/PaymentRequestUpdateEvent.idl',
+-      'payments/PaymentRequest.idl',
+-      'payments/PaymentResponse.idl',
+       'permissions/Permissions.idl',
+       'permissions/PermissionStatus.idl',
+       'plugins/MimeType.idl',
+@@ -367,7 +363,6 @@
+       'mediastream/MediaStreamEvent.idl',
+       'mediastream/MediaStreamTrackEvent.idl',
+       'notifications/NotificationEvent.idl',
+-      'payments/PaymentRequestUpdateEvent.idl',
+       'push_messaging/PushEvent.idl',
+       'sensor/SensorErrorEvent.idl',
+       'sensor/SensorReadingEvent.idl',
+@@ -435,14 +430,6 @@
+       'notifications/NotificationAction.idl',
+       'notifications/NotificationEventInit.idl',
+       'notifications/NotificationOptions.idl',
+-      'payments/PaymentCurrencyAmount.idl',
+-      'payments/PaymentDetails.idl',
+-      'payments/PaymentDetailsModifier.idl',
+-      'payments/PaymentItem.idl',
+-      'payments/PaymentMethodData.idl',
+-      'payments/PaymentOptions.idl',
+-      'payments/PaymentRequestUpdateEventInit.idl',
+-      'payments/PaymentShippingOption.idl',
+       'permissions/MidiPermissionDescriptor.idl',
+       'permissions/PermissionDescriptor.idl',
+       'permissions/PushPermissionDescriptor.idl',
+@@ -576,22 +563,6 @@
+       '<(blink_modules_output_dir)/notifications/NotificationEventInit.h',
+       '<(blink_modules_output_dir)/notifications/NotificationOptions.cpp',
+       '<(blink_modules_output_dir)/notifications/NotificationOptions.h',
+-      '<(blink_modules_output_dir)/payments/PaymentCurrencyAmount.cpp',
+-      '<(blink_modules_output_dir)/payments/PaymentCurrencyAmount.h',
+-      '<(blink_modules_output_dir)/payments/PaymentDetails.cpp',
+-      '<(blink_modules_output_dir)/payments/PaymentDetails.h',
+-      '<(blink_modules_output_dir)/payments/PaymentDetailsModifier.cpp',
+-      '<(blink_modules_output_dir)/payments/PaymentDetailsModifier.h',
+-      '<(blink_modules_output_dir)/payments/PaymentItem.cpp',
+-      '<(blink_modules_output_dir)/payments/PaymentItem.h',
+-      '<(blink_modules_output_dir)/payments/PaymentMethodData.cpp',
+-      '<(blink_modules_output_dir)/payments/PaymentMethodData.h',
+-      '<(blink_modules_output_dir)/payments/PaymentOptions.cpp',
+-      '<(blink_modules_output_dir)/payments/PaymentOptions.h',
+-      '<(blink_modules_output_dir)/payments/PaymentRequestUpdateEventInit.cpp',
+-      '<(blink_modules_output_dir)/payments/PaymentRequestUpdateEventInit.h',
+-      '<(blink_modules_output_dir)/payments/PaymentShippingOption.cpp',
+-      '<(blink_modules_output_dir)/payments/PaymentShippingOption.h',
+       '<(blink_modules_output_dir)/permissions/MidiPermissionDescriptor.cpp',
+       '<(blink_modules_output_dir)/permissions/MidiPermissionDescriptor.h',
+       '<(blink_modules_output_dir)/permissions/PermissionDescriptor.cpp',
+@@ -1185,18 +1156,6 @@
+       'offscreencanvas/OffscreenCanvasModules.h',
+       'offscreencanvas2d/OffscreenCanvasRenderingContext2D.cpp',
+       'offscreencanvas2d/OffscreenCanvasRenderingContext2D.h',
+-      'payments/PaymentAddress.cpp',
+-      'payments/PaymentAddress.h',
+-      'payments/PaymentCompleter.h',
+-      'payments/PaymentRequest.cpp',
+-      'payments/PaymentRequest.h',
+-      'payments/PaymentRequestUpdateEvent.cpp',
+-      'payments/PaymentRequestUpdateEvent.h',
+-      'payments/PaymentResponse.cpp',
+-      'payments/PaymentResponse.h',
+-      'payments/PaymentUpdater.h',
+-      'payments/PaymentsValidators.cpp',
+-      'payments/PaymentsValidators.h',
+       'permissions/NavigatorPermissions.cpp',
+       'permissions/NavigatorPermissions.h',
+       'permissions/PermissionController.cpp',
+@@ -1772,16 +1731,6 @@
+       'mediastream/MediaConstraintsTest.cpp',
+       'notifications/NotificationDataTest.cpp',
+       'notifications/NotificationResourcesLoaderTest.cpp',
+-      'payments/AbortTest.cpp',
+-      'payments/OnPaymentResponseTest.cpp',
+-      'payments/PaymentAddressTest.cpp',
+-      'payments/PaymentRequestDetailsTest.cpp',
+-      'payments/PaymentRequestTest.cpp',
+-      'payments/PaymentRequestUpdateEventTest.cpp',
+-      'payments/PaymentResponseTest.cpp',
+-      'payments/PaymentTestHelper.cpp',
+-      'payments/PaymentTestHelper.h',
+-      'payments/PaymentsValidatorsTest.cpp',
+       'peerconnection/RTCDataChannelTest.cpp',
+       'presentation/PresentationAvailabilityTest.cpp',
+       'push_messaging/PushManagerTest.cpp',
+diff --git a/third_party/WebKit/public/BUILD.gn b/third_party/WebKit/public/BUILD.gn
+index fcf00105ef1f..8ffb1c607f4c 100644
+--- a/third_party/WebKit/public/BUILD.gn
++++ b/third_party/WebKit/public/BUILD.gn
+@@ -172,7 +172,7 @@ mojom("mojo_bindings") {
+     "platform/modules/wake_lock/wake_lock_service.mojom",
+   ]
+   public_deps = [
+-    ":android_mojo_bindings",
++    #":android_mojo_bindings",
+     "//cc/ipc:interfaces_surfaceid_only",
+     #"//device/bluetooth/public/interfaces:bluetooth_mojom_bluetooth_uuid",
+   ]

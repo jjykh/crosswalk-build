@@ -1,0 +1,26 @@
+import("//xwalk/build/android.gni")
+target_os = "android"
+target_cpu = "arm"
+is_debug = false
+is_official_build = true
+blink_gc_plugin = false
+clang_use_chrome_plugins = false
+treat_warnings_as_errors = false
+disable_ftp_support = true
+enable_print_preview = false
+enable_pdf = false
+enable_plugins = false
+enable_remoting = false
+enable_webvr = false
+enable_nacl = false
+enable_webrtc = false
+enable_widevine = false
+symbol_level = 0
+
+v8_target_cpu = "arm"
+v8_enable_i18n_support = false
+v8_use_external_startup_data = false
+
+is_clang = true
+clang_base_path = "/home/kanghua/android-ndk-r18b/toolchains/llvm/prebuilt/linux-x86_64"
+

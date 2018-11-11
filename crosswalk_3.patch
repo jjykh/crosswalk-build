@@ -1,0 +1,30 @@
+commit d93112283208d90dc4b9d5195e76d4e8ac89f28d
+Author: kanghua <jjykh@hotmail.com>
+Date:   Sun Nov 11 20:08:07 2018 +0800
+
+    disable webkit tracing
+
+diff --git a/third_party/WebKit/Source/platform/TraceEvent.h b/third_party/WebKit/Source/platform/TraceEvent.h
+index bbb08f2e84d1..40c5ffb2473a 100644
+--- a/third_party/WebKit/Source/platform/TraceEvent.h
++++ b/third_party/WebKit/Source/platform/TraceEvent.h
+@@ -103,8 +103,8 @@
+ // for best performance when tracing is disabled.
+ // const unsigned char*
+ //     TRACE_EVENT_API_GET_CATEGORY_ENABLED(const char* category_name)
+-#define TRACE_EVENT_API_GET_CATEGORY_GROUP_ENABLED \
+-    blink::EventTracer::getTraceCategoryEnabledFlag
++#define TRACE_EVENT_API_GET_CATEGORY_GROUP_ENABLED(cn) \
++    true ? (const unsigned char*)"\0" : blink::EventTracer::getTraceCategoryEnabledFlag(cn)
+ 
+ // Add a trace event to the platform tracing system.
+ // blink::TraceEvent::TraceEventHandle TRACE_EVENT_API_ADD_TRACE_EVENT(
+@@ -271,7 +271,7 @@
+ #define INTERNAL_ENABLED_FOR_EVENT_CALLBACK (1 << 2)
+ 
+ #define INTERNAL_TRACE_EVENT_CATEGORY_GROUP_ENABLED_FOR_RECORDING_MODE() \
+-    (*INTERNALTRACEEVENTUID(categoryGroupEnabled) & (INTERNAL_ENABLED_FOR_RECORDING | INTERNAL_ENABLED_FOR_EVENT_CALLBACK))
++    false && (*INTERNALTRACEEVENTUID(categoryGroupEnabled) & (INTERNAL_ENABLED_FOR_RECORDING | INTERNAL_ENABLED_FOR_EVENT_CALLBACK))
+ 
+ #define INTERNAL_TRACE_MEMORY(category, name)
+ 
