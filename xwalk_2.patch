@@ -1,0 +1,2124 @@
+diff --git a/BUILD.gn b/BUILD.gn
+index 0400315..17ac1b8 100644
+--- a/BUILD.gn
++++ b/BUILD.gn
+@@ -115,8 +115,8 @@ source_set("xwalk_runtime") {
+     "runtime/browser/android/scoped_allow_wait_for_legacy_web_view_api.h",
+     "runtime/browser/android/state_serializer.cc",
+     "runtime/browser/android/state_serializer.h",
+-    "runtime/browser/android/xwalk_autofill_client_android.cc",
+-    "runtime/browser/android/xwalk_autofill_client_android.h",
++    #"runtime/browser/android/xwalk_autofill_client_android.cc",
++    #"runtime/browser/android/xwalk_autofill_client_android.h",
+     "runtime/browser/android/xwalk_content.cc",
+     "runtime/browser/android/xwalk_content.h",
+     "runtime/browser/android/xwalk_content_lifecycle_notifier.cc",
+@@ -130,10 +130,8 @@ source_set("xwalk_runtime") {
+     "runtime/browser/android/xwalk_contents_io_thread_client_impl.h",
+     "runtime/browser/android/xwalk_cookie_access_policy.cc",
+     "runtime/browser/android/xwalk_cookie_access_policy.h",
+-    "runtime/browser/android/xwalk_dev_tools_server.cc",
+-    "runtime/browser/android/xwalk_dev_tools_server.h",
+-    "runtime/browser/android/xwalk_form_database.cc",
+-    "runtime/browser/android/xwalk_form_database.h",
++    #"runtime/browser/android/xwalk_form_database.cc",
++    #"runtime/browser/android/xwalk_form_database.h",
+     "runtime/browser/android/xwalk_http_auth_handler.cc",
+     "runtime/browser/android/xwalk_http_auth_handler.h",
+     "runtime/browser/android/xwalk_http_auth_handler_base.cc",
+@@ -144,8 +142,8 @@ source_set("xwalk_runtime") {
+     "runtime/browser/android/xwalk_login_delegate.h",
+     "runtime/browser/android/xwalk_path_helper.cc",
+     "runtime/browser/android/xwalk_path_helper.h",
+-    "runtime/browser/android/xwalk_presentation_host.cc",
+-    "runtime/browser/android/xwalk_presentation_host.h",
++    #"runtime/browser/android/xwalk_presentation_host.cc",
++    #"runtime/browser/android/xwalk_presentation_host.h",
+     "runtime/browser/android/xwalk_request_interceptor.cc",
+     "runtime/browser/android/xwalk_request_interceptor.h",
+     "runtime/browser/android/xwalk_settings.cc",
+@@ -159,12 +157,8 @@ source_set("xwalk_runtime") {
+     "runtime/browser/android/xwalk_web_resource_response.h",
+     "runtime/browser/android/xwalk_web_resource_response_impl.cc",
+     "runtime/browser/android/xwalk_web_resource_response_impl.h",
+-    "runtime/browser/application_component.cc",
+-    "runtime/browser/application_component.h",
+-    "runtime/browser/devtools/remote_debugging_server.cc",
+-    "runtime/browser/devtools/remote_debugging_server.h",
+-    "runtime/browser/devtools/xwalk_devtools_manager_delegate.cc",
+-    "runtime/browser/devtools/xwalk_devtools_manager_delegate.h",
++    #"runtime/browser/application_component.cc",
++    #"runtime/browser/application_component.h",
+     "runtime/browser/geolocation/xwalk_access_token_store.cc",
+     "runtime/browser/geolocation/xwalk_access_token_store.h",
+     "runtime/browser/image_util.cc",
+@@ -202,14 +196,12 @@ source_set("xwalk_runtime") {
+     "runtime/browser/runtime_ui_delegate.h",
+     "runtime/browser/runtime_url_request_context_getter.cc",
+     "runtime/browser/runtime_url_request_context_getter.h",
+-    "runtime/browser/speech/speech_recognition_manager_delegate.cc",
+-    "runtime/browser/speech/speech_recognition_manager_delegate.h",
+     "runtime/browser/ssl_error_page.cc",
+     "runtime/browser/ssl_error_page.h",
+     "runtime/browser/storage_component.cc",
+     "runtime/browser/storage_component.h",
+-    "runtime/browser/sysapps_component.cc",
+-    "runtime/browser/sysapps_component.h",
++    #"runtime/browser/sysapps_component.cc",
++    #"runtime/browser/sysapps_component.h",
+     "runtime/browser/ui/color_chooser.cc",
+     "runtime/browser/ui/color_chooser.h",
+     "runtime/browser/ui/color_chooser_android.cc",
+@@ -224,14 +216,14 @@ source_set("xwalk_runtime") {
+     "runtime/browser/ui/native_app_window_mac.mm",
+     "runtime/browser/wifidirect_component_win.cc",
+     "runtime/browser/wifidirect_component_win.h",
+-    "runtime/browser/xwalk_app_extension_bridge.cc",
+-    "runtime/browser/xwalk_app_extension_bridge.h",
++    #"runtime/browser/xwalk_app_extension_bridge.cc",
++    #"runtime/browser/xwalk_app_extension_bridge.h",
+     "runtime/browser/xwalk_application_mac.h",
+     "runtime/browser/xwalk_application_mac.mm",
+-    "runtime/browser/xwalk_autofill_client.cc",
+-    "runtime/browser/xwalk_autofill_client.h",
+-    "runtime/browser/xwalk_autofill_manager.cc",
+-    "runtime/browser/xwalk_autofill_manager.h",
++    #"runtime/browser/xwalk_autofill_client.cc",
++    #"runtime/browser/xwalk_autofill_client.h",
++    #"runtime/browser/xwalk_autofill_manager.cc",
++    #"runtime/browser/xwalk_autofill_manager.h",
+     "runtime/browser/xwalk_browser_context.cc",
+     "runtime/browser/xwalk_browser_context.h",
+     "runtime/browser/xwalk_browser_main_parts.cc",
+@@ -245,8 +237,8 @@ source_set("xwalk_runtime") {
+     "runtime/browser/xwalk_content_browser_client.h",
+     "runtime/browser/xwalk_content_settings.cc",
+     "runtime/browser/xwalk_content_settings.h",
+-    "runtime/browser/xwalk_form_database_service.cc",
+-    "runtime/browser/xwalk_form_database_service.h",
++    #"runtime/browser/xwalk_form_database_service.cc",
++    #"runtime/browser/xwalk_form_database_service.h",
+     "runtime/browser/xwalk_notification_manager_linux.cc",
+     "runtime/browser/xwalk_notification_manager_linux.h",
+     "runtime/browser/xwalk_notification_manager_win.cc",
+@@ -259,18 +251,18 @@ source_set("xwalk_runtime") {
+     "runtime/browser/xwalk_platform_notification_service.h",
+     "runtime/browser/xwalk_pref_store.cc",
+     "runtime/browser/xwalk_pref_store.h",
+-    "runtime/browser/xwalk_presentation_service_delegate.cc",
+-    "runtime/browser/xwalk_presentation_service_delegate.h",
+-    "runtime/browser/xwalk_presentation_service_delegate_android.cc",
+-    "runtime/browser/xwalk_presentation_service_delegate_android.h",
+-    "runtime/browser/xwalk_presentation_service_delegate_win.cc",
+-    "runtime/browser/xwalk_presentation_service_delegate_win.h",
+-    "runtime/browser/xwalk_presentation_service_helper.cc",
+-    "runtime/browser/xwalk_presentation_service_helper.h",
+-    "runtime/browser/xwalk_presentation_service_helper_android.cc",
+-    "runtime/browser/xwalk_presentation_service_helper_android.h",
+-    "runtime/browser/xwalk_presentation_service_helper_win.cc",
+-    "runtime/browser/xwalk_presentation_service_helper_win.h",
++    #"runtime/browser/xwalk_presentation_service_delegate.cc",
++    #"runtime/browser/xwalk_presentation_service_delegate.h",
++    #"runtime/browser/xwalk_presentation_service_delegate_android.cc",
++    #"runtime/browser/xwalk_presentation_service_delegate_android.h",
++    #"runtime/browser/xwalk_presentation_service_delegate_win.cc",
++    #"runtime/browser/xwalk_presentation_service_delegate_win.h",
++    #"runtime/browser/xwalk_presentation_service_helper.cc",
++    #"runtime/browser/xwalk_presentation_service_helper.h",
++    #"runtime/browser/xwalk_presentation_service_helper_android.cc",
++    #"runtime/browser/xwalk_presentation_service_helper_android.h",
++    #"runtime/browser/xwalk_presentation_service_helper_win.cc",
++    #"runtime/browser/xwalk_presentation_service_helper_win.h",
+     "runtime/browser/xwalk_render_message_filter.cc",
+     "runtime/browser/xwalk_render_message_filter.h",
+     "runtime/browser/xwalk_runner.cc",
+@@ -324,8 +316,6 @@ source_set("xwalk_runtime") {
+   ]
+   if (!is_android) {
+     sources += [
+-      "runtime/browser/devtools/xwalk_devtools_frontend.cc",
+-      "runtime/browser/devtools/xwalk_devtools_frontend.h",
+       "runtime/browser/runtime_ui_delegate_desktop.cc",
+       "runtime/browser/runtime_ui_delegate_desktop.h",
+       "runtime/browser/ui/desktop/xwalk_autofill_popup_controller.cc",
+@@ -363,17 +353,16 @@ source_set("xwalk_runtime") {
+     "//base:i18n",
+     "//base/third_party/dynamic_annotations",
+     "//cc",
+-    "//components/autofill/content/browser",
+-    "//components/autofill/content/renderer",
+-    "//components/autofill/core/browser",
+-    "//components/cdm/renderer",
+-    "//components/devtools_http_handler",
+-    "//components/resources:components_resources",
++    #"//components/autofill/content/browser",
++    #"//components/autofill/content/renderer",
++    #"//components/autofill/core/browser",
++    #"//components/cdm/renderer",
++    #"//components/resources:components_resources",
+     "//components/strings",
+     "//components/url_formatter",
+-    "//components/user_prefs",
+-    "//components/visitedlink/browser",
+-    "//components/visitedlink/renderer",
++    #"//components/user_prefs",
++    #"//components/visitedlink/browser",
++    #"//components/visitedlink/renderer",
+     "//content",
+     "//content/public/app:both",
+     "//content/public/browser",
+@@ -396,17 +385,17 @@ source_set("xwalk_runtime") {
+     "//ui/snapshot",
+     "//url",
+     "//v8",
+-    "//xwalk/application:xwalk_application_lib",
+-    "//xwalk/application:xwalk_application_resources",
+-    "//xwalk/experimental",
+-    "//xwalk/extensions",
++    #"//xwalk/application:xwalk_application_lib",
++    #"//xwalk/application:xwalk_application_resources",
++    #"//xwalk/experimental",
++    #"//xwalk/extensions",
+     "//xwalk/resources:xwalk_pak",
+     "//xwalk/resources:xwalk_resources",
+     "//xwalk/resources:xwalk_resources_100_percent_pak",
+     "//xwalk/resources:xwalk_resources_200_percent_pak",
+     "//xwalk/resources:xwalk_resources_300_percent_pak",
+-    "//xwalk/sysapps",
+-    "//xwalk/sysapps:xwalk_sysapps_resources",
++    #"//xwalk/sysapps",
++    #"//xwalk/sysapps:xwalk_sysapps_resources",
+   ]
+ 
+   if (is_android) {
+diff --git a/application/BUILD.gn b/application/BUILD.gn
+index 18d5dd2..7ffa9c3 100644
+--- a/application/BUILD.gn
++++ b/application/BUILD.gn
+@@ -18,12 +18,12 @@ source_set("xwalk_application_lib") {
+     "browser/application_service.h",
+     "browser/application_system.cc",
+     "browser/application_system.h",
+-    "extension/application_runtime_extension.cc",
+-    "extension/application_runtime_extension.h",
+-    "extension/application_widget_extension.cc",
+-    "extension/application_widget_extension.h",
+-    "extension/application_widget_storage.cc",
+-    "extension/application_widget_storage.h",
++    #"extension/application_runtime_extension.cc",
++    #"extension/application_runtime_extension.h",
++    #"extension/application_widget_extension.cc",
++    #"extension/application_widget_extension.h",
++    #"extension/application_widget_storage.cc",
++    #"extension/application_widget_storage.h",
+     "renderer/application_native_module.cc",
+     "renderer/application_native_module.h",
+   ]
+diff --git a/application/browser/application_system.cc b/application/browser/application_system.cc
+index 3011f5d..20dc7c7 100644
+--- a/application/browser/application_system.cc
++++ b/application/browser/application_system.cc
+@@ -75,19 +75,5 @@ bool ApplicationSystem::LaunchFromCommandLine(
+   return false;
+ }
+ 
+-void ApplicationSystem::CreateExtensions(
+-    content::RenderProcessHost* host,
+-    extensions::XWalkExtensionVector* extensions) {
+-  Application* application =
+-    application_service_->GetApplicationByRenderHostID(host->GetID());
+-  if (!application)
+-    return;  // We might be in browser mode.
+-
+-  extensions->push_back(new ApplicationRuntimeExtension(application));
+-  // Register the widget extension only when the application is widget format.
+-  if (application->data()->manifest_type() == Manifest::TYPE_WIDGET)
+-      extensions->push_back(new ApplicationWidgetExtension(application));
+-}
+-
+ }  // namespace application
+ }  // namespace xwalk
+diff --git a/application/browser/application_system.h b/application/browser/application_system.h
+index c2c74a3..98b9151 100644
+--- a/application/browser/application_system.h
++++ b/application/browser/application_system.h
+@@ -9,7 +9,6 @@
+ #include <memory>
+ 
+ #include "base/memory/ref_counted.h"
+-#include "xwalk/extensions/common/xwalk_extension_vector.h"
+ 
+ class GURL;
+ 
+@@ -62,9 +61,6 @@ class ApplicationSystem {
+   virtual bool LaunchFromCommandLine(const base::CommandLine& cmd_line,
+                                      const GURL& url);
+ 
+-  void CreateExtensions(content::RenderProcessHost* host,
+-                        extensions::XWalkExtensionVector* extensions);
+-
+  protected:
+   explicit ApplicationSystem(XWalkBrowserContext* browser_context);
+ 
+diff --git a/runtime/android/core/BUILD.gn b/runtime/android/core/BUILD.gn
+index 4afb4b8..ad1da95 100644
+--- a/runtime/android/core/BUILD.gn
++++ b/runtime/android/core/BUILD.gn
+@@ -26,24 +26,24 @@ android_library("xwalk_core_java") {
+   srcjars =
+       [ "$root_gen_dir/xwalk_core_reflection_layer/wrapper/wrapper.srcjar" ]
+   java_files = [
+-    "src/org/xwalk/core/extension/BindingObject.java",
+-    "src/org/xwalk/core/extension/BindingObjectAutoJS.java",
+-    "src/org/xwalk/core/extension/BindingObjectStore.java",
+-    "src/org/xwalk/core/extension/EventTarget.java",
+-    "src/org/xwalk/core/extension/ExtensionInstanceHelper.java",
+-    "src/org/xwalk/core/extension/JsApi.java",
+-    "src/org/xwalk/core/extension/JsConstructor.java",
+-    "src/org/xwalk/core/extension/JsContextInfo.java",
+-    "src/org/xwalk/core/extension/JsStubGenerator.java",
+-    "src/org/xwalk/core/extension/MessageHandler.java",
+-    "src/org/xwalk/core/extension/MessageInfo.java",
+-    "src/org/xwalk/core/extension/ReflectionHelper.java",
+-    "src/org/xwalk/core/extension/XWalkCoreExtensionBridge.java",
+-    "src/org/xwalk/core/extension/XWalkExtensionContextClient.java",
+-    "src/org/xwalk/core/extension/XWalkExternalExtension.java",
+-    "src/org/xwalk/core/extension/XWalkExternalExtensionBridge.java",
+-    "src/org/xwalk/core/extension/XWalkExternalExtensionBridgeFactory.java",
+-    "src/org/xwalk/core/extension/XWalkExternalExtensionManagerImpl.java",
++    #"src/org/xwalk/core/extension/BindingObject.java",
++    #"src/org/xwalk/core/extension/BindingObjectAutoJS.java",
++    #"src/org/xwalk/core/extension/BindingObjectStore.java",
++    #"src/org/xwalk/core/extension/EventTarget.java",
++    #"src/org/xwalk/core/extension/ExtensionInstanceHelper.java",
++    #"src/org/xwalk/core/extension/JsApi.java",
++    #"src/org/xwalk/core/extension/JsConstructor.java",
++    #"src/org/xwalk/core/extension/JsContextInfo.java",
++    #"src/org/xwalk/core/extension/JsStubGenerator.java",
++    #"src/org/xwalk/core/extension/MessageHandler.java",
++    #"src/org/xwalk/core/extension/MessageInfo.java",
++    #"src/org/xwalk/core/extension/ReflectionHelper.java",
++    #"src/org/xwalk/core/extension/XWalkCoreExtensionBridge.java",
++    #"src/org/xwalk/core/extension/XWalkExtensionContextClient.java",
++    #"src/org/xwalk/core/extension/XWalkExternalExtension.java",
++    #"src/org/xwalk/core/extension/XWalkExternalExtensionBridge.java",
++    #"src/org/xwalk/core/extension/XWalkExternalExtensionBridgeFactory.java",
++    #"src/org/xwalk/core/extension/XWalkExternalExtensionManagerImpl.java",
+     "src/org/xwalk/core/JavascriptInterface.java",
+     "src/org/xwalk/core/XWalkActivity.java",
+     "src/org/xwalk/core/XWalkActivityDelegate.java",
+@@ -189,8 +189,8 @@ action("xwalk_core_library_documentation") {
+     "//xwalk/runtime/android/core/src/org/xwalk/core/XWalkFileChooser.java",
+     "//xwalk/runtime/android/core/src/org/xwalk/core/XWalkInitializer.java",
+     "//xwalk/runtime/android/core/src/org/xwalk/core/XWalkUpdater.java",
+-    "//xwalk/runtime/android/core/src/org/xwalk/core/extension/XWalkExtensionContextClient.java",
+-    "//xwalk/runtime/android/core/src/org/xwalk/core/extension/XWalkExternalExtension.java",
++    #"//xwalk/runtime/android/core/src/org/xwalk/core/extension/XWalkExtensionContextClient.java",
++    #"//xwalk/runtime/android/core/src/org/xwalk/core/extension/XWalkExternalExtension.java",
+   ]
+   _srcjar = "$root_gen_dir/xwalk_core_reflection_layer/wrapper/wrapper.srcjar"
+   _stamp_file = "$target_gen_dir/$target_name.stamp"
+@@ -198,12 +198,12 @@ action("xwalk_core_library_documentation") {
+     "org/xwalk/core/ClientCertRequest.java",
+     "org/xwalk/core/XWalkCookieManager.java",
+     "org/xwalk/core/XWalkDownloadListener.java",
+-    "org/xwalk/core/XWalkExternalExtensionManager.java",
++    #"org/xwalk/core/XWalkExternalExtensionManager.java",
+     "org/xwalk/core/XWalkFindListener.java",
+     "org/xwalk/core/XWalkGetBitmapCallback.java",
+     "org/xwalk/core/XWalkHttpAuthHandler.java",
+     "org/xwalk/core/XWalkJavascriptResult.java",
+-    "org/xwalk/core/XWalkNativeExtensionLoader.java",
++    #"org/xwalk/core/XWalkNativeExtensionLoader.java",
+     "org/xwalk/core/XWalkNavigationHistory.java",
+     "org/xwalk/core/XWalkNavigationItem.java",
+     "org/xwalk/core/XWalkPreferences.java",
+diff --git a/runtime/android/core_internal/BUILD.gn b/runtime/android/core_internal/BUILD.gn
+index 33e919e..7bc3e6c 100644
+--- a/runtime/android/core_internal/BUILD.gn
++++ b/runtime/android/core_internal/BUILD.gn
+@@ -19,8 +19,8 @@ internal_java_files = [
+   "src/org/xwalk/core/internal/CustomViewCallbackInternal.java",
+   "src/org/xwalk/core/internal/XWalkCookieManagerInternal.java",
+   "src/org/xwalk/core/internal/XWalkDownloadListenerInternal.java",
+-  "src/org/xwalk/core/internal/XWalkExtensionInternal.java",
+-  "src/org/xwalk/core/internal/XWalkExternalExtensionManagerInternal.java",
++  #"src/org/xwalk/core/internal/XWalkExtensionInternal.java",
++  #"src/org/xwalk/core/internal/XWalkExternalExtensionManagerInternal.java",
+   "src/org/xwalk/core/internal/XWalkFindListenerInternal.java",
+   "src/org/xwalk/core/internal/XWalkGetBitmapCallbackInternal.java",
+   "src/org/xwalk/core/internal/XWalkHitTestResultInternal.java",
+@@ -28,14 +28,14 @@ internal_java_files = [
+   "src/org/xwalk/core/internal/XWalkHttpAuthInternal.java",
+   "src/org/xwalk/core/internal/XWalkJavascriptResultHandlerInternal.java",
+   "src/org/xwalk/core/internal/XWalkJavascriptResultInternal.java",
+-  "src/org/xwalk/core/internal/XWalkNativeExtensionLoaderInternal.java",
++  #"src/org/xwalk/core/internal/XWalkNativeExtensionLoaderInternal.java",
+   "src/org/xwalk/core/internal/XWalkNavigationHistoryInternal.java",
+   "src/org/xwalk/core/internal/XWalkNavigationItemInternal.java",
+   "src/org/xwalk/core/internal/XWalkPreferencesInternal.java",
+   "src/org/xwalk/core/internal/XWalkResourceClientInternal.java",
+   "src/org/xwalk/core/internal/XWalkSettingsInternal.java",
+   "src/org/xwalk/core/internal/XWalkUIClientInternal.java",
+-  "src/org/xwalk/core/internal/XWalkViewDatabaseInternal.java",
++  #"src/org/xwalk/core/internal/XWalkViewDatabaseInternal.java",
+   "src/org/xwalk/core/internal/XWalkViewInternal.java",
+   "src/org/xwalk/core/internal/XWalkWebResourceRequestHandlerInternal.java",
+   "src/org/xwalk/core/internal/XWalkWebResourceRequestInternal.java",
+@@ -68,7 +68,7 @@ android_library("xwalk_core_internal_java") {
+     "src/org/xwalk/core/internal/SslUtil.java",
+     "src/org/xwalk/core/internal/UrlUtilities.java",
+     "src/org/xwalk/core/internal/XWalkAPI.java",
+-    "src/org/xwalk/core/internal/XWalkAutofillClientAndroid.java",
++    #"src/org/xwalk/core/internal/XWalkAutofillClientAndroid.java",
+     "src/org/xwalk/core/internal/XWalkClient.java",
+     "src/org/xwalk/core/internal/XWalkContent.java",
+     "src/org/xwalk/core/internal/XWalkContentLifecycleNotifier.java",
+@@ -79,9 +79,9 @@ android_library("xwalk_core_internal_java") {
+     "src/org/xwalk/core/internal/XWalkContentsClientCallbackHelper.java",
+     "src/org/xwalk/core/internal/XWalkContentsIoThreadClient.java",
+     "src/org/xwalk/core/internal/XWalkCoreBridge.java",
+-    "src/org/xwalk/core/internal/XWalkDevToolsServer.java",
++    #"src/org/xwalk/core/internal/XWalkDevToolsServer.java",
+     "src/org/xwalk/core/internal/XWalkDownloadListenerImpl.java",
+-    "src/org/xwalk/core/internal/XWalkFormDatabase.java",
++    #"src/org/xwalk/core/internal/XWalkFormDatabase.java",
+     "src/org/xwalk/core/internal/XWalkGeolocationPermissions.java",
+     "src/org/xwalk/core/internal/XWalkInternalResources.java",
+     "src/org/xwalk/core/internal/XWalkLaunchScreenManager.java",
+@@ -91,24 +91,24 @@ android_library("xwalk_core_internal_java") {
+     "src/org/xwalk/core/internal/XWalkNotificationService.java",
+     "src/org/xwalk/core/internal/XWalkNotificationServiceImpl.java",
+     "src/org/xwalk/core/internal/XWalkPathHelper.java",
+-    "src/org/xwalk/core/internal/XWalkPresentationHost.java",
++    #"src/org/xwalk/core/internal/XWalkPresentationHost.java",
+     "src/org/xwalk/core/internal/XWalkSwitches.java",
+     "src/org/xwalk/core/internal/XWalkViewDelegate.java",
+     "src/org/xwalk/core/internal/XWalkWebChromeClient.java",
+     "src/org/xwalk/core/internal/XWalkWebContentsDelegate.java",
+     "src/org/xwalk/core/internal/XWalkWebContentsDelegateAdapter.java",
+-    "src/org/xwalk/core/internal/extension/BuiltinXWalkExtensions.java",
+-    "src/org/xwalk/core/internal/extension/XWalkExtensionWithActivityStateListener.java",
+-    "src/org/xwalk/core/internal/extension/api/launchscreen/LaunchScreenExtension.java",
+-    "src/org/xwalk/core/internal/extension/api/presentation/PresentationExtension.java",
+-    "src/org/xwalk/core/internal/extension/api/presentation/PresentationView.java",
+-    "src/org/xwalk/core/internal/extension/api/presentation/PresentationViewJBMR1.java",
+-    "src/org/xwalk/core/internal/extension/api/presentation/PresentationViewNull.java",
+-    "src/org/xwalk/core/internal/extension/api/presentation/XWalkPresentationContent.java",
+-    "src/org/xwalk/core/internal/extension/api/wifidirect/WifiDirect.java",
+-    "src/org/xwalk/core/internal/extension/api/DisplayManagerJBMR1.java",
+-    "src/org/xwalk/core/internal/extension/api/DisplayManagerNull.java",
+-    "src/org/xwalk/core/internal/extension/api/XWalkDisplayManager.java",
++    #"src/org/xwalk/core/internal/extension/BuiltinXWalkExtensions.java",
++    #"src/org/xwalk/core/internal/extension/XWalkExtensionWithActivityStateListener.java",
++    #"src/org/xwalk/core/internal/extension/api/launchscreen/LaunchScreenExtension.java",
++    #"src/org/xwalk/core/internal/extension/api/presentation/PresentationExtension.java",
++    #"src/org/xwalk/core/internal/extension/api/presentation/PresentationView.java",
++    #"src/org/xwalk/core/internal/extension/api/presentation/PresentationViewJBMR1.java",
++    #"src/org/xwalk/core/internal/extension/api/presentation/PresentationViewNull.java",
++    #"src/org/xwalk/core/internal/extension/api/presentation/XWalkPresentationContent.java",
++    #"src/org/xwalk/core/internal/extension/api/wifidirect/WifiDirect.java",
++    #"src/org/xwalk/core/internal/extension/api/DisplayManagerJBMR1.java",
++    #"src/org/xwalk/core/internal/extension/api/DisplayManagerNull.java",
++    #"src/org/xwalk/core/internal/extension/api/XWalkDisplayManager.java",
+   ]
+   java_files += internal_java_files
+   java_files += reflection_java_files
+@@ -183,17 +183,17 @@ generate_jni("xwalk_core_native_jni") {
+   jni_package = "xwalk"
+   sources = [
+     "src/org/xwalk/core/internal/AndroidProtocolHandler.java",
+-    "src/org/xwalk/core/internal/XWalkAutofillClientAndroid.java",
++    #"src/org/xwalk/core/internal/XWalkAutofillClientAndroid.java",
+     "src/org/xwalk/core/internal/XWalkContent.java",
+     "src/org/xwalk/core/internal/XWalkContentLifecycleNotifier.java",
+     "src/org/xwalk/core/internal/XWalkContentsClientBridge.java",
+     "src/org/xwalk/core/internal/XWalkContentsIoThreadClient.java",
+     "src/org/xwalk/core/internal/XWalkCookieManagerInternal.java",
+-    "src/org/xwalk/core/internal/XWalkDevToolsServer.java",
+-    "src/org/xwalk/core/internal/XWalkFormDatabase.java",
++    #"src/org/xwalk/core/internal/XWalkDevToolsServer.java",
++    #"src/org/xwalk/core/internal/XWalkFormDatabase.java",
+     "src/org/xwalk/core/internal/XWalkHttpAuthHandlerInternal.java",
+     "src/org/xwalk/core/internal/XWalkPathHelper.java",
+-    "src/org/xwalk/core/internal/XWalkPresentationHost.java",
++    #"src/org/xwalk/core/internal/XWalkPresentationHost.java",
+     "src/org/xwalk/core/internal/XWalkSettingsInternal.java",
+     "src/org/xwalk/core/internal/XWalkViewDelegate.java",
+     "src/org/xwalk/core/internal/XWalkWebContentsDelegate.java",
+diff --git a/runtime/android/core_internal/src/org/xwalk/core/internal/XWalkContent.java b/runtime/android/core_internal/src/org/xwalk/core/internal/XWalkContent.java
+index 7b018c5..f1951b4 100644
+--- a/runtime/android/core_internal/src/org/xwalk/core/internal/XWalkContent.java
++++ b/runtime/android/core_internal/src/org/xwalk/core/internal/XWalkContent.java
+@@ -75,7 +75,6 @@ class XWalkContent implements XWalkPreferencesInternal.KeyValueChangeListener {
+     private XWalkContentView mContentView;
+     private ContentViewRenderView mContentViewRenderView;
+     private WindowAndroid mWindow;
+-    private XWalkDevToolsServer mDevToolsServer;
+     private XWalkViewInternal mXWalkView;
+     private XWalkContentsClientBridge mContentsClientBridge;
+     private XWalkContentsIoThreadClient mIoThreadClient;
+@@ -87,7 +86,7 @@ class XWalkContent implements XWalkPreferencesInternal.KeyValueChangeListener {
+     private WebContents mWebContents;
+     private boolean mIsLoaded = false;
+     private boolean mAnimated = false;
+-    private XWalkAutofillClientAndroid mXWalkAutofillClient;
++    //private XWalkAutofillClientAndroid mXWalkAutofillClient;
+     private XWalkGetBitmapCallbackInternal mXWalkGetBitmapCallbackInternal;
+     private ContentBitmapCallback mGetBitmapCallback;
+     private final HitTestData mPossiblyStaleHitTestData = new HitTestData();
+@@ -612,8 +611,7 @@ class XWalkContent implements XWalkPreferencesInternal.KeyValueChangeListener {
+     }
+ 
+     public String devToolsAgentId() {
+-        if (mNativeContent == 0) return "";
+-        return nativeDevToolsAgentId(mNativeContent);
++        return "";
+     }
+ 
+     public XWalkSettingsInternal getSettings() {
+@@ -943,30 +941,13 @@ class XWalkContent implements XWalkPreferencesInternal.KeyValueChangeListener {
+     }
+ 
+     public void enableRemoteDebugging() {
+-        // Chrome looks for "devtools_remote" pattern in the name of a unix domain socket
+-        // to identify a debugging page
+-        final String socketName = mViewContext.getApplicationContext().getPackageName() + "_devtools_remote";
+-        if (mDevToolsServer == null) {
+-            mDevToolsServer = new XWalkDevToolsServer(socketName);
+-            mDevToolsServer.setRemoteDebuggingEnabled(
+-                    true, XWalkDevToolsServer.Security.ALLOW_SOCKET_ACCESS);
+-        }
+     }
+ 
+     void disableRemoteDebugging() {
+-        if (mDevToolsServer ==  null) return;
+-
+-        if (mDevToolsServer.isRemoteDebuggingEnabled()) {
+-            mDevToolsServer.setRemoteDebuggingEnabled(false);
+-        }
+-        mDevToolsServer.destroy();
+-        mDevToolsServer = null;
+     }
+ 
+     public String getRemoteDebuggingUrl() {
+-        if (mDevToolsServer == null) return "";
+-        // devtools/page is hardcoded in devtools_http_handler_impl.cc (kPageUrlPrefix)
+-        return "ws://" + mDevToolsServer.getSocketName() + "/devtools/page/" + devToolsAgentId();
++        return "";
+     }
+ 
+     @Override
+@@ -1052,9 +1033,9 @@ class XWalkContent implements XWalkPreferencesInternal.KeyValueChangeListener {
+             return;
+         }
+ 
+-        if (mXWalkAutofillClient != null) {
+-            mXWalkAutofillClient.hideAutofillPopup();
+-        }
++        // if (mXWalkAutofillClient != null) {
++        //     mXWalkAutofillClient.hideAutofillPopup();
++        // }
+     }
+ 
+     // It is only used for SurfaceView.
+@@ -1064,11 +1045,11 @@ class XWalkContent implements XWalkPreferencesInternal.KeyValueChangeListener {
+         surfaceView.setVisibility(visibility);
+     }
+ 
+-    @CalledByNative
+-    private void setXWalkAutofillClient(XWalkAutofillClientAndroid client) {
+-        mXWalkAutofillClient = client;
+-        client.init(mContentViewCore);
+-    }
++    // @CalledByNative
++    // private void setXWalkAutofillClient(XWalkAutofillClientAndroid client) {
++    //     mXWalkAutofillClient = client;
++    //     client.init(mContentViewCore);
++    // }
+ 
+     public void clearSslPreferences() {
+         if (mNativeContent == 0) return;
+@@ -1135,7 +1116,6 @@ class XWalkContent implements XWalkPreferencesInternal.KeyValueChangeListener {
+             InterceptNavigationDelegate navigationInterceptionDelegate);
+     private native void nativeClearCache(long nativeXWalkContent, boolean includeDiskFiles);
+     private native void nativeClearCacheForSingleFile(long nativeXWalkContent, String url);
+-    private native String nativeDevToolsAgentId(long nativeXWalkContent);
+     private native String nativeGetVersion(long nativeXWalkContent);
+     private native void nativeSetJsOnlineProperty(long nativeXWalkContent, boolean networkUp);
+     private native boolean nativeSetManifest(long nativeXWalkContent, String path, String manifest);
+diff --git a/runtime/android/core_internal/src/org/xwalk/core/internal/XWalkInternalResources.java b/runtime/android/core_internal/src/org/xwalk/core/internal/XWalkInternalResources.java
+index b084025..effebd1 100644
+--- a/runtime/android/core_internal/src/org/xwalk/core/internal/XWalkInternalResources.java
++++ b/runtime/android/core_internal/src/org/xwalk/core/internal/XWalkInternalResources.java
+@@ -39,7 +39,7 @@ class XWalkInternalResources {
+                     try {
+                         generatedInnerClazz = appClassLoader.loadClass(generatedInnerClassName);
+                     } catch (ClassNotFoundException e) {
+-                        Log.w(TAG, generatedInnerClassName + "is not found.");
++                        //Log.w(TAG, generatedInnerClassName + "is not found.");
+                         continue;
+                     }
+                     Field[] fields = innerClazz.getFields();
+@@ -56,8 +56,8 @@ class XWalkInternalResources {
+                             Log.w(TAG, generatedInnerClazz.getName() + "." +
+                                     field.getName() + " is not int.");
+                         } catch (NoSuchFieldException e) {
+-                            Log.w(TAG, generatedInnerClazz.getName() + "." +
+-                                    field.getName() + " is not found.");
++                            //Log.w(TAG, generatedInnerClazz.getName() + "." +
++                            //        field.getName() + " is not found.");
+                         }
+                         if (Modifier.isFinal(field.getModifiers())) field.setAccessible(false);
+                     }
+diff --git a/runtime/android/core_internal/src/org/xwalk/core/internal/XWalkViewDelegate.java b/runtime/android/core_internal/src/org/xwalk/core/internal/XWalkViewDelegate.java
+index 7e6c7be..de21ed4 100644
+--- a/runtime/android/core_internal/src/org/xwalk/core/internal/XWalkViewDelegate.java
++++ b/runtime/android/core_internal/src/org/xwalk/core/internal/XWalkViewDelegate.java
+@@ -143,8 +143,6 @@ class XWalkViewDelegate {
+             ApplicationStatusManager.init(((Service) appContext).getApplication());
+         }
+ 
+-        XWalkPresentationHost.createInstanceOnce(context);
+-
+         sInitialized = true;
+     }
+ 
+diff --git a/runtime/android/core_internal/src/org/xwalk/core/internal/XWalkViewInternal.java b/runtime/android/core_internal/src/org/xwalk/core/internal/XWalkViewInternal.java
+index bcea06e..79892f7 100644
+--- a/runtime/android/core_internal/src/org/xwalk/core/internal/XWalkViewInternal.java
++++ b/runtime/android/core_internal/src/org/xwalk/core/internal/XWalkViewInternal.java
+@@ -59,7 +59,7 @@ import org.chromium.base.ApplicationStatusManager;
+ import org.chromium.base.CommandLine;
+ import org.chromium.content.browser.ContentViewCore;
+ 
+-import org.xwalk.core.internal.extension.BuiltinXWalkExtensions;
++//import org.xwalk.core.internal.extension.BuiltinXWalkExtensions;
+ 
+ /**
+  * <p>XWalkViewInternal represents an Android view for web apps/pages. Thus most of attributes
+@@ -223,7 +223,7 @@ public class XWalkViewInternal extends android.widget.FrameLayout {
+     private Context mContext;
+     private final XWalkHitTestResultInternal mXWalkHitTestResult;
+     private boolean mIsHidden;
+-    private XWalkExternalExtensionManagerInternal mExternalExtensionManager;
++    //private XWalkExternalExtensionManagerInternal mExternalExtensionManager;
+ 
+     /**
+      * Normal reload mode as default.
+@@ -273,8 +273,7 @@ public class XWalkViewInternal extends android.widget.FrameLayout {
+                   "        addView((FrameLayout)bridge, new FrameLayout.LayoutParams(",
+                   "                FrameLayout.LayoutParams.MATCH_PARENT,",
+                   "                FrameLayout.LayoutParams.MATCH_PARENT));",
+-                  "        removeViewAt(0);",
+-                  "        new org.xwalk.core.extension.XWalkExternalExtensionManagerImpl(this);"})
++                  "        removeViewAt(0);"})
+     public XWalkViewInternal(Context context) {
+         super(context, null);
+ 
+@@ -306,8 +305,7 @@ public class XWalkViewInternal extends android.widget.FrameLayout {
+                   "        addView((FrameLayout)bridge, new FrameLayout.LayoutParams(",
+                   "                FrameLayout.LayoutParams.MATCH_PARENT,",
+                   "                FrameLayout.LayoutParams.MATCH_PARENT));",
+-                  "        removeViewAt(0);",
+-                  "        new org.xwalk.core.extension.XWalkExternalExtensionManagerImpl(this);"},
++                  "        removeViewAt(0);"},
+               postBridgeLines = {
+                   "        String animatable = null;",
+                   "        try {",
+@@ -342,8 +340,7 @@ public class XWalkViewInternal extends android.widget.FrameLayout {
+                   "        addView((FrameLayout)bridge, new FrameLayout.LayoutParams(",
+                   "                FrameLayout.LayoutParams.MATCH_PARENT,",
+                   "                FrameLayout.LayoutParams.MATCH_PARENT));",
+-                  "        removeViewAt(0);",
+-                  "        new org.xwalk.core.extension.XWalkExternalExtensionManagerImpl(this);"})
++                  "        removeViewAt(0);"})
+     public XWalkViewInternal(Context context, Activity activity) {
+         super(context, null);
+ 
+@@ -373,11 +370,11 @@ public class XWalkViewInternal extends android.widget.FrameLayout {
+             ApplicationStatusManager.informActivityStarted((Activity) mContext);
+         }
+ 
+-        if (!CommandLine.getInstance().hasSwitch("disable-xwalk-extensions")) {
+-            BuiltinXWalkExtensions.load(mContext);
+-        } else {
++        //if (!CommandLine.getInstance().hasSwitch("disable-xwalk-extensions")) {
++        //    BuiltinXWalkExtensions.load(mContext);
++        //} else {
+             XWalkPreferencesInternal.setValue(XWalkPreferencesInternal.ENABLE_EXTENSIONS, false);
+-        }
++        //}
+ 
+         mIsHidden = false;
+         mContent = new XWalkContent(mContext, animatable, this);
+@@ -922,9 +919,9 @@ public class XWalkViewInternal extends android.widget.FrameLayout {
+     public boolean onNewIntent(Intent intent) {
+         if (mContent == null) return false;
+ 
+-        if (mExternalExtensionManager != null) {
+-            mExternalExtensionManager.onNewIntent(intent);
+-        }
++        //if (mExternalExtensionManager != null) {
++        //    mExternalExtensionManager.onNewIntent(intent);
++        //}
+ 
+         return mContent.onNewIntent(intent);
+     }
+@@ -1636,22 +1633,22 @@ public class XWalkViewInternal extends android.widget.FrameLayout {
+      * Embedders could employ this manager to load their own external extensions.
+      * @return the external extension manager.
+      */
+-    @XWalkAPI
+-    public XWalkExternalExtensionManagerInternal getExtensionManager() {
+-        if (mContent == null) return null;
+-        checkThreadSafety();
+-        return mExternalExtensionManager;
+-    }
++    //@XWalkAPI
++    //public XWalkExternalExtensionManagerInternal getExtensionManager() {
++    //    if (mContent == null) return null;
++    //    checkThreadSafety();
++    //    return mExternalExtensionManager;
++    //}
+ 
+     /**
+      * XWalkExternalExtensionManagerInternal will call this function after its construction.
+      * @hide
+      */
+-    public void setExternalExtensionManager(XWalkExternalExtensionManagerInternal manager) {
+-        if (mContent == null) return;
+-        checkThreadSafety();
+-        mExternalExtensionManager = manager;
+-    }
++    //public void setExternalExtensionManager(XWalkExternalExtensionManagerInternal manager) {
++    //    if (mContent == null) return;
++    //    checkThreadSafety();
++    //    mExternalExtensionManager = manager;
++    //}
+ 
+     /**
+      * Clears the SSL preferences table stored in response to proceeding with
+diff --git a/runtime/android/sample/BUILD.gn b/runtime/android/sample/BUILD.gn
+index 716c223..70142ca 100644
+--- a/runtime/android/sample/BUILD.gn
++++ b/runtime/android/sample/BUILD.gn
+@@ -9,8 +9,6 @@ android_apk("xwalk_core_sample_apk") {
+   android_manifest = "AndroidManifest.xml"
+   java_files = [
+     "src/org/xwalk/core/sample/AnimatableXWalkViewActivity.java",
+-    "src/org/xwalk/core/sample/ExtensionActivity.java",
+-    "src/org/xwalk/core/sample/ExtensionEcho.java",
+     "src/org/xwalk/core/sample/LoadAppFromManifestActivity.java",
+     "src/org/xwalk/core/sample/MultiXWalkViewActivity.java",
+     "src/org/xwalk/core/sample/MultiXWalkViewOverlayActivity.java",
+@@ -32,7 +30,6 @@ android_apk("xwalk_core_sample_apk") {
+     ":xwalk_core_sample_apk_assets",
+     ":xwalk_core_sample_apk_resources",
+     "//base:base_java",
+-    "//xwalk/extensions/android:xwalk_core_extensions_java",
+     "//xwalk/runtime/android/core:xwalk_core_java",
+     "//xwalk/runtime/android/core_internal:xwalk_core_internal_java",
+   ]
+diff --git a/runtime/app/android/BUILD.gn b/runtime/app/android/BUILD.gn
+index d75fa52..cf8bdfd 100644
+--- a/runtime/app/android/BUILD.gn
++++ b/runtime/app/android/BUILD.gn
+@@ -13,8 +13,6 @@ shared_library("libxwalkcore") {
+     "//components/cdm/browser",
+     "//components/cdm/renderer",
+     "//components/navigation_interception",
+-    "//components/visitedlink/browser",
+-    "//components/visitedlink/renderer",
+     "//components/web_contents_delegate_android",
+     "//mojo/public/cpp/bindings",
+     "//skia",
+diff --git a/runtime/app/android/xwalk_jni_registrar.cc b/runtime/app/android/xwalk_jni_registrar.cc
+index 941ed98..f8394cc 100644
+--- a/runtime/app/android/xwalk_jni_registrar.cc
++++ b/runtime/app/android/xwalk_jni_registrar.cc
+@@ -41,21 +41,21 @@ static base::android::RegistrationMethod kXWalkRegisteredMethods[] = {
+   { "NetAndroid", net::android::RegisterJni },
+   { "WebContentsDelegateAndroid",
+       web_contents_delegate_android::RegisterWebContentsDelegateAndroidJni },
+-  { "XWalkAutofillClient", RegisterXWalkAutofillClient },
++  //{ "XWalkAutofillClient", RegisterXWalkAutofillClient },
+   { "XWalkContentsClientBridge", RegisterXWalkContentsClientBridge },
+   { "XWalkContentsIoThreadClientImpl",
+       RegisterXWalkContentsIoThreadClientImpl },
+   { "XWalkContent", RegisterXWalkContent },
+   { "XWalkContentLifecycleNotifier", RegisterXWalkContentLifecycleNotifier },
+-  { "XWalkPresentationHost", RegisterXWalkPresentationHost },
+-  { "XWalkDevToolsServer", RegisterXWalkDevToolsServer },
+-  { "XWalkExtensionAndroid", extensions::RegisterXWalkExtensionAndroid },
++  //{ "XWalkPresentationHost", RegisterXWalkPresentationHost },
++  //{ "XWalkDevToolsServer", RegisterXWalkDevToolsServer },
++  //{ "XWalkExtensionAndroid", extensions::RegisterXWalkExtensionAndroid },
+   { "XWalkHttpAuthHandler", RegisterXWalkHttpAuthHandler },
+-  { "XWalkNativeExtensionLoaderAndroid",
+-      extensions::RegisterXWalkNativeExtensionLoaderAndroid },
++  //{ "XWalkNativeExtensionLoaderAndroid",
++  //    extensions::RegisterXWalkNativeExtensionLoaderAndroid },
+   { "XWalkPathHelper", RegisterXWalkPathHelper },
+   { "XWalkSettings", RegisterXWalkSettings },
+-  { "XWalkFormDatabase", RegisterXWalkFormDatabase },
++  //{ "XWalkFormDatabase", RegisterXWalkFormDatabase },
+   { "XWalkViewDelegate", RegisterXWalkViewDelegate },
+   { "XWalkWebContentsDelegate", RegisterXWalkWebContentsDelegate },
+   { "XWalkWebResourceResponseImpl", RegisterXWalkWebResourceResponse },
+diff --git a/runtime/app/xwalk_main_delegate.cc b/runtime/app/xwalk_main_delegate.cc
+index 3f42323..ac46f38 100644
+--- a/runtime/app/xwalk_main_delegate.cc
++++ b/runtime/app/xwalk_main_delegate.cc
+@@ -92,8 +92,6 @@ void XWalkMainDelegate::SandboxInitialized(const std::string& process_type) {
+ 
+ int XWalkMainDelegate::RunProcess(const std::string& process_type,
+     const content::MainFunctionParams& main_function_params) {
+-  if (process_type == switches::kXWalkExtensionProcess)
+-    return XWalkExtensionProcessMain(main_function_params);
+   // Tell content to use default process main entries by returning -1.
+   return -1;
+ }
+diff --git a/runtime/browser/android/xwalk_content.cc b/runtime/browser/android/xwalk_content.cc
+index 7ec20ca..f88d611 100644
+--- a/runtime/browser/android/xwalk_content.cc
++++ b/runtime/browser/android/xwalk_content.cc
+@@ -56,9 +56,6 @@ using base::android::ScopedJavaLocalRef;
+ using content::BrowserThread;
+ using content::WebContents;
+ using navigation_interception::InterceptNavigationDelegate;
+-using xwalk::application_manifest_keys::kDisplay;
+-
+-namespace keys = xwalk::application_manifest_keys;
+ 
+ namespace xwalk {
+ 
+@@ -137,26 +134,19 @@ XWalkContent* XWalkContent::FromWebContents(
+ 
+ XWalkContent::XWalkContent(std::unique_ptr<content::WebContents> web_contents)
+     : web_contents_(std::move(web_contents)) {
+-  xwalk_autofill_manager_.reset(new XWalkAutofillManager(web_contents_.get()));
+   XWalkContentLifecycleNotifier::OnXWalkViewCreated();
+ }
+ 
+ void XWalkContent::SetXWalkAutofillClient(jobject client) {
+   DCHECK(BrowserThread::CurrentlyOn(BrowserThread::UI));
+-  JNIEnv* env = AttachCurrentThread();
+-  ScopedJavaLocalRef<jobject> obj = java_ref_.get(env);
+-  if (obj.is_null()) return;
+-  Java_XWalkContent_setXWalkAutofillClient(env, obj.obj(), client);
++  // JNIEnv* env = AttachCurrentThread();
++  // ScopedJavaLocalRef<jobject> obj = java_ref_.get(env);
++  // if (obj.is_null()) return;
++  // Java_XWalkContent_setXWalkAutofillClient(env, obj.obj(), client);
+ }
+ 
+ void XWalkContent::SetSaveFormData(bool enabled) {
+   DCHECK(BrowserThread::CurrentlyOn(BrowserThread::UI));
+-  xwalk_autofill_manager_->InitAutofillIfNecessary(enabled);
+-  // We need to check for the existence, since autofill_manager_delegate
+-  // may not be created when the setting is false.
+-  if (auto client =
+-      XWalkAutofillClientAndroid::FromWebContents(web_contents_.get()))
+-    client->SetSaveFormData(enabled);
+ }
+ 
+ XWalkContent::~XWalkContent() {
+@@ -254,13 +244,6 @@ void XWalkContent::ClearCacheForSingleFile(
+     RemoveHttpDiskCache(web_contents_->GetRenderProcessHost(), key);
+ }
+ 
+-ScopedJavaLocalRef<jstring> XWalkContent::DevToolsAgentId(JNIEnv* env,
+-                                                          jobject obj) {
+-  scoped_refptr<content::DevToolsAgentHost> agent_host(
+-      content::DevToolsAgentHost::GetOrCreateFor(web_contents_.get()));
+-  return base::android::ConvertUTF8ToJavaString(env, agent_host->GetId());
+-}
+-
+ void XWalkContent::Destroy(JNIEnv* env, jobject obj) {
+   delete this;
+ }
+@@ -324,150 +307,17 @@ jboolean XWalkContent::SetManifest(JNIEnv* env,
+                                    jobject obj,
+                                    jstring path,
+                                    jstring manifest_string) {
+-  std::string path_str = base::android::ConvertJavaStringToUTF8(env, path);
+-  std::string json_input =
+-      base::android::ConvertJavaStringToUTF8(env, manifest_string);
+-
+-  std::unique_ptr<base::Value> manifest_value = base::JSONReader::Read(json_input);
+-  if (!manifest_value || !manifest_value->IsType(base::Value::TYPE_DICTIONARY))
+-      return false;
+-
+-  xwalk::application::Manifest manifest(
+-      base::WrapUnique(
+-          static_cast<base::DictionaryValue*>(manifest_value.release())));
+-
+-  std::string url;
+-  if (manifest.GetString(keys::kStartURLKey, &url)) {
+-    std::string scheme = GURL(url).scheme();
+-    if (scheme.empty())
+-      url = path_str + url;
+-  } else if (manifest.GetString(keys::kLaunchLocalPathKey, &url)) {
+-    PrintManifestDeprecationWarning(keys::kLaunchLocalPathKey);
+-    // According to original proposal for "app:launch:local_path", the "http"
+-    // and "https" schemes are supported. So |url| should do nothing when it
+-    // already has "http" or "https" scheme.
+-    std::string scheme = GURL(url).scheme();
+-    if (scheme != url::kHttpScheme && scheme != url::kHttpsScheme)
+-      url = path_str + url;
+-  } else if (manifest.GetString(keys::kLaunchWebURLKey, &url)) {
+-    PrintManifestDeprecationWarning(keys::kLaunchWebURLKey);
+-  } else {
+-    NOTIMPLEMENTED();
+-  }
+-
+-  std::string match_patterns;
+-  const base::ListValue* xwalk_hosts = NULL;
+-  if (manifest.GetList(
+-          xwalk::application_manifest_keys::kXWalkHostsKey, &xwalk_hosts)) {
+-      base::JSONWriter::Write(*xwalk_hosts, &match_patterns);
+-  }
+-  render_view_host_ext_->SetOriginAccessWhitelist(url, match_patterns);
+-
+-  std::string csp;
+-  ManifestGetString(manifest, keys::kCSPKey, keys::kDeprecatedCSPKey, &csp);
+-  XWalkBrowserContext* browser_context =
+-      XWalkRunner::GetInstance()->browser_context();
+-  CHECK(browser_context);
+-  browser_context->SetCSPString(csp);
+-
+-  ScopedJavaLocalRef<jstring> url_buffer =
+-      base::android::ConvertUTF8ToJavaString(env, url);
+-
+-  if (manifest.HasPath(kDisplay)) {
+-    std::string display_string;
+-    if (manifest.GetString(kDisplay, &display_string)) {
+-      // TODO(David): update the handling process of the display strings
+-      // including fullscreen etc.
+-      bool display_as_fullscreen =
+-          base::LowerCaseEqualsASCII(display_string, "fullscreen");
+-      Java_XWalkContent_onGetFullscreenFlagFromManifest(
+-          env, obj, display_as_fullscreen ? JNI_TRUE : JNI_FALSE);
+-    }
+-  }
++  //std::string match_patterns;
++  //render_view_host_ext_->SetOriginAccessWhitelist(url, match_patterns);
+ 
+-  // Check whether need to display launch screen. (Read from manifest.json)
+-  if (ManifestHasPath(manifest,
+-                      keys::kXWalkLaunchScreen,
+-                      keys::kLaunchScreen)) {
+-    std::string ready_when;
+-    // Get the value of 'ready_when' from manifest.json
+-    ManifestGetString(manifest,
+-                      keys::kXWalkLaunchScreenReadyWhen,
+-                      keys::kLaunchScreenReadyWhen,
+-                      &ready_when);
+-    ScopedJavaLocalRef<jstring> ready_when_buffer =
+-        base::android::ConvertUTF8ToJavaString(env, ready_when);
+-
+-    // Get the value of 'image_border'
+-    // 1. When 'launch_screen.[orientation]' was defined, but no 'image_border'
+-    //    The value of 'image_border' will be set as 'empty'.
+-    // 2. Otherwise, there is no 'launch_screen.[orientation]' defined,
+-    //    The value of 'image_border' will be empty.
+-    const char empty[] = "empty";
+-    std::string image_border_default;
+-    ManifestGetString(manifest,
+-                      keys::kXWalkLaunchScreenImageBorderDefault,
+-                      keys::kLaunchScreenImageBorderDefault,
+-                      &image_border_default);
+-    if (image_border_default.empty() &&
+-        ManifestHasPath(manifest,
+-                        keys::kXWalkLaunchScreenDefault,
+-                        keys::kLaunchScreenDefault)) {
+-      image_border_default = empty;
+-    }
+-
+-    std::string image_border_landscape;
+-    ManifestGetString(manifest,
+-                      keys::kXWalkLaunchScreenImageBorderLandscape,
+-                      keys::kLaunchScreenImageBorderLandscape,
+-                      &image_border_landscape);
+-    if (image_border_landscape.empty() &&
+-        ManifestHasPath(manifest,
+-                        keys::kXWalkLaunchScreenLandscape,
+-                        keys::kLaunchScreenLandscape)) {
+-      image_border_landscape = empty;
+-    }
+-
+-    std::string image_border_portrait;
+-    ManifestGetString(manifest,
+-                      keys::kXWalkLaunchScreenImageBorderPortrait,
+-                      keys::kLaunchScreenImageBorderPortrait,
+-                      &image_border_portrait);
+-    if (image_border_portrait.empty() &&
+-        ManifestHasPath(manifest,
+-                        keys::kXWalkLaunchScreenPortrait,
+-                        keys::kLaunchScreenPortrait)) {
+-      image_border_portrait = empty;
+-    }
+-
+-    std::string image_border = image_border_default + ';' +
+-        image_border_landscape  + ';' + image_border_portrait;
+-    ScopedJavaLocalRef<jstring> image_border_buffer =
+-        base::android::ConvertUTF8ToJavaString(env, image_border);
++  //std::string csp;
++  //XWalkBrowserContext* browser_context =
++  //    XWalkRunner::GetInstance()->browser_context();
++  //CHECK(browser_context);
++  //browser_context->SetCSPString(csp);
+ 
+-    Java_XWalkContent_onGetUrlAndLaunchScreenFromManifest(
+-        env, obj, url_buffer.obj(), ready_when_buffer.obj(),
+-        image_border_buffer.obj());
+-  } else {
+-    // No need to display launch screen, load the url directly.
+-    Java_XWalkContent_onGetUrlFromManifest(env, obj, url_buffer.obj());
+-  }
+-  std::string view_background_color;
+-  ManifestGetString(manifest,
+-                    keys::kXWalkViewBackgroundColor,
+-                    keys::kViewBackgroundColor,
+-                    &view_background_color);
+-
+-  if (view_background_color.empty())
+-    return true;
+-  unsigned int view_background_color_int = 0;
+-  if (!base::HexStringToUInt(view_background_color.substr(1),
+-      &view_background_color_int)) {
+-    LOG(ERROR) << "Background color format error! Valid background color"
+-               "should be(Alpha Red Green Blue): #ff01abcd";
+-    return false;
+-  }
+-  Java_XWalkContent_setBackgroundColor(env, obj, view_background_color_int);
++  //unsigned int view_background_color_int = 0;
++  //Java_XWalkContent_setBackgroundColor(env, obj, view_background_color_int);
+   return true;
+ }
+ 
+diff --git a/runtime/browser/android/xwalk_content.h b/runtime/browser/android/xwalk_content.h
+index 15734d7..3957f21 100644
+--- a/runtime/browser/android/xwalk_content.h
++++ b/runtime/browser/android/xwalk_content.h
+@@ -51,7 +51,6 @@ class XWalkContent : public FindHelper::Listener {
+                     jobject intercept_navigation_delegate);
+   void ClearCache(JNIEnv* env, jobject obj, jboolean include_disk_files);
+   void ClearCacheForSingleFile(JNIEnv* env, jobject obj, jstring url);
+-  ScopedJavaLocalRef<jstring> DevToolsAgentId(JNIEnv* env, jobject obj);
+   void Destroy(JNIEnv* env, jobject obj);
+   void UpdateLastHitTestData(JNIEnv* env, jobject obj);
+   void RequestNewHitTestDataAt(JNIEnv* env,
+@@ -123,7 +122,6 @@ class XWalkContent : public FindHelper::Listener {
+   std::unique_ptr<XWalkWebContentsDelegate> web_contents_delegate_;
+   std::unique_ptr<XWalkRenderViewHostExt> render_view_host_ext_;
+   std::unique_ptr<XWalkContentsClientBridge> contents_client_bridge_;
+-  std::unique_ptr<XWalkAutofillManager> xwalk_autofill_manager_;
+   std::unique_ptr<content::WebContents> web_contents_;
+   std::unique_ptr<XWalkContent> pending_contents_;
+   std::unique_ptr<FindHelper> find_helper_;
+diff --git a/runtime/browser/android/xwalk_settings.cc b/runtime/browser/android/xwalk_settings.cc
+index dd15cf2..c428452 100644
+--- a/runtime/browser/android/xwalk_settings.cc
++++ b/runtime/browser/android/xwalk_settings.cc
+@@ -305,17 +305,8 @@ void XWalkSettings::RenderViewCreated(
+ }
+ 
+ void XWalkSettings::UpdateAcceptLanguages(JNIEnv* env, jobject obj) {
+-  PrefService* pref_service = GetPrefs();
+-  if (!pref_service) return;
+-  pref_service->SetString(
+-      "intl.accept_languages",
+-      base::android::ConvertJavaStringToUTF8(
+-          Java_XWalkSettingsInternal_getAcceptLanguagesLocked(env, obj)));
+ }
+ 
+-PrefService* XWalkSettings::GetPrefs() {
+-  return user_prefs::UserPrefs::Get(XWalkBrowserContext::GetDefault());
+-}
+ 
+ static jlong Init(JNIEnv* env,
+                  const JavaParamRef<jobject>& obj,
+diff --git a/runtime/browser/android/xwalk_settings.h b/runtime/browser/android/xwalk_settings.h
+index b249d53..5de5a42 100644
+--- a/runtime/browser/android/xwalk_settings.h
++++ b/runtime/browser/android/xwalk_settings.h
+@@ -39,7 +39,6 @@ class XWalkSettings : public content::WebContentsObserver {
+   XWalkRenderViewHostExt* GetXWalkRenderViewHostExt();
+   void UpdateEverything();
+   void UpdatePreferredSizeMode();
+-  PrefService* GetPrefs();
+ 
+   // WebContentsObserver overrides:
+   void RenderViewCreated(
+diff --git a/runtime/browser/application_component.cc b/runtime/browser/application_component.cc
+index a15112e..6274e1e 100644
+--- a/runtime/browser/application_component.cc
++++ b/runtime/browser/application_component.cc
+@@ -16,17 +16,4 @@ ApplicationComponent::ApplicationComponent(
+ 
+ ApplicationComponent::~ApplicationComponent() {}
+ 
+-void ApplicationComponent::CreateUIThreadExtensions(
+-    content::RenderProcessHost* host,
+-    extensions::XWalkExtensionVector* extensions) {
+-  if (!XWalkRuntimeFeatures::isApplicationAPIEnabled())
+-    return;
+-  app_system_->CreateExtensions(host, extensions);
+-}
+-
+-void ApplicationComponent::CreateExtensionThreadExtensions(
+-    content::RenderProcessHost* host,
+-    extensions::XWalkExtensionVector* extensions) {
+-}
+-
+ }  // namespace xwalk
+diff --git a/runtime/browser/application_component.h b/runtime/browser/application_component.h
+index cbc41cc..601c8b7 100644
+--- a/runtime/browser/application_component.h
++++ b/runtime/browser/application_component.h
+@@ -28,14 +28,6 @@ class ApplicationComponent : public XWalkComponent {
+   application::ApplicationSystem* app_system() { return app_system_.get(); }
+ 
+  private:
+-  // XWalkComponent implementation.
+-  void CreateUIThreadExtensions(
+-      content::RenderProcessHost* host,
+-      extensions::XWalkExtensionVector* extensions) override;
+-  void CreateExtensionThreadExtensions(
+-      content::RenderProcessHost* host,
+-      extensions::XWalkExtensionVector* extensions) override;
+-
+   std::unique_ptr<application::ApplicationSystem> app_system_;
+ };
+ 
+diff --git a/runtime/browser/runtime.cc b/runtime/browser/runtime.cc
+index 0ea9630..f2e2324 100644
+--- a/runtime/browser/runtime.cc
++++ b/runtime/browser/runtime.cc
+@@ -69,11 +69,6 @@ Runtime::Runtime(content::WebContents* web_contents)
+       observer_(nullptr),
+       weak_ptr_factory_(this) {
+   web_contents_->SetDelegate(this);
+-#if !defined(OS_ANDROID)
+-  if (XWalkBrowserContext::GetDefault()->save_form_data())
+-    xwalk_autofill_manager_.reset(
+-        new XWalkAutofillManager(web_contents_.get()));
+-#endif
+ }
+ 
+ Runtime::~Runtime() {
+diff --git a/runtime/browser/runtime.h b/runtime/browser/runtime.h
+index 09fdbce..2bda65e 100644
+--- a/runtime/browser/runtime.h
++++ b/runtime/browser/runtime.h
+@@ -187,9 +187,6 @@ class Runtime : public content::WebContentsDelegate,
+   base::ThreadChecker thread_checker_;
+ 
+   std::unique_ptr<content::WebContents> web_contents_;
+-#if !defined(OS_ANDROID)
+-  std::unique_ptr<XWalkAutofillManager> xwalk_autofill_manager_;
+-#endif
+ 
+   gfx::Image app_icon_;
+ 
+diff --git a/runtime/browser/storage_component.cc b/runtime/browser/storage_component.cc
+index 0f46b09..f53f196 100644
+--- a/runtime/browser/storage_component.cc
++++ b/runtime/browser/storage_component.cc
+@@ -13,15 +13,15 @@ StorageComponent::StorageComponent()
+ }
+ 
+ StorageComponent::~StorageComponent() {
+-  if (native_file_system_extension_) {
+-    delete native_file_system_extension_;
+-  }
++  //if (native_file_system_extension_) {
++  //  delete native_file_system_extension_;
++  //}
+ }
+ 
+ void StorageComponent::CreateExtensionThreadExtensions(
+     content::RenderProcessHost* host,
+     extensions::XWalkExtensionVector* extensions) {
+-  extensions->push_back(new experimental::NativeFileSystemExtension(host));
++  //extensions->push_back(new experimental::NativeFileSystemExtension(host));
+ }
+ 
+ }  // namespace xwalk
+diff --git a/runtime/browser/xwalk_browser_context.cc b/runtime/browser/xwalk_browser_context.cc
+index a74d74f..41b13cb 100644
+--- a/runtime/browser/xwalk_browser_context.cc
++++ b/runtime/browser/xwalk_browser_context.cc
+@@ -92,8 +92,6 @@ XWalkBrowserContext::XWalkBrowserContext()
+     : resource_context_(new RuntimeResourceContext),
+     save_form_data_(true) {
+   InitWhileIOAllowed();
+-  InitFormDatabaseService();
+-  InitVisitedLinkMaster();
+   CHECK(!g_browser_context);
+   g_browser_context = this;
+ }
+@@ -265,12 +263,6 @@ net::URLRequestContextGetter* XWalkBrowserContext::CreateRequestContext(
+   if (url_request_getter_)
+     return url_request_getter_.get();
+ 
+-  protocol_handlers->insert(std::pair<std::string,
+-        linked_ptr<net::URLRequestJobFactory::ProtocolHandler> >(
+-          application::kApplicationScheme,
+-          application::CreateApplicationProtocolHandler(
+-              application_service_)));
+-
+   url_request_getter_ = new RuntimeURLRequestContextGetter(
+       false, /* ignore_certificate_error = false */
+       GetPath(),
+@@ -295,13 +287,6 @@ net::URLRequestContextGetter*
+   if (iter != context_getters_.end())
+     return iter->second.get();
+ 
+-  application::ApplicationService* service =
+-      XWalkRunner::GetInstance()->app_system()->application_service();
+-  protocol_handlers->insert(std::pair<std::string,
+-        linked_ptr<net::URLRequestJobFactory::ProtocolHandler> >(
+-          application::kApplicationScheme,
+-          application::CreateApplicationProtocolHandler(service)));
+-
+   scoped_refptr<RuntimeURLRequestContextGetter>
+   context_getter = new RuntimeURLRequestContextGetter(
+       false, /* ignore_certificate_error = false */
+@@ -340,10 +325,6 @@ XWalkBrowserContext::CreateMediaRequestContextForStoragePartition(
+ #endif
+ }
+ 
+-XWalkFormDatabaseService* XWalkBrowserContext::GetFormDatabaseService() {
+-  return form_database_service_.get();
+-}
+-
+ // Create user pref service for autofill functionality.
+ void XWalkBrowserContext::CreateUserPrefServiceIfNecessary() {
+   if (user_pref_service_) return;
+@@ -371,16 +352,6 @@ void XWalkBrowserContext::UpdateAcceptLanguages(
+     url_request_getter_->UpdateAcceptLanguages(accept_languages);
+ }
+ 
+-void XWalkBrowserContext::InitFormDatabaseService() {
+-  base::FilePath user_data_dir;
+-#if defined(OS_ANDROID)
+-  CHECK(PathService::Get(base::DIR_ANDROID_APP_DATA, &user_data_dir));
+-#elif defined(OS_WIN)
+-  CHECK(PathService::Get(base::DIR_APP_DATA, &user_data_dir));
+-#endif
+-  form_database_service_.reset(new XWalkFormDatabaseService(user_data_dir));
+-}
+-
+ #if defined(OS_ANDROID)
+ void XWalkBrowserContext::SetCSPString(const std::string& csp) {
+   // Check format of csp string.
+@@ -401,15 +372,7 @@ std::string XWalkBrowserContext::GetCSPString() const {
+ }
+ #endif
+ 
+-void XWalkBrowserContext::InitVisitedLinkMaster() {
+-  visitedlink_master_.reset(
+-      new visitedlink::VisitedLinkMaster(this, this, false));
+-  visitedlink_master_->Init();
+-}
+-
+ void XWalkBrowserContext::AddVisitedURLs(const std::vector<GURL>& urls) {
+-  DCHECK(visitedlink_master_.get());
+-  visitedlink_master_->AddURLs(urls);
+ }
+ 
+ void XWalkBrowserContext::RebuildTable(
+diff --git a/runtime/browser/xwalk_browser_context.h b/runtime/browser/xwalk_browser_context.h
+index 500fa6f..df3796f 100644
+--- a/runtime/browser/xwalk_browser_context.h
++++ b/runtime/browser/xwalk_browser_context.h
+@@ -92,8 +92,6 @@ class XWalkBrowserContext
+ 
+   RuntimeURLRequestContextGetter* GetURLRequestContextGetterById(
+       const std::string& pkg_id);
+-  void InitFormDatabaseService();
+-  XWalkFormDatabaseService* GetFormDatabaseService();
+   void CreateUserPrefServiceIfNecessary();
+   void UpdateAcceptLanguages(const std::string& accept_languages);
+   void set_save_form_data(bool enable) { save_form_data_ = enable; }
+@@ -126,20 +124,15 @@ class XWalkBrowserContext
+   // allowed on the current thread.
+   void InitWhileIOAllowed();
+ 
+-  // Reset visitedlink master and initialize it.
+-  void InitVisitedLinkMaster();
+-
+   application::ApplicationService* application_service_;
+   std::unique_ptr<RuntimeResourceContext> resource_context_;
+   scoped_refptr<RuntimeDownloadManagerDelegate> download_manager_delegate_;
+   scoped_refptr<RuntimeURLRequestContextGetter> url_request_getter_;
+   std::unique_ptr<PrefService> user_pref_service_;
+-  std::unique_ptr<XWalkFormDatabaseService> form_database_service_;
+   bool save_form_data_;
+ #if defined(OS_ANDROID)
+   std::string csp_;
+ #endif
+-  std::unique_ptr<visitedlink::VisitedLinkMaster> visitedlink_master_;
+ 
+   typedef std::map<base::FilePath::StringType,
+       scoped_refptr<RuntimeURLRequestContextGetter> >
+diff --git a/runtime/browser/xwalk_browser_main_parts.cc b/runtime/browser/xwalk_browser_main_parts.cc
+index fa38cde..e8cd1d9 100644
+--- a/runtime/browser/xwalk_browser_main_parts.cc
++++ b/runtime/browser/xwalk_browser_main_parts.cc
+@@ -17,7 +17,6 @@
+ #include "base/strings/string_number_conversions.h"
+ #include "base/strings/utf_string_conversions.h"
+ #include "cc/base/switches.h"
+-#include "components/devtools_http_handler/devtools_http_handler.h"
+ #include "content/public/browser/browser_thread.h"
+ #include "content/public/common/content_switches.h"
+ #include "content/public/common/main_function_params.h"
+@@ -89,11 +88,9 @@ namespace xwalk {
+ XWalkBrowserMainParts::XWalkBrowserMainParts(
+     const content::MainFunctionParams& parameters)
+     : xwalk_runner_(XWalkRunner::GetInstance()),
+-      extension_service_(NULL),
+       startup_url_(url::kAboutBlankURL),
+       parameters_(parameters),
+-      run_default_message_loop_(true),
+-      devtools_http_handler_(nullptr) {
++      run_default_message_loop_(true) {
+ #if defined(OS_LINUX)
+   // FIXME: We disable the setuid sandbox on Linux because we don't ship
+   // the setuid binary. It is important to remember that the seccomp-bpf
+@@ -109,7 +106,6 @@ XWalkBrowserMainParts::XWalkBrowserMainParts(
+ }
+ 
+ XWalkBrowserMainParts::~XWalkBrowserMainParts() {
+-  DCHECK(!devtools_http_handler_);
+ }
+ 
+ void XWalkBrowserMainParts::PreMainMessageLoopStart() {
+@@ -123,14 +119,10 @@ void XWalkBrowserMainParts::PreMainMessageLoopStart() {
+   // FIXME: Add comment why this is needed on Android.
+   command_line->AppendSwitch(switches::kAllowFileAccessFromFiles);
+ 
+-  // Enable SIMD.JS API by default.
+-  std::string js_flags("--harmony-simd");
+   if (command_line->HasSwitch(switches::kJavaScriptFlags)) {
+-    js_flags += " ";
+-    js_flags +=
+-        command_line->GetSwitchValueASCII(switches::kJavaScriptFlags);
++    std::string js_flags = command_line->GetSwitchValueASCII(switches::kJavaScriptFlags);
++    command_line->AppendSwitchASCII(switches::kJavaScriptFlags, js_flags);
+   }
+-  command_line->AppendSwitchASCII(switches::kJavaScriptFlags, js_flags);
+   startup_url_ = GetURLFromCommandLine(*command_line);
+ }
+ 
+@@ -156,42 +148,9 @@ int XWalkBrowserMainParts::PreCreateThreads() {
+   return content::RESULT_CODE_NORMAL_EXIT;
+ }
+ 
+-void XWalkBrowserMainParts::RegisterExternalExtensions() {
+-  base::CommandLine* cmd_line = base::CommandLine::ForCurrentProcess();
+-  if (!cmd_line->HasSwitch(switches::kXWalkExternalExtensionsPath))
+-    return;
+-
+-  if (!cmd_line->HasSwitch(
+-          switches::kXWalkAllowExternalExtensionsForRemoteSources) &&
+-      (!startup_url_.is_empty() && !startup_url_.SchemeIsFile())) {
+-    VLOG(0) << "Unsupported scheme for external extensions: " <<
+-          startup_url_.scheme();
+-    return;
+-  }
+-
+-  base::FilePath extensions_dir =
+-      cmd_line->GetSwitchValuePath(switches::kXWalkExternalExtensionsPath);
+-  if (!base::DirectoryExists(extensions_dir)) {
+-    LOG(WARNING) << "Ignoring non-existent extension directory: "
+-                 << extensions_dir.AsUTF8Unsafe();
+-    return;
+-  }
+-
+-  extension_service_->RegisterExternalExtensionsForPath(extensions_dir);
+-}
+-
+ void XWalkBrowserMainParts::PreMainMessageLoopRun() {
+   xwalk_runner_->PreMainMessageLoopRun();
+ 
+-  devtools_http_handler_.reset(
+-      XWalkDevToolsManagerDelegate::CreateHttpHandler(
+-          xwalk_runner_->browser_context()));
+-
+-  extension_service_ = xwalk_runner_->extension_service();
+-
+-  if (extension_service_)
+-    RegisterExternalExtensions();
+-
+ #if !defined(DISABLE_NACL)
+   NaClBrowserDelegateImpl* delegate = new NaClBrowserDelegateImpl();
+   nacl::NaClBrowser::SetDelegate(delegate);
+@@ -239,9 +198,6 @@ void XWalkBrowserMainParts::PreMainMessageLoopRun() {
+     return;
+   }
+ 
+-  application::ApplicationSystem* app_system = xwalk_runner_->app_system();
+-  run_default_message_loop_ = app_system->LaunchFromCommandLine(
+-      *command_line, startup_url_);
+   // If the |ui_task| is specified in main function parameter, it indicates
+   // that we will run this UI task instead of running the the default main
+   // message loop. See |content::BrowserTestBase::SetUp| for |ui_task| usage
+@@ -262,17 +218,6 @@ bool XWalkBrowserMainParts::MainMessageLoopRun(int* result_code) {
+ 
+ void XWalkBrowserMainParts::PostMainMessageLoopRun() {
+   xwalk_runner_->PostMainMessageLoopRun();
+-  devtools_http_handler_.reset();
+-}
+-
+-void XWalkBrowserMainParts::CreateInternalExtensionsForUIThread(
+-    content::RenderProcessHost* host,
+-    extensions::XWalkExtensionVector* extensions) {
+-}
+-
+-void XWalkBrowserMainParts::CreateInternalExtensionsForExtensionThread(
+-    content::RenderProcessHost* host,
+-    extensions::XWalkExtensionVector* extensions) {
+ }
+ 
+ }  // namespace xwalk
+diff --git a/runtime/browser/xwalk_browser_main_parts.h b/runtime/browser/xwalk_browser_main_parts.h
+index 8e26a41..b309355 100644
+--- a/runtime/browser/xwalk_browser_main_parts.h
++++ b/runtime/browser/xwalk_browser_main_parts.h
+@@ -12,9 +12,6 @@
+ #include "content/public/browser/browser_main_parts.h"
+ #include "content/public/common/main_function_params.h"
+ #include "url/gurl.h"
+-#include "xwalk/extensions/browser/xwalk_extension_service.h"
+-#include "xwalk/extensions/common/xwalk_extension_permission_types.h"
+-#include "xwalk/extensions/common/xwalk_extension_vector.h"
+ 
+ namespace content {
+ class RenderProcessHost;
+@@ -26,18 +23,10 @@ class WMState;
+ }
+ #endif
+ 
+-namespace devtools_http_handler {
+-class DevToolsHttpHandler;
+-}
+-
+ namespace xwalk {
+ 
+ class XWalkRunner;
+ 
+-namespace extensions {
+-class XWalkExtensionService;
+-}
+-
+ class XWalkBrowserMainParts : public content::BrowserMainParts {
+  public:
+   explicit XWalkBrowserMainParts(
+@@ -54,27 +43,9 @@ class XWalkBrowserMainParts : public content::BrowserMainParts {
+   bool MainMessageLoopRun(int* result_code) override;
+   void PostMainMessageLoopRun() override;
+ 
+-  // Create all the extensions to be hooked into a new
+-  // RenderProcessHost. Base class implementation should be called by
+-  // subclasses overriding this..
+-  virtual void CreateInternalExtensionsForUIThread(
+-      content::RenderProcessHost* host,
+-      extensions::XWalkExtensionVector* extensions);
+-  virtual void CreateInternalExtensionsForExtensionThread(
+-      content::RenderProcessHost* host,
+-      extensions::XWalkExtensionVector* extensions);
+-
+-  devtools_http_handler::DevToolsHttpHandler* devtools_http_handler() {
+-    return devtools_http_handler_.get();
+-  }
+-
+  protected:
+-  void RegisterExternalExtensions();
+-
+   XWalkRunner* xwalk_runner_;
+ 
+-  extensions::XWalkExtensionService* extension_service_;
+-
+   // Should be about:blank If no URL is specified in command line arguments.
+   GURL startup_url_;
+ 
+@@ -84,8 +55,6 @@ class XWalkBrowserMainParts : public content::BrowserMainParts {
+   // True if we need to run the default message loop defined in content.
+   bool run_default_message_loop_;
+ 
+-  std::unique_ptr<devtools_http_handler::DevToolsHttpHandler> devtools_http_handler_;
+-
+  private:
+ #if defined(USE_AURA)
+   std::unique_ptr<wm::WMState> wm_state_;
+diff --git a/runtime/browser/xwalk_browser_main_parts_android.cc b/runtime/browser/xwalk_browser_main_parts_android.cc
+index cbdaf65..d208168 100644
+--- a/runtime/browser/xwalk_browser_main_parts_android.cc
++++ b/runtime/browser/xwalk_browser_main_parts_android.cc
+@@ -114,7 +114,6 @@ base::StringPiece PlatformResourceProvider(int key) {
+ namespace xwalk {
+ 
+ using content::BrowserThread;
+-using extensions::XWalkExtension;
+ 
+ void GetUserDataDir(base::FilePath* user_data_dir) {
+   if (!PathService::Get(base::DIR_ANDROID_APP_DATA, user_data_dir)) {
+@@ -146,9 +145,6 @@ void XWalkBrowserMainPartsAndroid::PreEarlyInitialization() {
+ 
+ void XWalkBrowserMainPartsAndroid::PreMainMessageLoopStart() {
+   base::CommandLine* command_line = base::CommandLine::ForCurrentProcess();
+-  // Disable ExtensionProcess for Android.
+-  // External extensions will run in the BrowserProcess (in process mode).
+-  command_line->AppendSwitch(switches::kXWalkDisableExtensionProcess);
+   // Enable viewport.
+   command_line->AppendSwitch(switches::kEnableViewport);
+   // Temporary fix for XWALK-7231
+@@ -194,8 +190,6 @@ void XWalkBrowserMainPartsAndroid::PreMainMessageLoopRun() {
+ 
+   xwalk_runner_->PreMainMessageLoopRun();
+ 
+-  extension_service_ = xwalk_runner_->extension_service();
+-
+   // Due to http://code.google.com/p/chromium/issues/detail?id=507809,
+   // it's not possible to inject javascript into the main world by default.
+   // So lift this limitation here to enable XWalkView.evaluateJavaScript
+@@ -220,44 +214,4 @@ void XWalkBrowserMainPartsAndroid::PostMainMessageLoopRun() {
+   base::MessageLoopForUI::current()->Start();
+ }
+ 
+-void XWalkBrowserMainPartsAndroid::CreateInternalExtensionsForExtensionThread(
+-    content::RenderProcessHost* host,
+-    extensions::XWalkExtensionVector* extensions) {
+-  // On Android part, the ownership of each extension object will be transferred
+-  // to XWalkExtensionServer after this method is called. It is a rule enforced
+-  // by extension system that XWalkExtensionServer must own the extension
+-  // objects and extension instances.
+-  extensions::XWalkExtensionVector::const_iterator it = extensions_.begin();
+-  for (; it != extensions_.end(); ++it)
+-    extensions->push_back(*it);
+-}
+-
+-void XWalkBrowserMainPartsAndroid::RegisterExtension(
+-    std::unique_ptr<XWalkExtension> extension) {
+-  // Since the creation of extension object is driven by Java side, and each
+-  // Java extension is backed by a native extension object. However, the Java
+-  // object may be destroyed by Android lifecycle management without destroying
+-  // the native side object. We keep the reference to native extension object
+-  // to make sure we can reuse the native object if Java extension is re-created
+-  // on resuming.
+-  extensions_.push_back(extension.release());
+-}
+-
+-XWalkExtension* XWalkBrowserMainPartsAndroid::LookupExtension(
+-    const std::string& name) {
+-  extensions::XWalkExtensionVector::const_iterator it = extensions_.begin();
+-  for (; it != extensions_.end(); ++it) {
+-    XWalkExtension* extension = *it;
+-    if (name == extension->name()) return extension;
+-  }
+-
+-  return NULL;
+-}
+-
+-void XWalkBrowserMainPartsAndroid::RegisterExtensionInPath(
+-    const std::string& path) {
+-  extension_service_->RegisterExternalExtensionsForPath(
+-      base::FilePath(path));
+-}
+-
+ }  // namespace xwalk
+diff --git a/runtime/browser/xwalk_browser_main_parts_android.h b/runtime/browser/xwalk_browser_main_parts_android.h
+index b78b0a5..114e42c 100644
+--- a/runtime/browser/xwalk_browser_main_parts_android.h
++++ b/runtime/browser/xwalk_browser_main_parts_android.h
+@@ -26,24 +26,7 @@ class XWalkBrowserMainPartsAndroid : public XWalkBrowserMainParts {
+   void PreMainMessageLoopRun() override;
+   void PostMainMessageLoopRun() override;
+ 
+-  void CreateInternalExtensionsForExtensionThread(
+-      content::RenderProcessHost* host,
+-      extensions::XWalkExtensionVector* extensions) override;
+-
+-  // XWalkExtensionAndroid needs to register its extensions on
+-  // XWalkBrowserMainParts so they get correctly registered on-demand
+-  // by XWalkExtensionService each time a in_process Server is created.
+-  void RegisterExtension(std::unique_ptr<extensions::XWalkExtension> extension);
+-
+-  // Lookup the extension with the given name from the extension list that is
+-  // already registered. Returns NULL if no such extension exists.
+-  extensions::XWalkExtension* LookupExtension(const std::string& name);
+-
+-  void RegisterExtensionInPath(const std::string& path);
+-
+  private:
+-  extensions::XWalkExtensionVector extensions_;
+-
+   DISALLOW_COPY_AND_ASSIGN(XWalkBrowserMainPartsAndroid);
+ };
+ 
+diff --git a/runtime/browser/xwalk_content_browser_client.cc b/runtime/browser/xwalk_content_browser_client.cc
+index 6ccfe2e..edc44a8 100644
+--- a/runtime/browser/xwalk_content_browser_client.cc
++++ b/runtime/browser/xwalk_content_browser_client.cc
+@@ -149,18 +149,6 @@ content::BrowserMainParts* XWalkContentBrowserClient::CreateBrowserMainParts(
+ // process we launch.
+ void XWalkContentBrowserClient::AppendExtraCommandLineSwitches(
+     base::CommandLine* command_line, int child_process_id) {
+-  const base::CommandLine& browser_process_cmd_line =
+-      *base::CommandLine::ForCurrentProcess();
+-  const char* extra_switches[] = {
+-    switches::kXWalkDisableExtensionProcess,
+-#if defined(ENABLE_PLUGINS)
+-    switches::kPpapiFlashPath,
+-    switches::kPpapiFlashVersion
+-#endif
+-  };
+-
+-  command_line->CopySwitchesFrom(
+-      browser_process_cmd_line, extra_switches, arraysize(extra_switches));
+ }
+ 
+ content::QuotaPermissionContext*
+@@ -347,7 +335,7 @@ void XWalkContentBrowserClient::ResourceDispatcherHostCreated() {
+ 
+ content::SpeechRecognitionManagerDelegate*
+     XWalkContentBrowserClient::CreateSpeechRecognitionManagerDelegate() {
+-  return new xwalk::XWalkSpeechRecognitionManagerDelegate();
++  return nullptr;
+ }
+ 
+ #if !defined(OS_ANDROID)
+@@ -413,9 +401,6 @@ content::PresentationServiceDelegate* XWalkContentBrowserClient::
+ #if defined(OS_WIN)
+   return XWalkPresentationServiceDelegateWin::
+       GetOrCreateForWebContents(web_contents);
+-#elif defined(OS_ANDROID)
+-  return XWalkPresentationServiceDelegateAndroid::
+-      GetOrCreateForWebContents(web_contents);
+ #else
+   return nullptr;
+ #endif
+diff --git a/runtime/browser/xwalk_permission_manager.cc b/runtime/browser/xwalk_permission_manager.cc
+index d892734..1f81a2d 100644
+--- a/runtime/browser/xwalk_permission_manager.cc
++++ b/runtime/browser/xwalk_permission_manager.cc
+@@ -59,11 +59,6 @@ XWalkPermissionManager::~XWalkPermissionManager() {
+ void XWalkPermissionManager::GetApplicationName(
+     content::RenderFrameHost* render_frame_host,
+     std::string* name) {
+-  application::Application* app =
+-      application_service_->GetApplicationByRenderHostID(
+-      render_frame_host->GetProcess()->GetID());
+-  if (app)
+-    *name = app->data()->Name();
+ }
+ 
+ int XWalkPermissionManager::RequestPermission(
+diff --git a/runtime/browser/xwalk_runner.cc b/runtime/browser/xwalk_runner.cc
+index bcf996c..71b6689 100644
+--- a/runtime/browser/xwalk_runner.cc
++++ b/runtime/browser/xwalk_runner.cc
+@@ -39,8 +39,7 @@ XWalkRunner* g_xwalk_runner = NULL;
+ 
+ }  // namespace
+ 
+-XWalkRunner::XWalkRunner()
+-    : app_component_(nullptr) {
++XWalkRunner::XWalkRunner() {
+   VLOG(1) << "Creating XWalkRunner object.";
+   DCHECK(!g_xwalk_runner);
+   g_xwalk_runner = this;
+@@ -64,41 +63,19 @@ XWalkRunner* XWalkRunner::GetInstance() {
+   return g_xwalk_runner;
+ }
+ 
+-application::ApplicationSystem* XWalkRunner::app_system() {
+-  return app_component_ ? app_component_->app_system() : NULL;
+-}
+-
+ void XWalkRunner::PreMainMessageLoopRun() {
+   browser_context_.reset(new XWalkBrowserContext);
+-  app_extension_bridge_.reset(new XWalkAppExtensionBridge());
+-
+-  base::CommandLine* cmd_line = base::CommandLine::ForCurrentProcess();
+-  if (!cmd_line->HasSwitch(switches::kXWalkDisableExtensions))
+-    extension_service_.reset(new extensions::XWalkExtensionService(
+-        app_extension_bridge_.get()));
+ 
+   CreateComponents();
+-  app_extension_bridge_->SetApplicationSystem(app_component_->app_system());
+-  browser_context_->set_application_service(
+-      app_system()->application_service());
+ }
+ 
+ void XWalkRunner::PostMainMessageLoopRun() {
+   DestroyComponents();
+-  extension_service_.reset();
+   browser_context_.reset();
+   DisableRemoteDebugging();
+ }
+ 
+ void XWalkRunner::CreateComponents() {
+-  std::unique_ptr<ApplicationComponent> app_component(CreateAppComponent());
+-  // Keep a reference as some code still needs to call
+-  // XWalkRunner::app_system().
+-  app_component_ = app_component.get();
+-  AddComponent(std::move(app_component));
+-
+-  if (XWalkRuntimeFeatures::isSysAppsEnabled())
+-    AddComponent(CreateSysAppsComponent());
+   if (XWalkRuntimeFeatures::isStorageAPIEnabled())
+     AddComponent(CreateStorageComponent());
+ }
+@@ -108,68 +85,17 @@ void XWalkRunner::DestroyComponents() {
+   // components are deleted before their dependencies by reversing the order.
+   std::reverse(components_.begin(), components_.end());
+   components_.clear();
+-
+-  app_component_ = NULL;
+ }
+ 
+ void XWalkRunner::AddComponent(std::unique_ptr<XWalkComponent> component) {
+   components_.push_back(component.release());
+ }
+ 
+-std::unique_ptr<ApplicationComponent> XWalkRunner::CreateAppComponent() {
+-  return base::WrapUnique(new ApplicationComponent(browser_context_.get()));
+-}
+-
+-std::unique_ptr<SysAppsComponent> XWalkRunner::CreateSysAppsComponent() {
+-  return base::WrapUnique(new SysAppsComponent());
+-}
+-
+ std::unique_ptr<StorageComponent> XWalkRunner::CreateStorageComponent() {
+   return base::WrapUnique(new StorageComponent());
+ }
+ 
+-void XWalkRunner::InitializeRuntimeVariablesForExtensions(
+-    const content::RenderProcessHost* host,
+-    base::DictionaryValue::Storage* variables) {
+-  application::Application* app = app_system()->application_service()->
+-      GetApplicationByRenderHostID(host->GetID());
+-
+-  if (app)
+-    (*variables)["app_id"] =
+-        base::WrapUnique(new base::StringValue(app->id()));
+-}
+-
+ void XWalkRunner::OnRenderProcessWillLaunch(content::RenderProcessHost* host) {
+-  if (!extension_service_)
+-    return;
+-
+-  std::vector<extensions::XWalkExtension*> ui_thread_extensions;
+-  std::vector<extensions::XWalkExtension*> extension_thread_extensions;
+-
+-  ScopedVector<XWalkComponent>::iterator it = components_.begin();
+-  for (; it != components_.end(); ++it) {
+-    XWalkComponent* component = *it;
+-    component->CreateUIThreadExtensions(host, &ui_thread_extensions);
+-    component->CreateExtensionThreadExtensions(
+-        host, &extension_thread_extensions);
+-  }
+-
+-  // TODO(cmarcelo): Once functionality is moved to components, remove
+-  // CreateInternalExtensions*() functions from XWalkBrowserMainParts.
+-  XWalkBrowserMainParts* main_parts = content_browser_client_->main_parts();
+-  main_parts->CreateInternalExtensionsForUIThread(
+-      host, &ui_thread_extensions);
+-  main_parts->CreateInternalExtensionsForExtensionThread(
+-      host, &extension_thread_extensions);
+-
+-  InitializeEnvironmentVariablesForGoogleAPIs(host);
+-
+-  std::unique_ptr<base::DictionaryValue::Storage>
+-      runtime_variables(new base::DictionaryValue::Storage);
+-  InitializeRuntimeVariablesForExtensions(host, runtime_variables.get());
+-  extension_service_->OnRenderProcessWillLaunch(
+-      host, &ui_thread_extensions, &extension_thread_extensions,
+-      std::move(runtime_variables));
+ }
+ 
+ void XWalkRunner::InitializeEnvironmentVariablesForGoogleAPIs(
+@@ -177,25 +103,12 @@ void XWalkRunner::InitializeEnvironmentVariablesForGoogleAPIs(
+ }
+ 
+ void XWalkRunner::OnRenderProcessHostGone(content::RenderProcessHost* host) {
+-  if (!extension_service_)
+-    return;
+-  extension_service_->OnRenderProcessDied(host);
+ }
+ 
+ void XWalkRunner::EnableRemoteDebugging(int port) {
+-  const char* local_ip = "0.0.0.0";
+-  if (port > 0 && port < 65535) {
+-    if (remote_debugging_server_.get() &&
+-        remote_debugging_server_.get()->port() == port)
+-      remote_debugging_server_.reset();
+-    remote_debugging_server_.reset(
+-        new RemoteDebuggingServer(browser_context(),
+-            local_ip, port, std::string()));
+-  }
+ }
+ 
+ void XWalkRunner::DisableRemoteDebugging() {
+-  remote_debugging_server_.reset();
+ }
+ 
+ // static
+diff --git a/runtime/browser/xwalk_runner.h b/runtime/browser/xwalk_runner.h
+index 5127fac..c28e2b5 100644
+--- a/runtime/browser/xwalk_runner.h
++++ b/runtime/browser/xwalk_runner.h
+@@ -22,22 +22,9 @@ class XWalkTestSuiteInitializer;
+ 
+ namespace xwalk {
+ 
+-class ApplicationComponent;
+-class RemoteDebuggingServer;
+-class SysAppsComponent;
+ class XWalkBrowserContext;
+ class XWalkComponent;
+ class XWalkContentBrowserClient;
+-class XWalkAppExtensionBridge;
+-
+-namespace application {
+-class Application;
+-class ApplicationSystem;
+-}
+-
+-namespace extensions {
+-class XWalkExtensionService;
+-};
+ 
+ // Main object for the Browser Process execution in Crosswalk. It is created and
+ // owned by XWalkMainDelegate. It's role is to own, setup and teardown all the
+@@ -69,10 +56,6 @@ class XWalkRunner {
+   //   object. Certain APIs doesn't allow us to pass the dependencies, so we
+   //   need to reach them some way.
+   XWalkBrowserContext* browser_context() { return browser_context_.get(); }
+-  application::ApplicationSystem* app_system();
+-  extensions::XWalkExtensionService* extension_service() {
+-    return extension_service_.get();
+-  }
+ 
+   // Stages of main parts. See content/browser_main_parts.h for description.
+   virtual void PreMainMessageLoopRun();
+@@ -94,16 +77,9 @@ class XWalkRunner {
+ 
+   // These specific factory functions are used to allow ports to customize
+   // components.
+-  virtual std::unique_ptr<ApplicationComponent> CreateAppComponent();
+-  virtual std::unique_ptr<SysAppsComponent> CreateSysAppsComponent();
+   virtual std::unique_ptr<StorageComponent> CreateStorageComponent();
+ 
+  protected:
+-  // These variables are used to export some values from the browser process
+-  // side to the extension side, such as application IDs and whatnot.
+-  virtual void InitializeRuntimeVariablesForExtensions(
+-      const content::RenderProcessHost* host,
+-      base::DictionaryValue::Storage* runtime_variables);
+   virtual void InitializeEnvironmentVariablesForGoogleAPIs(
+       content::RenderProcessHost* host);
+ 
+@@ -111,9 +87,6 @@ class XWalkRunner {
+   friend class XWalkMainDelegate;
+   friend class ::XWalkTestSuiteInitializer;
+ 
+-  // To track OnRenderProcessHostGone.
+-  friend class application::Application;
+-
+   // This class acts as an "arm" of XWalkRunner to fulfill Content API needs,
+   // it may call us back in some situations where the a more wider view of the
+   // objects is necessary, e.g. during render process lifecycle callbacks.
+@@ -135,19 +108,12 @@ class XWalkRunner {
+ 
+   std::unique_ptr<XWalkContentBrowserClient> content_browser_client_;
+   std::unique_ptr<XWalkBrowserContext> browser_context_;
+-  std::unique_ptr<extensions::XWalkExtensionService> extension_service_;
+-  std::unique_ptr<XWalkAppExtensionBridge> app_extension_bridge_;
+ 
+   // XWalkRunner uses the XWalkComponent interface to be able to handle
+   // different subsystems and call them in specific situations, e.g. when
+   // extensions need to be created.
+   ScopedVector<XWalkComponent> components_;
+ 
+-  ApplicationComponent* app_component_;
+-
+-  // Remote debugger server.
+-  std::unique_ptr<RemoteDebuggingServer> remote_debugging_server_;
+-
+   DISALLOW_COPY_AND_ASSIGN(XWalkRunner);
+ };
+ 
+diff --git a/runtime/common/xwalk_content_client.cc b/runtime/common/xwalk_content_client.cc
+index 7d1e22f..8263ab6 100644
+--- a/runtime/common/xwalk_content_client.cc
++++ b/runtime/common/xwalk_content_client.cc
+@@ -208,16 +208,11 @@ void XWalkContentClient::AddAdditionalSchemes(
+     std::vector<url::SchemeWithType>* standard_schemes,
+     std::vector<url::SchemeWithType>* referrer_schemes,
+     std::vector<std::string>* savable_schemes) {
+-  url::SchemeWithType app_scheme = {application::kApplicationScheme,
+-                                    url::SCHEME_WITHOUT_PORT};
+-  standard_schemes->push_back(app_scheme);
+-  savable_schemes->push_back(application::kApplicationScheme);
+ }
+ 
+ void XWalkContentClient::AddSecureSchemesAndOrigins(
+     std::set<std::string>* schemes,
+     std::set<GURL>* origins) {
+-    schemes->insert(application::kApplicationScheme);
+ }
+ 
+ std::string XWalkContentClient::GetProcessTypeNameInEnglish(int type) {
+diff --git a/runtime/renderer/xwalk_content_renderer_client.cc b/runtime/renderer/xwalk_content_renderer_client.cc
+index dbd8846..5ce9b5b 100644
+--- a/runtime/renderer/xwalk_content_renderer_client.cc
++++ b/runtime/renderer/xwalk_content_renderer_client.cc
+@@ -7,16 +7,13 @@
+ 
+ #include "base/command_line.h"
+ #include "base/strings/utf_string_conversions.h"
+-#include "components/autofill/content/renderer/autofill_agent.h"
+-#include "components/autofill/content/renderer/password_autofill_agent.h"
+-#include "components/visitedlink/renderer/visitedlink_slave.h"
+ #include "content/public/renderer/render_frame.h"
+ #include "content/public/renderer/render_frame_observer.h"
+ #include "content/public/renderer/render_frame_observer_tracker.h"
+ #include "content/public/renderer/render_thread.h"
+ #include "content/public/renderer/render_view.h"
+-#include "grit/xwalk_application_resources.h"
+-#include "grit/xwalk_sysapps_resources.h"
++//#include "grit/xwalk_application_resources.h"
++//#include "grit/xwalk_sysapps_resources.h"
+ #include "net/base/net_errors.h"
+ #include "third_party/WebKit/public/platform/WebString.h"
+ #include "third_party/WebKit/public/platform/WebURLError.h"
+@@ -70,15 +67,15 @@ class XWalkFrameHelper
+   // RenderFrameObserver implementation.
+   void DidCreateScriptContext(v8::Handle<v8::Context> context,
+                               int extension_group, int world_id) override {
+-    if (extension_controller_)
++    /*if (extension_controller_)
+       extension_controller_->DidCreateScriptContext(
+-          render_frame()->GetWebFrame(), context);
++          render_frame()->GetWebFrame(), context);*/
+   }
+   void WillReleaseScriptContext(v8::Handle<v8::Context> context,
+                                 int world_id) override {
+-    if (extension_controller_)
++    /*if (extension_controller_)
+       extension_controller_->WillReleaseScriptContext(
+-          render_frame()->GetWebFrame(), context);
++          render_frame()->GetWebFrame(), context);*/
+   }
+ 
+   void OnDestruct() override {
+@@ -110,18 +107,12 @@ void XWalkContentRendererClient::RenderThreadStarted() {
+   content::RenderThread* thread = content::RenderThread::Get();
+   xwalk_render_thread_observer_.reset(new XWalkRenderThreadObserver);
+   thread->AddObserver(xwalk_render_thread_observer_.get());
+-  visited_link_slave_.reset(new visitedlink::VisitedLinkSlave);
+-  thread->AddObserver(visited_link_slave_.get());
+ 
+-  base::CommandLine* cmd_line = base::CommandLine::ForCurrentProcess();
++  /*base::CommandLine* cmd_line = base::CommandLine::ForCurrentProcess();
+   if (!cmd_line->HasSwitch(switches::kXWalkDisableExtensions))
+     extension_controller_.reset(
+-        new extensions::XWalkExtensionRendererController(this));
++        new extensions::XWalkExtensionRendererController(this));*/
+ 
+-  blink::WebString application_scheme(
+-      base::ASCIIToUTF16(application::kApplicationScheme));
+-  blink::WebSecurityPolicy::registerURLSchemeAsSecure(application_scheme);
+-  blink::WebSecurityPolicy::registerURLSchemeAsCORSEnabled(application_scheme);
+ #if defined(OS_ANDROID)
+   blink::WebString content_scheme(
+       base::ASCIIToUTF16(xwalk::kContentScheme));
+@@ -214,11 +205,6 @@ void XWalkContentRendererClient::RenderFrameCreated(
+         parent_frame->GetRoutingID(), render_frame->GetRoutingID()));
+   }
+ #endif
+-  // TODO(sgurun) do not create a password autofill agent (change
+-  // autofill agent to store a weakptr).
+-  autofill::PasswordAutofillAgent* password_autofill_agent =
+-      new autofill::PasswordAutofillAgent(render_frame);
+-  new autofill::AutofillAgent(render_frame, password_autofill_agent, nullptr);
+ }
+ 
+ void XWalkContentRendererClient::RenderViewCreated(
+@@ -230,7 +216,7 @@ void XWalkContentRendererClient::RenderViewCreated(
+ 
+ void XWalkContentRendererClient::DidCreateModuleSystem(
+     extensions::XWalkModuleSystem* module_system) {
+-  std::unique_ptr<extensions::XWalkNativeModule> app_module(
++  /*std::unique_ptr<extensions::XWalkNativeModule> app_module(
+       new application::ApplicationNativeModule());
+   module_system->RegisterNativeModule("application", std::move(app_module));
+   std::unique_ptr<extensions::XWalkNativeModule> isolated_file_system_module(
+@@ -241,7 +227,7 @@ void XWalkContentRendererClient::DidCreateModuleSystem(
+       extensions::CreateJSModuleFromResource(IDR_XWALK_SYSAPPS_COMMON_API));
+   module_system->RegisterNativeModule("widget_common",
+       extensions::CreateJSModuleFromResource(
+-          IDR_XWALK_APPLICATION_WIDGET_COMMON_API));
++          IDR_XWALK_APPLICATION_WIDGET_COMMON_API));*/
+ }
+ 
+ bool XWalkContentRendererClient::IsExternalPepperPlugin(
+@@ -252,15 +238,6 @@ bool XWalkContentRendererClient::IsExternalPepperPlugin(
+   return module_name == "Native Client";
+ }
+ 
+-unsigned long long XWalkContentRendererClient::VisitedLinkHash(
+-    const char* canonical_url, size_t length) {
+-  return visited_link_slave_->ComputeURLFingerprint(canonical_url, length);
+-}
+-
+-bool XWalkContentRendererClient::IsLinkVisited(unsigned long long link_hash) {
+-  return visited_link_slave_->IsVisited(link_hash);
+-}
+-
+ bool XWalkContentRendererClient::WillSendRequest(blink::WebFrame* frame,
+                      ui::PageTransition transition_type,
+                      const GURL& url,
+diff --git a/runtime/renderer/xwalk_content_renderer_client.h b/runtime/renderer/xwalk_content_renderer_client.h
+index c4a9c30..bfa9c39 100644
+--- a/runtime/renderer/xwalk_content_renderer_client.h
++++ b/runtime/renderer/xwalk_content_renderer_client.h
+@@ -22,10 +22,6 @@
+ #include "xwalk/runtime/renderer/xwalk_render_thread_observer_generic.h"
+ #endif
+ 
+-namespace visitedlink {
+-class VisitedLinkSlave;
+-}
+-
+ namespace xwalk {
+ 
+ class XWalkRenderThreadObserver;
+@@ -46,9 +42,6 @@ class XWalkContentRendererClient
+   void RenderFrameCreated(content::RenderFrame* render_frame) override;
+   void RenderViewCreated(content::RenderView* render_view) override;
+   bool IsExternalPepperPlugin(const std::string& module_name) override;
+-  unsigned long long VisitedLinkHash(const char* canonical_url,
+-                                     size_t length) override;
+-  bool IsLinkVisited(unsigned long long link_hash) override;
+ 
+   bool WillSendRequest(blink::WebFrame* frame,
+                        ui::PageTransition transition_type,
+@@ -81,8 +74,6 @@ class XWalkContentRendererClient
+   std::unique_ptr<extensions::XWalkExtensionRendererController>
+       extension_controller_;
+ 
+-  std::unique_ptr<visitedlink::VisitedLinkSlave> visited_link_slave_;
+-
+   void GetNavigationErrorStrings(
+       content::RenderFrame* render_frame,
+       const blink::WebURLRequest& failed_request,
+diff --git a/tools/reflection_generator/reflection_generator.py b/tools/reflection_generator/reflection_generator.py
+index 4ae7369..3976e38 100755
+--- a/tools/reflection_generator/reflection_generator.py
++++ b/tools/reflection_generator/reflection_generator.py
+@@ -35,15 +35,15 @@ CLASSES_TO_PROCESS = [
+     'CustomViewCallbackInternal',
+     'XWalkCookieManagerInternal',
+     'XWalkDownloadListenerInternal',
+-    'XWalkExtensionInternal',
+-    'XWalkExternalExtensionManagerInternal',
++    #'XWalkExtensionInternal',
++    #'XWalkExternalExtensionManagerInternal',
+     'XWalkFindListenerInternal',
+     'XWalkGetBitmapCallbackInternal',
+     'XWalkHttpAuthHandlerInternal',
+     'XWalkHttpAuthInternal',
+     'XWalkJavascriptResultHandlerInternal',
+     'XWalkJavascriptResultInternal',
+-    'XWalkNativeExtensionLoaderInternal',
++    #'XWalkNativeExtensionLoaderInternal',
+     'XWalkNavigationHistoryInternal',
+     'XWalkNavigationItemInternal',
+     'XWalkPreferencesInternal',
+@@ -52,7 +52,7 @@ CLASSES_TO_PROCESS = [
+     'XWalkUIClientInternal',
+     'XWalkHitTestResultInternal',
+     'XWalkViewInternal',
+-    'XWalkViewDatabaseInternal',
++    #'XWalkViewDatabaseInternal',
+     'XWalkWebResourceRequestHandlerInternal',
+     'XWalkWebResourceRequestInternal',
+     'XWalkWebResourceResponseInternal',
+diff --git a/xwalk_android.gypi b/xwalk_android.gypi
+index 06971dd..a0ebc89 100644
+--- a/xwalk_android.gypi
++++ b/xwalk_android.gypi
+@@ -13,8 +13,6 @@
+         '../components/components.gyp:cdm_browser',
+         '../components/components.gyp:cdm_renderer',
+         '../components/components.gyp:navigation_interception',
+-        '../components/components.gyp:visitedlink_browser',
+-        '../components/components.gyp:visitedlink_renderer',
+         '../components/components.gyp:web_contents_delegate_android',
+         '../skia/skia.gyp:skia',
+         '../mojo/mojo_public.gyp:mojo_cpp_bindings',
+@@ -178,16 +176,16 @@
+       },
+       'sources': [
+         'runtime/android/core_internal/src/org/xwalk/core/internal/AndroidProtocolHandler.java',
+-        'runtime/android/core_internal/src/org/xwalk/core/internal/XWalkAutofillClientAndroid.java',
++        #'runtime/android/core_internal/src/org/xwalk/core/internal/XWalkAutofillClientAndroid.java',
+         'runtime/android/core_internal/src/org/xwalk/core/internal/XWalkContent.java',
+         'runtime/android/core_internal/src/org/xwalk/core/internal/XWalkContentLifecycleNotifier.java',
+         'runtime/android/core_internal/src/org/xwalk/core/internal/XWalkContentsClientBridge.java',
+         'runtime/android/core_internal/src/org/xwalk/core/internal/XWalkContentsIoThreadClient.java',
+         'runtime/android/core_internal/src/org/xwalk/core/internal/XWalkCookieManagerInternal.java',
+-        'runtime/android/core_internal/src/org/xwalk/core/internal/XWalkDevToolsServer.java',
++        #'runtime/android/core_internal/src/org/xwalk/core/internal/XWalkDevToolsServer.java',
+         'runtime/android/core_internal/src/org/xwalk/core/internal/XWalkHttpAuthHandlerInternal.java',
+         'runtime/android/core_internal/src/org/xwalk/core/internal/XWalkPathHelper.java',
+-        'runtime/android/core_internal/src/org/xwalk/core/internal/XWalkPresentationHost.java',
++        #'runtime/android/core_internal/src/org/xwalk/core/internal/XWalkPresentationHost.java',
+         'runtime/android/core_internal/src/org/xwalk/core/internal/XWalkSettingsInternal.java',
+         'runtime/android/core_internal/src/org/xwalk/core/internal/XWalkViewDelegate.java',
+         'runtime/android/core_internal/src/org/xwalk/core/internal/XWalkWebContentsDelegate.java',
+@@ -216,8 +214,8 @@
+         'jni_gen_package': 'xwalk',
+       },
+       'sources': [
+-        'extensions/android/java/src/org/xwalk/core/internal/extensions/XWalkExtensionAndroid.java',
+-        'extensions/android/java/src/org/xwalk/core/internal/extensions/XWalkNativeExtensionLoaderAndroid.java',
++        #'extensions/android/java/src/org/xwalk/core/internal/extensions/XWalkExtensionAndroid.java',
++        #'extensions/android/java/src/org/xwalk/core/internal/extensions/XWalkNativeExtensionLoaderAndroid.java',
+       ],
+       'includes': ['../build/jni_generator.gypi'],
+     },
+diff --git a/xwalk_core_library_android.gypi b/xwalk_core_library_android.gypi
+index bcc0651..3f0f0a8 100644
+--- a/xwalk_core_library_android.gypi
++++ b/xwalk_core_library_android.gypi
+@@ -22,17 +22,17 @@
+           '<(DEPTH)/xwalk/runtime/android/core/src/org/xwalk/core/XWalkInitializer.java',
+           '<(DEPTH)/xwalk/runtime/android/core/src/org/xwalk/core/XWalkFileChooser.java',
+           '<(DEPTH)/xwalk/runtime/android/core/src/org/xwalk/core/XWalkUpdater.java',
+-          '<(DEPTH)/xwalk/runtime/android/core/src/org/xwalk/core/extension/XWalkExtensionContextClient.java',
+-          '<(DEPTH)/xwalk/runtime/android/core/src/org/xwalk/core/extension/XWalkExternalExtension.java',
++          #'<(DEPTH)/xwalk/runtime/android/core/src/org/xwalk/core/extension/XWalkExtensionContextClient.java',
++          #'<(DEPTH)/xwalk/runtime/android/core/src/org/xwalk/core/extension/XWalkExternalExtension.java',
+           '>(reflection_gen_dir)/wrapper/org/xwalk/core/ClientCertRequest.java',
+           '>(reflection_gen_dir)/wrapper/org/xwalk/core/XWalkCookieManager.java',
+           '>(reflection_gen_dir)/wrapper/org/xwalk/core/XWalkDownloadListener.java',
+-          '>(reflection_gen_dir)/wrapper/org/xwalk/core/XWalkExternalExtensionManager.java',
++          #'>(reflection_gen_dir)/wrapper/org/xwalk/core/XWalkExternalExtensionManager.java',
+           '>(reflection_gen_dir)/wrapper/org/xwalk/core/XWalkFindListener.java',
+           '>(reflection_gen_dir)/wrapper/org/xwalk/core/XWalkGetBitmapCallback.java',
+           '>(reflection_gen_dir)/wrapper/org/xwalk/core/XWalkHttpAuthHandler.java',
+           '>(reflection_gen_dir)/wrapper/org/xwalk/core/XWalkJavascriptResult.java',
+-          '>(reflection_gen_dir)/wrapper/org/xwalk/core/XWalkNativeExtensionLoader.java',
++          #'>(reflection_gen_dir)/wrapper/org/xwalk/core/XWalkNativeExtensionLoader.java',
+           '>(reflection_gen_dir)/wrapper/org/xwalk/core/XWalkNavigationHistory.java',
+           '>(reflection_gen_dir)/wrapper/org/xwalk/core/XWalkNavigationItem.java',
+           '>(reflection_gen_dir)/wrapper/org/xwalk/core/XWalkPreferences.java',
