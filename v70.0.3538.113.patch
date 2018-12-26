@@ -1,0 +1,3350 @@
+diff --git a/android_webview/BUILD.gn b/android_webview/BUILD.gn
+index 25b7ec9..c4d64a6 100644
+--- a/android_webview/BUILD.gn
++++ b/android_webview/BUILD.gn
+@@ -9,7 +9,7 @@ import("//build/config/android/chrome_version.gni")
+ import("//build/config/android/config.gni")
+ import("//build/config/android/rules.gni")
+ import("//build/config/locales.gni")
+-import("//components/spellcheck/spellcheck_build_features.gni")
++#import("//components/spellcheck/spellcheck_build_features.gni")
+ import("//tools/grit/repack.gni")
+ import("//tools/resources/generate_resource_whitelist.gni")
+ import("//tools/v8_context_snapshot/v8_context_snapshot.gni")
+@@ -35,7 +35,7 @@ group("android_webview") {
+ generate_jni("native_jni") {
+   sources = [
+     "java/src/org/chromium/android_webview/AndroidProtocolHandler.java",
+-    "java/src/org/chromium/android_webview/AwAutofillClient.java",
++    #"java/src/org/chromium/android_webview/AwAutofillClient.java",
+     "java/src/org/chromium/android_webview/AwBrowserProcess.java",
+     "java/src/org/chromium/android_webview/AwContents.java",
+     "java/src/org/chromium/android_webview/AwContentsBackgroundThreadClient.java",
+@@ -45,12 +45,12 @@ generate_jni("native_jni") {
+     "java/src/org/chromium/android_webview/AwContentsStatics.java",
+     "java/src/org/chromium/android_webview/AwCookieManager.java",
+     "java/src/org/chromium/android_webview/AwDebug.java",
+-    "java/src/org/chromium/android_webview/AwDevToolsServer.java",
++    #"java/src/org/chromium/android_webview/AwDevToolsServer.java",
+     "java/src/org/chromium/android_webview/AwFormDatabase.java",
+     "java/src/org/chromium/android_webview/AwGLFunctor.java",
+     "java/src/org/chromium/android_webview/AwHttpAuthHandler.java",
+-    "java/src/org/chromium/android_webview/AwMetricsLogUploader.java",
+-    "java/src/org/chromium/android_webview/AwMetricsServiceClient.java",
++    #"java/src/org/chromium/android_webview/AwMetricsLogUploader.java",
++    #"java/src/org/chromium/android_webview/AwMetricsServiceClient.java",
+     "java/src/org/chromium/android_webview/AwPdfExporter.java",
+     "java/src/org/chromium/android_webview/AwPicture.java",
+     "java/src/org/chromium/android_webview/AwQuotaManagerBridge.java",
+@@ -58,7 +58,7 @@ generate_jni("native_jni") {
+     "java/src/org/chromium/android_webview/AwResource.java",
+     "java/src/org/chromium/android_webview/AwSettings.java",
+     "java/src/org/chromium/android_webview/AwTokenBindingManager.java",
+-    "java/src/org/chromium/android_webview/AwTracingController.java",
++    #"java/src/org/chromium/android_webview/AwTracingController.java",
+     "java/src/org/chromium/android_webview/AwVariationsSeedBridge.java",
+     "java/src/org/chromium/android_webview/AwWebContentsDelegate.java",
+     "java/src/org/chromium/android_webview/AwWebResourceResponse.java",
+@@ -209,7 +209,7 @@ android_assets("monochrome_webview_assets") {
+ 
+ java_group("assets") {
+   deps = [
+-    ":license_assets",
++    # ":license_assets",
+     ":locale_pak_assets",
+     ":monochrome_webview_assets",
+     ":pak_file_assets",
+@@ -218,7 +218,7 @@ java_group("assets") {
+ 
+ java_group("stub_assets") {
+   deps = [
+-    ":license_assets",
++    # ":license_assets",
+   ]
+ }
+ 
+@@ -386,7 +386,7 @@ source_set("webview_entry_point") {
+   ]
+ }
+ 
+-shared_library("libwebviewchromium") {
++shared_library("libwebcr") {
+   deps = [
+     ":webview_entry_point",
+   ]
+@@ -441,9 +441,9 @@ if (android_64bit_target_cpu) {
+ if (enable_resource_whitelist_generation) {
+   generate_resource_whitelist("system_webview_pak_whitelist") {
+     deps = [
+-      ":libwebviewchromium",
++      ":libwebcr",
+     ]
+-    input = "$root_out_dir/lib.unstripped/libwebviewchromium$shlib_extension"
++    input = "$root_out_dir/lib.unstripped/libwebcr$shlib_extension"
+     output = system_webview_pak_whitelist
+   }
+ }
+@@ -452,15 +452,13 @@ source_set("common") {
+   sources = [
+     "browser/android_protocol_handler.cc",
+     "browser/android_protocol_handler.h",
+-    "browser/aw_autofill_client.cc",
+-    "browser/aw_autofill_client.h",
++    #"browser/aw_autofill_client.cc",
++    #"browser/aw_autofill_client.h",
+     "browser/aw_browser_context.cc",
+     "browser/aw_browser_context.h",
+     "browser/aw_browser_main_parts.cc",
+     "browser/aw_browser_main_parts.h",
+     "browser/aw_browser_permission_request_delegate.h",
+-    "browser/aw_browser_policy_connector.cc",
+-    "browser/aw_browser_policy_connector.h",
+     "browser/aw_browser_terminator.cc",
+     "browser/aw_browser_terminator.h",
+     "browser/aw_content_browser_client.cc",
+@@ -474,20 +472,18 @@ source_set("common") {
+     "browser/aw_contents_lifecycle_notifier.cc",
+     "browser/aw_contents_lifecycle_notifier.h",
+     "browser/aw_contents_statics.cc",
+-    "browser/aw_cookie_access_policy.cc",
+-    "browser/aw_cookie_access_policy.h",
+     "browser/aw_debug.cc",
+-    "browser/aw_devtools_manager_delegate.cc",
+-    "browser/aw_devtools_manager_delegate.h",
+-    "browser/aw_devtools_server.cc",
+-    "browser/aw_devtools_server.h",
++    #"browser/aw_devtools_manager_delegate.cc",
++    #"browser/aw_devtools_manager_delegate.h",
++    #"browser/aw_devtools_server.cc",
++    #"browser/aw_devtools_server.h",
+     "browser/aw_download_manager_delegate.cc",
+     "browser/aw_download_manager_delegate.h",
+     "browser/aw_field_trial_creator.cc",
+     "browser/aw_field_trial_creator.h",
+-    "browser/aw_form_database.cc",
+-    "browser/aw_form_database_service.cc",
+-    "browser/aw_form_database_service.h",
++    #"browser/aw_form_database.cc",
++    #"browser/aw_form_database_service.cc",
++    #"browser/aw_form_database_service.h",
+     "browser/aw_gl_functor.cc",
+     "browser/aw_gl_functor.h",
+     "browser/aw_gl_surface.cc",
+@@ -500,10 +496,10 @@ source_set("common") {
+     "browser/aw_login_delegate.h",
+     "browser/aw_media_url_interceptor.cc",
+     "browser/aw_media_url_interceptor.h",
+-    "browser/aw_metrics_log_uploader.cc",
+-    "browser/aw_metrics_log_uploader.h",
+-    "browser/aw_metrics_service_client.cc",
+-    "browser/aw_metrics_service_client.h",
++    #"browser/aw_metrics_log_uploader.cc",
++    #"browser/aw_metrics_log_uploader.h",
++    #"browser/aw_metrics_service_client.cc",
++    #"browser/aw_metrics_service_client.h",
+     "browser/aw_pdf_exporter.cc",
+     "browser/aw_pdf_exporter.h",
+     "browser/aw_permission_manager.cc",
+@@ -526,20 +522,20 @@ source_set("common") {
+     "browser/aw_renderer_priority.h",
+     "browser/aw_resource_context.cc",
+     "browser/aw_resource_context.h",
+-    "browser/aw_safe_browsing_blocking_page.cc",
+-    "browser/aw_safe_browsing_blocking_page.h",
+-    "browser/aw_safe_browsing_resource_throttle.cc",
+-    "browser/aw_safe_browsing_resource_throttle.h",
+-    "browser/aw_safe_browsing_ui_manager.cc",
+-    "browser/aw_safe_browsing_ui_manager.h",
+-    "browser/aw_safe_browsing_whitelist_manager.cc",
+-    "browser/aw_safe_browsing_whitelist_manager.h",
++    #"browser/aw_safe_browsing_blocking_page.cc",
++    #"browser/aw_safe_browsing_blocking_page.h",
++    #"browser/aw_safe_browsing_resource_throttle.cc",
++    #"browser/aw_safe_browsing_resource_throttle.h",
++    #"browser/aw_safe_browsing_ui_manager.cc",
++    #"browser/aw_safe_browsing_ui_manager.h",
++    #"browser/aw_safe_browsing_whitelist_manager.cc",
++    #"browser/aw_safe_browsing_whitelist_manager.h",
+     "browser/aw_settings.cc",
+     "browser/aw_settings.h",
+     "browser/aw_ssl_host_state_delegate.cc",
+     "browser/aw_ssl_host_state_delegate.h",
+-    "browser/aw_url_checker_delegate_impl.cc",
+-    "browser/aw_url_checker_delegate_impl.h",
++    #"browser/aw_url_checker_delegate_impl.cc",
++    #"browser/aw_url_checker_delegate_impl.h",
+     "browser/aw_variations_seed_bridge.cc",
+     "browser/aw_variations_seed_bridge.h",
+     "browser/aw_variations_service_client.cc",
+@@ -640,12 +636,12 @@ source_set("common") {
+     "browser/surfaces_instance.cc",
+     "browser/surfaces_instance.h",
+     "browser/token_binding_manager_bridge.cc",
+-    "browser/tracing/aw_trace_event_args_whitelist.cc",
+-    "browser/tracing/aw_trace_event_args_whitelist.h",
+-    "browser/tracing/aw_tracing_controller.cc",
+-    "browser/tracing/aw_tracing_controller.h",
+-    "browser/tracing/aw_tracing_delegate.cc",
+-    "browser/tracing/aw_tracing_delegate.h",
++    #"browser/tracing/aw_trace_event_args_whitelist.cc",
++    #"browser/tracing/aw_trace_event_args_whitelist.h",
++    #"browser/tracing/aw_tracing_controller.cc",
++    #"browser/tracing/aw_tracing_controller.h",
++    #"browser/tracing/aw_tracing_delegate.cc",
++    #"browser/tracing/aw_tracing_delegate.h",
+     "common/android_webview_message_generator.cc",
+     "common/android_webview_message_generator.h",
+     "common/aw_channel.cc",
+@@ -694,10 +690,6 @@ source_set("common") {
+     "renderer/aw_render_thread_observer.h",
+     "renderer/aw_render_view_ext.cc",
+     "renderer/aw_render_view_ext.h",
+-    "renderer/aw_url_loader_throttle_provider.cc",
+-    "renderer/aw_url_loader_throttle_provider.h",
+-    "renderer/aw_websocket_handshake_throttle_provider.cc",
+-    "renderer/aw_websocket_handshake_throttle_provider.h",
+     "renderer/print_render_frame_observer.cc",
+     "renderer/print_render_frame_observer.h",
+     "utility/aw_content_utility_client.cc",
+@@ -711,44 +703,40 @@ source_set("common") {
+     ":native_jni",
+     "//base",
+     "//base/third_party/dynamic_annotations:dynamic_annotations",
+-    "//components/autofill/android:provider",
+-    "//components/autofill/content/browser",
+-    "//components/autofill/content/renderer",
++    #"//components/autofill/android:provider",
++    #"//components/autofill/content/browser",
++    #"//components/autofill/content/renderer",
+     "//components/cdm/browser",
+     "//components/cdm/renderer",
+     "//components/crash/content/app",
+     "//components/crash/content/browser",
+     "//components/download/public/common:public",
+     "//components/embedder_support/android:web_contents_delegate",
+-    "//components/google/core/browser",
+-    "//components/heap_profiling",
++    #"//components/google/core/browser",
++    #"//components/heap_profiling",
+     "//components/keyed_service/content",
+-    "//components/metrics",
+-    "//components/metrics:gpu",
+-    "//components/metrics:net",
+-    "//components/metrics:ui",
++    #"//components/metrics",
++    #"//components/metrics:gpu",
++    #"//components/metrics:net",
++    #"//components/metrics:ui",
+     "//components/minidump_uploader",
+     "//components/navigation_interception",
+     "//components/network_session_configurator/common",
+-    "//components/policy:generated",
+-    "//components/policy/content/",
+-    "//components/policy/core/browser",
+-    "//components/policy/core/common",
+     "//components/prefs",
+     "//components/printing/browser",
+     "//components/printing/common",
+     "//components/printing/renderer",
+-    "//components/safe_browsing",
+-    "//components/safe_browsing/android:safe_browsing_mobile",
+-    "//components/safe_browsing/browser",
+-    "//components/safe_browsing/common",
+-    "//components/safe_browsing/renderer:throttles",
+-    "//components/safe_browsing/triggers",
+-    "//components/safe_browsing/web_ui",
+-    "//components/services/heap_profiling",
+-    "//components/services/heap_profiling/public/cpp",
+-    "//components/services/heap_profiling/public/mojom",
+-    "//components/spellcheck:buildflags",
++    #"//components/safe_browsing",
++    #"//components/safe_browsing/android:safe_browsing_mobile",
++    #"//components/safe_browsing/browser",
++    #"//components/safe_browsing/common",
++    #"//components/safe_browsing/renderer:throttles",
++    #"//components/safe_browsing/triggers",
++    #"//components/safe_browsing/web_ui",
++    #"//components/services/heap_profiling",
++    #"//components/services/heap_profiling/public/cpp",
++    #"//components/services/heap_profiling/public/mojom",
++    #"//components/spellcheck:buildflags",
+     "//components/supervised_user_error_page",
+     "//components/supervised_user_error_page:gin",
+     "//components/url_matcher",
+@@ -792,12 +780,12 @@ source_set("common") {
+     "//v8",
+   ]
+ 
+-  if (enable_spellcheck) {
+-    deps += [
+-      "//components/spellcheck/browser",
+-      "//components/spellcheck/renderer",
+-    ]
+-  }
++  #if (enable_spellcheck) {
++  #  deps += [
++  #    "//components/spellcheck/browser",
++  #    "//components/spellcheck/renderer",
++  #  ]
++  #}
+ 
+   configs += [
+     "//tools/v8_context_snapshot:use_v8_context_snapshot",
+@@ -810,12 +798,12 @@ source_set("common") {
+ android_library("android_webview_java") {
+   java_files = [
+     "java/src/org/chromium/android_webview/AndroidProtocolHandler.java",
+-    "java/src/org/chromium/android_webview/AutofillActionModeCallback.java",
++    #"java/src/org/chromium/android_webview/AutofillActionModeCallback.java",
+     "java/src/org/chromium/android_webview/AwActionModeCallback.java",
+-    "java/src/org/chromium/android_webview/AwAutofillClient.java",
+-    "java/src/org/chromium/android_webview/AwAutofillManager.java",
+-    "java/src/org/chromium/android_webview/AwAutofillProvider.java",
+-    "java/src/org/chromium/android_webview/AwAutofillUMA.java",
++    #"java/src/org/chromium/android_webview/AwAutofillClient.java",
++    #"java/src/org/chromium/android_webview/AwAutofillManager.java",
++    #"java/src/org/chromium/android_webview/AwAutofillProvider.java",
++    #"java/src/org/chromium/android_webview/AwAutofillUMA.java",
+     "java/src/org/chromium/android_webview/AwBrowserContext.java",
+     "java/src/org/chromium/android_webview/AwBrowserProcess.java",
+     "java/src/org/chromium/android_webview/AwContents.java",
+@@ -829,25 +817,25 @@ android_library("android_webview_java") {
+     "java/src/org/chromium/android_webview/AwContentsStatics.java",
+     "java/src/org/chromium/android_webview/AwCookieManager.java",
+     "java/src/org/chromium/android_webview/AwDebug.java",
+-    "java/src/org/chromium/android_webview/AwDevToolsServer.java",
+-    "java/src/org/chromium/android_webview/AwFormDatabase.java",
++    #"java/src/org/chromium/android_webview/AwDevToolsServer.java",
++    #"java/src/org/chromium/android_webview/AwFormDatabase.java",
+     "java/src/org/chromium/android_webview/AwGeolocationPermissions.java",
+     "java/src/org/chromium/android_webview/AwGLFunctor.java",
+     "java/src/org/chromium/android_webview/AwHttpAuthHandler.java",
+     "java/src/org/chromium/android_webview/AwLayoutSizer.java",
+-    "java/src/org/chromium/android_webview/AwMetricsLogUploader.java",
+-    "java/src/org/chromium/android_webview/AwMetricsServiceClient.java",
++    #"java/src/org/chromium/android_webview/AwMetricsLogUploader.java",
++    #"java/src/org/chromium/android_webview/AwMetricsServiceClient.java",
+     "java/src/org/chromium/android_webview/AwNetworkChangeNotifierRegistrationPolicy.java",
+     "java/src/org/chromium/android_webview/AwPdfExporter.java",
+     "java/src/org/chromium/android_webview/AwPicture.java",
+     "java/src/org/chromium/android_webview/AwPrintDocumentAdapter.java",
+-    "java/src/org/chromium/android_webview/AwSafeBrowsingConfigHelper.java",
+-    "java/src/org/chromium/android_webview/AwSafeBrowsingResponse.java",
++    #"java/src/org/chromium/android_webview/AwSafeBrowsingConfigHelper.java",
++    #"java/src/org/chromium/android_webview/AwSafeBrowsingResponse.java",
+     "java/src/org/chromium/android_webview/AwQuotaManagerBridge.java",
+     "java/src/org/chromium/android_webview/AwRenderProcessGoneDetail.java",
+     "java/src/org/chromium/android_webview/AwResource.java",
+     "java/src/org/chromium/android_webview/AwRenderProcess.java",
+-    "java/src/org/chromium/android_webview/AwSafeBrowsingConversionHelper.java",
++    #"java/src/org/chromium/android_webview/AwSafeBrowsingConversionHelper.java",
+     "java/src/org/chromium/android_webview/AwScrollOffsetManager.java",
+     "java/src/org/chromium/android_webview/AwServiceWorkerClient.java",
+     "java/src/org/chromium/android_webview/AwServiceWorkerController.java",
+@@ -856,7 +844,7 @@ android_library("android_webview_java") {
+     "java/src/org/chromium/android_webview/AwSupportLibIsomorphic.java",
+     "java/src/org/chromium/android_webview/AwSwitches.java",
+     "java/src/org/chromium/android_webview/AwTokenBindingManager.java",
+-    "java/src/org/chromium/android_webview/AwTracingController.java",
++    #"java/src/org/chromium/android_webview/AwTracingController.java",
+     "java/src/org/chromium/android_webview/AwViewMethods.java",
+     "java/src/org/chromium/android_webview/AwViewAndroidDelegate.java",
+     "java/src/org/chromium/android_webview/AwVariationsSeedBridge.java",
+@@ -889,7 +877,6 @@ android_library("android_webview_java") {
+     "java/src/org/chromium/android_webview/WebViewChromiumRunQueue.java",
+     "java/src/org/chromium/android_webview/permission/AwGeolocationCallback.java",
+     "java/src/org/chromium/android_webview/permission/AwPermissionRequest.java",
+-    "java/src/org/chromium/android_webview/policy/AwPolicyProvider.java",
+   ]
+   deps = [
+     ":android_webview_commandline_java",
+@@ -900,15 +887,14 @@ android_library("android_webview_java") {
+     ":strings_grd",
+     ":system_webview_manifest",
+     "//base:base_java",
+-    "//components/autofill/android:autofill_java",
+-    "//components/autofill/android:provider_java",
++    #"//components/autofill/android:autofill_java",
++    #"//components/autofill/android:provider_java",
+     "//components/background_task_scheduler:background_task_scheduler_task_ids_java",
+     "//components/crash/android:java",
+     "//components/embedder_support/android:web_contents_delegate_java",
+     "//components/minidump_uploader:minidump_uploader_java",
+     "//components/navigation_interception/android:navigation_interception_java",
+-    "//components/policy/android:policy_java",
+-    "//components/safe_browsing/android:safe_browsing_java",
++    #"//components/safe_browsing/android:safe_browsing_java",
+     "//components/variations:load_seed_result_enum_java",
+     "//components/variations/android:variations_java",
+     "//components/version_info/android:version_constants_java",
+@@ -921,16 +907,16 @@ android_library("android_webview_java") {
+     "//ui/android:ui_java",
+   ]
+ 
+-  if (enable_spellcheck) {
+-    deps += [ "//components/spellcheck/browser/android:java" ]
+-  }
++  #if (enable_spellcheck) {
++  #  deps += [ "//components/spellcheck/browser/android:java" ]
++  #}
+ 
+   srcjar_deps = [
+     ":aw_permission_request_resource",
+     ":android_webview_java_enums_srcjar",
+     ":aw_error_ui",
+-    ":aw_safe_browsing_action",
+-    "//components/safe_browsing/db:sb_threat_values",
++    #":aw_safe_browsing_action",
++    #"//components/safe_browsing/db:sb_threat_values",
+   ]
+ 
+   android_manifest_for_lint = system_webview_android_manifest
+@@ -1090,3 +1076,20 @@ if (public_android_sdk) {
+     apk_name = "SystemWebView"
+   }
+ }
++
++dist_aar("awlite") {
++  deps = [
++    ":libwebcr",
++    ":platform_service_bridge_upstream_implementation_java",
++    ":system_webview_resources",
++    "//android_webview/glue",
++    "//android_webview/support_library:support_lib_glue_java",
++  ]
++  native_libraries = [
++    "$root_out_dir/libwebcr$shlib_extension"
++  ]
++  #android_manifest = "AndroidManifest.xml"
++  direct_deps_only = true
++  output = "$root_build_dir/awlite.aar"
++}
++
+diff --git a/android_webview/apk/java/AndroidManifest.xml b/android_webview/apk/java/AndroidManifest.xml
+index 94264a9..3ebbbb3 100644
+--- a/android_webview/apk/java/AndroidManifest.xml
++++ b/android_webview/apk/java/AndroidManifest.xml
+@@ -61,7 +61,7 @@
+                          android:process=":webview_service" />
+             {% endif %}
+         {% endmacro %}
+-        {{ common(package|default('com.android.webview'), library|default('libwebviewchromium.so')) }}
++        {{ common(package|default('com.android.webview'), library|default('libwebcr.so')) }}
+         {% if donor_package is defined %}
+             <meta-data android:name="com.android.webview.WebViewDonorPackage"
+                        android:value="{{ donor_package }}" />
+diff --git a/android_webview/browser/aw_browser_context.cc b/android_webview/browser/aw_browser_context.cc
+index d557160..a2812fb 100644
+--- a/android_webview/browser/aw_browser_context.cc
++++ b/android_webview/browser/aw_browser_context.cc
+@@ -7,14 +7,11 @@
+ #include <memory>
+ #include <utility>
+ 
+-#include "android_webview/browser/aw_browser_policy_connector.h"
+ #include "android_webview/browser/aw_download_manager_delegate.h"
+-#include "android_webview/browser/aw_form_database_service.h"
+ #include "android_webview/browser/aw_metrics_service_client.h"
+ #include "android_webview/browser/aw_permission_manager.h"
+ #include "android_webview/browser/aw_quota_manager_bridge.h"
+ #include "android_webview/browser/aw_resource_context.h"
+-#include "android_webview/browser/aw_safe_browsing_whitelist_manager.h"
+ #include "android_webview/browser/aw_web_ui_controller_factory.h"
+ #include "android_webview/browser/net/aw_url_request_context_getter.h"
+ #include "android_webview/common/aw_content_client.h"
+@@ -23,18 +20,12 @@
+ #include "base/path_service.h"
+ #include "base/single_thread_task_runner.h"
+ #include "base/task/post_task.h"
+-#include "components/autofill/core/common/autofill_prefs.h"
+ #include "components/metrics/metrics_service.h"
+-#include "components/policy/core/browser/browser_policy_connector_base.h"
+-#include "components/policy/core/browser/configuration_policy_pref_store.h"
+-#include "components/policy/core/browser/url_blacklist_manager.h"
+ #include "components/pref_registry/pref_registry_syncable.h"
+ #include "components/prefs/in_memory_pref_store.h"
+ #include "components/prefs/json_pref_store.h"
+ #include "components/prefs/pref_service.h"
+ #include "components/prefs/pref_service_factory.h"
+-#include "components/safe_browsing/common/safe_browsing_prefs.h"
+-#include "components/safe_browsing/triggers/trigger_manager.h"
+ #include "components/url_formatter/url_fixer.h"
+ #include "components/user_prefs/user_prefs.h"
+ #include "components/visitedlink/browser/visitedlink_master.h"
+@@ -96,18 +87,6 @@ std::unique_ptr<net::ProxyConfigServiceAndroid> CreateProxyConfigService() {
+   return config_service_android;
+ }
+ 
+-std::unique_ptr<AwSafeBrowsingWhitelistManager>
+-CreateSafeBrowsingWhitelistManager() {
+-  // Should not be called until the end of PreMainMessageLoopRun,
+-  scoped_refptr<base::SequencedTaskRunner> background_task_runner =
+-      base::CreateSequencedTaskRunnerWithTraits(
+-          {base::MayBlock(), base::TaskPriority::BEST_EFFORT});
+-  scoped_refptr<base::SingleThreadTaskRunner> io_task_runner =
+-      BrowserThread::GetTaskRunnerForThread(BrowserThread::IO);
+-  return std::make_unique<AwSafeBrowsingWhitelistManager>(
+-      background_task_runner, io_task_runner);
+-}
+-
+ base::FilePath GetCacheDirForAw() {
+   FilePath cache_path;
+   base::PathService::Get(base::DIR_CACHE, &cache_path);
+@@ -151,8 +130,6 @@ AwBrowserContext* AwBrowserContext::FromWebContents(
+ void AwBrowserContext::PreMainMessageLoopRun(net::NetLog* net_log) {
+   FilePath cache_path = GetCacheDirForAw();
+ 
+-  browser_policy_connector_.reset(new AwBrowserPolicyConnector());
+-
+   InitUserPrefService();
+ 
+   url_request_context_getter_ = new AwURLRequestContextGetter(
+@@ -167,16 +144,8 @@ void AwBrowserContext::PreMainMessageLoopRun(net::NetLog* net_log) {
+       new visitedlink::VisitedLinkMaster(this, this, false));
+   visitedlink_master_->Init();
+ 
+-  form_database_service_.reset(
+-      new AwFormDatabaseService(context_storage_path_));
+-
+   EnsureResourceContextInitialized(this);
+ 
+-  AwMetricsServiceClient::GetInstance()->Initialize(
+-      user_pref_service_.get(),
+-      content::BrowserContext::GetDefaultStoragePartition(this)
+-          ->GetURLRequestContext());
+-
+   web_restriction_provider_.reset(
+       new web_restrictions::WebRestrictionsClient());
+   pref_change_registrar_.Add(
+@@ -186,17 +155,6 @@ void AwBrowserContext::PreMainMessageLoopRun(net::NetLog* net_log) {
+   web_restriction_provider_->SetAuthority(
+       user_pref_service_->GetString(prefs::kWebRestrictionsAuthority));
+ 
+-  safe_browsing_ui_manager_ = new AwSafeBrowsingUIManager(
+-      GetAwURLRequestContext(), user_pref_service_.get());
+-  safe_browsing_db_manager_ =
+-      new safe_browsing::RemoteSafeBrowsingDatabaseManager();
+-  safe_browsing_trigger_manager_ =
+-      std::make_unique<safe_browsing::TriggerManager>(
+-          safe_browsing_ui_manager_.get(),
+-          /*referrer_chain_provider=*/nullptr,
+-          /*local_state_prefs=*/nullptr);
+-  safe_browsing_whitelist_manager_ = CreateSafeBrowsingWhitelistManager();
+-
+   content::WebUIControllerFactory::RegisterFactory(
+       AwWebUIControllerFactory::GetInstance());
+ }
+@@ -218,10 +176,6 @@ AwQuotaManagerBridge* AwBrowserContext::GetQuotaManagerBridge() {
+   return quota_manager_bridge_.get();
+ }
+ 
+-AwFormDatabaseService* AwBrowserContext::GetFormDatabaseService() {
+-  return form_database_service_.get();
+-}
+-
+ AwURLRequestContextGetter* AwBrowserContext::GetAwURLRequestContext() {
+   return url_request_context_getter_.get();
+ }
+@@ -229,24 +183,12 @@ AwURLRequestContextGetter* AwBrowserContext::GetAwURLRequestContext() {
+ // Create user pref service
+ void AwBrowserContext::InitUserPrefService() {
+   auto pref_registry = base::MakeRefCounted<user_prefs::PrefRegistrySyncable>();
+-  // We only use the autocomplete feature of Autofill, which is controlled via
+-  // the manager_delegate. We don't use the rest of Autofill, which is why it is
+-  // hardcoded as disabled here.
+-  // TODO(crbug.com/873740): The following also disables autocomplete.
+-  // Investigate what the intended behavior is.
+-  pref_registry->RegisterBooleanPref(autofill::prefs::kAutofillProfileEnabled,
+-                                     false);
+-  pref_registry->RegisterBooleanPref(
+-      autofill::prefs::kAutofillCreditCardEnabled, false);
+-  policy::URLBlacklistManager::RegisterProfilePrefs(pref_registry.get());
+ 
+   pref_registry->RegisterStringPref(prefs::kWebRestrictionsAuthority,
+                                     std::string());
+ 
+   android_webview::AwURLRequestContextGetter::RegisterPrefs(
+       pref_registry.get());
+-  metrics::MetricsService::RegisterPrefs(pref_registry.get());
+-  safe_browsing::RegisterProfilePrefs(pref_registry.get());
+ 
+   PrefServiceFactory pref_service_factory;
+ 
+@@ -264,12 +206,6 @@ void AwBrowserContext::InitUserPrefService() {
+           base::MakeRefCounted<InMemoryPrefStore>(),
+           base::MakeRefCounted<JsonPrefStore>(GetPrefStorePath()),
+           persistent_prefs, /*validation_delegate=*/nullptr));
+-  pref_service_factory.set_managed_prefs(
+-      base::MakeRefCounted<policy::ConfigurationPolicyPrefStore>(
+-          browser_policy_connector_.get(),
+-          browser_policy_connector_->GetPolicyService(),
+-          browser_policy_connector_->GetHandlerList(),
+-          policy::POLICY_LEVEL_MANDATORY));
+   pref_service_factory.set_read_error_callback(
+       base::BindRepeating(&HandleReadError));
+   user_pref_service_ = pref_service_factory.Create(pref_registry);
+@@ -396,35 +332,6 @@ AwBrowserContext::GetWebRestrictionProvider() {
+   return web_restriction_provider_.get();
+ }
+ 
+-AwSafeBrowsingUIManager* AwBrowserContext::GetSafeBrowsingUIManager() const {
+-  return safe_browsing_ui_manager_.get();
+-}
+-
+-safe_browsing::RemoteSafeBrowsingDatabaseManager*
+-AwBrowserContext::GetSafeBrowsingDBManager() {
+-  DCHECK_CURRENTLY_ON(BrowserThread::IO);
+-  if (!safe_browsing_db_manager_started_) {
+-    // V4ProtocolConfig is not used. Just create one with empty values..
+-    safe_browsing::V4ProtocolConfig config("", false, "", "");
+-    safe_browsing_db_manager_->StartOnIOThread(
+-        safe_browsing_ui_manager_->GetURLLoaderFactoryOnIOThread(), config);
+-    safe_browsing_db_manager_started_ = true;
+-  }
+-  return safe_browsing_db_manager_.get();
+-}
+-
+-safe_browsing::TriggerManager* AwBrowserContext::GetSafeBrowsingTriggerManager()
+-    const {
+-  DCHECK_CURRENTLY_ON(BrowserThread::UI);
+-  return safe_browsing_trigger_manager_.get();
+-}
+-
+-AwSafeBrowsingWhitelistManager*
+-AwBrowserContext::GetSafeBrowsingWhitelistManager() const {
+-  // Should not be called until the end of PreMainMessageLoopRun,
+-  return safe_browsing_whitelist_manager_.get();
+-}
+-
+ void AwBrowserContext::RebuildTable(
+     const scoped_refptr<URLEnumerator>& enumerator) {
+   // Android WebView rebuilds from WebChromeClient.getVisitedHistory. The client
+diff --git a/android_webview/browser/aw_browser_context.h b/android_webview/browser/aw_browser_context.h
+index a435b06..24360d1 100644
+--- a/android_webview/browser/aw_browser_context.h
++++ b/android_webview/browser/aw_browser_context.h
+@@ -8,14 +8,12 @@
+ #include <memory>
+ #include <vector>
+ 
+-#include "android_webview/browser/aw_safe_browsing_ui_manager.h"
+ #include "android_webview/browser/aw_ssl_host_state_delegate.h"
+ #include "base/compiler_specific.h"
+ #include "base/files/file_path.h"
+ #include "base/macros.h"
+ #include "base/memory/ref_counted.h"
+ #include "components/prefs/pref_change_registrar.h"
+-#include "components/safe_browsing/android/remote_database_manager.h"
+ #include "components/visitedlink/browser/visitedlink_delegate.h"
+ #include "components/web_restrictions/browser/web_restrictions_client.h"
+ #include "content/public/browser/browser_context.h"
+@@ -83,7 +81,6 @@ class AwBrowserContext : public content::BrowserContext,
+   void AddVisitedURLs(const std::vector<GURL>& urls);
+ 
+   AwQuotaManagerBridge* GetQuotaManagerBridge();
+-  AwFormDatabaseService* GetFormDatabaseService();
+   AwURLRequestContextGetter* GetAwURLRequestContext();
+ 
+   web_restrictions::WebRestrictionsClient* GetWebRestrictionProvider();
+@@ -120,11 +117,6 @@ class AwBrowserContext : public content::BrowserContext,
+   // visitedlink::VisitedLinkDelegate implementation.
+   void RebuildTable(const scoped_refptr<URLEnumerator>& enumerator) override;
+ 
+-  AwSafeBrowsingUIManager* GetSafeBrowsingUIManager() const;
+-  safe_browsing::RemoteSafeBrowsingDatabaseManager* GetSafeBrowsingDBManager();
+-  safe_browsing::TriggerManager* GetSafeBrowsingTriggerManager() const;
+-  AwSafeBrowsingWhitelistManager* GetSafeBrowsingWhitelistManager() const;
+-
+  private:
+   void InitUserPrefService();
+   void OnWebRestrictionsAuthorityChanged();
+@@ -134,28 +126,17 @@ class AwBrowserContext : public content::BrowserContext,
+ 
+   scoped_refptr<AwURLRequestContextGetter> url_request_context_getter_;
+   scoped_refptr<AwQuotaManagerBridge> quota_manager_bridge_;
+-  std::unique_ptr<AwFormDatabaseService> form_database_service_;
+ 
+   std::unique_ptr<visitedlink::VisitedLinkMaster> visitedlink_master_;
+   std::unique_ptr<content::ResourceContext> resource_context_;
+ 
+   std::unique_ptr<PrefService> user_pref_service_;
+-  std::unique_ptr<policy::BrowserPolicyConnectorBase> browser_policy_connector_;
+   std::unique_ptr<AwSSLHostStateDelegate> ssl_host_state_delegate_;
+   std::unique_ptr<content::PermissionControllerDelegate> permission_manager_;
+   std::unique_ptr<web_restrictions::WebRestrictionsClient>
+       web_restriction_provider_;
+   PrefChangeRegistrar pref_change_registrar_;
+ 
+-  scoped_refptr<AwSafeBrowsingUIManager> safe_browsing_ui_manager_;
+-  std::unique_ptr<safe_browsing::TriggerManager> safe_browsing_trigger_manager_;
+-  scoped_refptr<safe_browsing::RemoteSafeBrowsingDatabaseManager>
+-      safe_browsing_db_manager_;
+-  bool safe_browsing_db_manager_started_ = false;
+-
+-  std::unique_ptr<AwSafeBrowsingWhitelistManager>
+-      safe_browsing_whitelist_manager_;
+-
+   DISALLOW_COPY_AND_ASSIGN(AwBrowserContext);
+ };
+ 
+diff --git a/android_webview/browser/aw_browser_main_parts.cc b/android_webview/browser/aw_browser_main_parts.cc
+index 4a37cc9f..341dfd3 100644
+--- a/android_webview/browser/aw_browser_main_parts.cc
++++ b/android_webview/browser/aw_browser_main_parts.cc
+@@ -28,8 +28,6 @@
+ #include "base/path_service.h"
+ #include "components/crash/content/browser/child_exit_observer_android.h"
+ #include "components/crash/content/browser/crash_dump_manager_android.h"
+-#include "components/heap_profiling/supervisor.h"
+-#include "components/services/heap_profiling/public/cpp/settings.h"
+ #include "content/public/browser/android/synchronous_compositor.h"
+ #include "content/public/browser/render_frame_host.h"
+ #include "content/public/browser/render_process_host.h"
+@@ -149,11 +147,6 @@ bool AwBrowserMainParts::MainMessageLoopRun(int* result_code) {
+ 
+ void AwBrowserMainParts::ServiceManagerConnectionStarted(
+     content::ServiceManagerConnection* connection) {
+-  heap_profiling::Mode mode = heap_profiling::GetModeForStartup();
+-  if (mode != heap_profiling::Mode::kNone) {
+-    heap_profiling::Supervisor::GetInstance()->Start(connection,
+-                                                     base::OnceClosure());
+-  }
+ }
+ 
+ }  // namespace android_webview
+diff --git a/android_webview/browser/aw_content_browser_client.cc b/android_webview/browser/aw_content_browser_client.cc
+index e5c9d537..00c59c3 100644
+--- a/android_webview/browser/aw_content_browser_client.cc
++++ b/android_webview/browser/aw_content_browser_client.cc
+@@ -18,7 +18,6 @@
+ #include "android_webview/browser/aw_printing_message_filter.h"
+ #include "android_webview/browser/aw_quota_permission_context.h"
+ #include "android_webview/browser/aw_settings.h"
+-#include "android_webview/browser/aw_url_checker_delegate_impl.h"
+ #include "android_webview/browser/aw_web_contents_view_delegate.h"
+ #include "android_webview/browser/net/aw_url_request_context_getter.h"
+ #include "android_webview/browser/renderer_host/aw_resource_dispatcher_host_delegate.h"
+@@ -40,16 +39,10 @@
+ #include "base/memory/ptr_util.h"
+ #include "base/path_service.h"
+ #include "base/strings/utf_string_conversions.h"
+-#include "components/autofill/content/browser/content_autofill_driver_factory.h"
+ #include "components/cdm/browser/cdm_message_filter_android.h"
+ #include "components/crash/content/browser/child_exit_observer_android.h"
+ #include "components/navigation_interception/intercept_navigation_delegate.h"
+ #include "components/policy/content/policy_blacklist_navigation_throttle.h"
+-#include "components/safe_browsing/browser/browser_url_loader_throttle.h"
+-#include "components/safe_browsing/browser/mojo_safe_browsing_impl.h"
+-#include "components/safe_browsing/features.h"
+-#include "components/services/heap_profiling/public/mojom/constants.mojom.h"
+-#include "components/spellcheck/spellcheck_buildflags.h"
+ #include "content/public/browser/browser_message_filter.h"
+ #include "content/public/browser/browser_thread.h"
+ #include "content/public/browser/child_process_security_policy.h"
+@@ -78,11 +71,6 @@
+ #include "ui/base/resource/resource_bundle_android.h"
+ #include "ui/resources/grit/ui_resources.h"
+ 
+-#if BUILDFLAG(ENABLE_SPELLCHECK)
+-#include "components/spellcheck/browser/spell_check_host_impl.h"
+-#include "components/spellcheck/common/spellcheck_switches.h"
+-#endif
+-
+ using content::BrowserThread;
+ using content::ResourceType;
+ using content::WebContents;
+@@ -176,11 +164,6 @@ void AwContentsMessageFilter::OnSubFrameCreated(int parent_render_frame_id,
+       process_id_, parent_render_frame_id, child_render_frame_id);
+ }
+ 
+-// A dummy binder for mojo interface autofill::mojom::PasswordManagerDriver.
+-void DummyBindPasswordManagerDriver(
+-    autofill::mojom::PasswordManagerDriverRequest request,
+-    content::RenderFrameHost* render_frame_host) {}
+-
+ }  // anonymous namespace
+ 
+ // TODO(yirui): can use similar logic as in PrependToAcceptLanguagesIfNecessary
+@@ -207,8 +190,6 @@ AwContentBrowserClient::AwContentBrowserClient() : net_log_(new net::NetLog()) {
+   // could still request this interface, so we register a dummy binder which
+   // just drops the incoming request, to avoid the 'Failed to locate a binder
+   // for interface' error log..
+-  frame_interfaces_.AddInterface(
+-      base::BindRepeating(&DummyBindPasswordManagerDriver));
+   sniff_file_urls_ = AwSettings::GetAllowSniffingFileUrls();
+ }
+ 
+@@ -334,12 +315,7 @@ bool AwContentBrowserClient::AllowGetCookie(const GURL& url,
+                                             content::ResourceContext* context,
+                                             int render_process_id,
+                                             int render_frame_id) {
+-  return AwCookieAccessPolicy::GetInstance()->AllowGetCookie(url,
+-                                                             first_party,
+-                                                             cookie_list,
+-                                                             context,
+-                                                             render_process_id,
+-                                                             render_frame_id);
++  return true;
+ }
+ 
+ bool AwContentBrowserClient::AllowSetCookie(const GURL& url,
+@@ -348,8 +324,7 @@ bool AwContentBrowserClient::AllowSetCookie(const GURL& url,
+                                             content::ResourceContext* context,
+                                             int render_process_id,
+                                             int render_frame_id) {
+-  return AwCookieAccessPolicy::GetInstance()->AllowSetCookie(
+-      url, first_party, cookie, context, render_process_id, render_frame_id);
++  return true;
+ }
+ 
+ void AwContentBrowserClient::AllowWorkerFileSystem(
+@@ -492,7 +467,7 @@ bool AwContentBrowserClient::IsPepperVpnProviderAPIAllowed(
+ }
+ 
+ content::TracingDelegate* AwContentBrowserClient::GetTracingDelegate() {
+-  return new AwTracingDelegate();
++  return nullptr;
+ }
+ 
+ void AwContentBrowserClient::GetAdditionalMappedFilesForChildProcess(
+@@ -534,15 +509,13 @@ AwContentBrowserClient::CreateThrottlesForNavigation(
+     throttles.push_back(
+         navigation_interception::InterceptNavigationDelegate::CreateThrottleFor(
+             navigation_handle));
+-    throttles.push_back(std::make_unique<PolicyBlacklistNavigationThrottle>(
+-        navigation_handle, browser_context_.get()));
+   }
+   return throttles;
+ }
+ 
+ content::DevToolsManagerDelegate*
+ AwContentBrowserClient::GetDevToolsManagerDelegate() {
+-  return new AwDevToolsManagerDelegate();
++  return nullptr;
+ }
+ 
+ std::unique_ptr<base::Value> AwContentBrowserClient::GetServiceManifestOverlay(
+@@ -575,12 +548,6 @@ bool AwContentBrowserClient::BindAssociatedInterfaceRequestFromFrame(
+     content::RenderFrameHost* render_frame_host,
+     const std::string& interface_name,
+     mojo::ScopedInterfaceEndpointHandle* handle) {
+-  if (interface_name == autofill::mojom::AutofillDriver::Name_) {
+-    autofill::ContentAutofillDriverFactory::BindAutofillDriver(
+-        autofill::mojom::AutofillDriverAssociatedRequest(std::move(*handle)),
+-        render_frame_host);
+-    return true;
+-  }
+ 
+   return false;
+ }
+@@ -589,24 +556,6 @@ void AwContentBrowserClient::ExposeInterfacesToRenderer(
+     service_manager::BinderRegistry* registry,
+     blink::AssociatedInterfaceRegistry* associated_registry,
+     content::RenderProcessHost* render_process_host) {
+-  if (base::FeatureList::IsEnabled(network::features::kNetworkService) ||
+-      base::FeatureList::IsEnabled(safe_browsing::kCheckByURLLoaderThrottle)) {
+-    content::ResourceContext* resource_context =
+-        render_process_host->GetBrowserContext()->GetResourceContext();
+-    registry->AddInterface(
+-        base::BindRepeating(
+-            &safe_browsing::MojoSafeBrowsingImpl::MaybeCreate,
+-            render_process_host->GetID(), resource_context,
+-            base::BindRepeating(
+-                &AwContentBrowserClient::GetSafeBrowsingUrlCheckerDelegate,
+-                base::Unretained(this))),
+-        BrowserThread::GetTaskRunnerForThread(BrowserThread::IO));
+-  }
+-#if BUILDFLAG(ENABLE_SPELLCHECK)
+-  registry->AddInterface(
+-      base::BindRepeating(&SpellCheckHostImpl::Create),
+-      BrowserThread::GetTaskRunnerForThread(BrowserThread::UI));
+-#endif
+ }
+ 
+ std::vector<std::unique_ptr<content::URLLoaderThrottle>>
+@@ -620,38 +569,9 @@ AwContentBrowserClient::CreateURLLoaderThrottles(
+ 
+   std::vector<std::unique_ptr<content::URLLoaderThrottle>> result;
+ 
+-  if (base::FeatureList::IsEnabled(network::features::kNetworkService) ||
+-      base::FeatureList::IsEnabled(safe_browsing::kCheckByURLLoaderThrottle)) {
+-    auto* delegate = GetSafeBrowsingUrlCheckerDelegate();
+-    if (delegate && !delegate->ShouldSkipRequestCheck(
+-                        resource_context, request.url, frame_tree_node_id,
+-                        -1 /* render_process_id */, -1 /* render_frame_id */,
+-                        request.originated_from_service_worker)) {
+-      auto safe_browsing_throttle =
+-          safe_browsing::BrowserURLLoaderThrottle::MaybeCreate(delegate,
+-                                                               wc_getter);
+-      if (safe_browsing_throttle)
+-        result.push_back(std::move(safe_browsing_throttle));
+-    }
+-  }
+-
+   return result;
+ }
+ 
+-safe_browsing::UrlCheckerDelegate*
+-AwContentBrowserClient::GetSafeBrowsingUrlCheckerDelegate() {
+-  DCHECK_CURRENTLY_ON(BrowserThread::IO);
+-
+-  if (!safe_browsing_url_checker_delegate_) {
+-    safe_browsing_url_checker_delegate_ = new AwUrlCheckerDelegateImpl(
+-        browser_context_->GetSafeBrowsingDBManager(),
+-        browser_context_->GetSafeBrowsingUIManager(),
+-        browser_context_->GetSafeBrowsingWhitelistManager());
+-  }
+-
+-  return safe_browsing_url_checker_delegate_.get();
+-}
+-
+ bool AwContentBrowserClient::ShouldOverrideUrlLoading(
+     int frame_tree_node_id,
+     bool browser_initiated,
+@@ -736,8 +656,6 @@ bool AwContentBrowserClient::HandleExternalProtocol(
+ 
+ void AwContentBrowserClient::RegisterOutOfProcessServices(
+     OutOfProcessServiceMap* services) {
+-  (*services)[heap_profiling::mojom::kServiceName] =
+-      base::BindRepeating(&base::ASCIIToUTF16, "Heap Profiling Service");
+ }
+ 
+ bool AwContentBrowserClient::ShouldEnableStrictSiteIsolation() {
+diff --git a/android_webview/browser/aw_content_browser_client.h b/android_webview/browser/aw_content_browser_client.h
+index 7f01296..e0e3600 100644
+--- a/android_webview/browser/aw_content_browser_client.h
++++ b/android_webview/browser/aw_content_browser_client.h
+@@ -23,10 +23,6 @@ namespace net {
+ class NetLog;
+ }
+ 
+-namespace safe_browsing {
+-class UrlCheckerDelegate;
+-}
+-
+ namespace android_webview {
+ 
+ class AwBrowserContext;
+@@ -196,8 +192,6 @@ class AwContentBrowserClient : public content::ContentBrowserClient {
+   static void DisableCreatingTaskScheduler();
+ 
+  private:
+-  safe_browsing::UrlCheckerDelegate* GetSafeBrowsingUrlCheckerDelegate();
+-
+   std::unique_ptr<net::NetLog> net_log_;
+ 
+   // Android WebView currently has a single global (non-off-the-record) browser
+@@ -207,9 +201,6 @@ class AwContentBrowserClient : public content::ContentBrowserClient {
+   service_manager::BinderRegistryWithArgs<content::RenderFrameHost*>
+       frame_interfaces_;
+ 
+-  scoped_refptr<safe_browsing::UrlCheckerDelegate>
+-      safe_browsing_url_checker_delegate_;
+-
+   bool sniff_file_urls_;
+ 
+   DISALLOW_COPY_AND_ASSIGN(AwContentBrowserClient);
+diff --git a/android_webview/browser/aw_contents.cc b/android_webview/browser/aw_contents.cc
+index 6e4d9f4..c43f457 100644
+--- a/android_webview/browser/aw_contents.cc
++++ b/android_webview/browser/aw_contents.cc
+@@ -8,7 +8,6 @@
+ #include <memory>
+ #include <utility>
+ 
+-#include "android_webview/browser/aw_autofill_client.h"
+ #include "android_webview/browser/aw_browser_context.h"
+ #include "android_webview/browser/aw_browser_main_parts.h"
+ #include "android_webview/browser/aw_contents_client_bridge.h"
+@@ -56,10 +55,6 @@
+ #include "base/supports_user_data.h"
+ #include "base/threading/thread_restrictions.h"
+ #include "base/threading/thread_task_runner_handle.h"
+-#include "components/autofill/android/autofill_provider_android.h"
+-#include "components/autofill/content/browser/content_autofill_driver_factory.h"
+-#include "components/autofill/core/browser/autofill_manager.h"
+-#include "components/autofill/core/browser/webdata/autofill_webdata_service.h"
+ #include "components/navigation_interception/intercept_navigation_delegate.h"
+ #include "content/public/browser/android/child_process_importance.h"
+ #include "content/public/browser/android/synchronous_compositor.h"
+@@ -89,10 +84,9 @@
+ #include "ui/gfx/geometry/rect_f.h"
+ #include "ui/gfx/geometry/size.h"
+ #include "ui/gfx/image/image.h"
++#include "ui/android/view_android.h"
+ struct AwDrawSWFunctionTable;
+ 
+-using autofill::ContentAutofillDriverFactory;
+-using autofill::AutofillManager;
+ using base::android::AttachCurrentThread;
+ using base::android::ConvertJavaStringToUTF16;
+ using base::android::ConvertJavaStringToUTF8;
+@@ -145,16 +139,6 @@ class AwContentsUserData : public base::SupportsUserData::Data {
+ 
+ base::subtle::Atomic32 g_instance_count = 0;
+ 
+-void JavaScriptResultCallbackForTesting(
+-    const ScopedJavaGlobalRef<jobject>& callback,
+-    const base::Value* result) {
+-  JNIEnv* env = base::android::AttachCurrentThread();
+-  std::string json;
+-  base::JSONWriter::Write(*result, &json);
+-  ScopedJavaLocalRef<jstring> j_json = ConvertUTF8ToJavaString(env, json);
+-  Java_AwContents_onEvaluateJavaScriptResultForTesting(env, j_json, callback);
+-}
+-
+ }  // namespace
+ 
+ class ScopedAllowInitGLBindings {
+@@ -218,13 +202,6 @@ AwBrowserPermissionRequestDelegate* AwBrowserPermissionRequestDelegate::FromID(
+ }
+ 
+ // static
+-AwSafeBrowsingUIManager::UIManagerClient*
+-AwSafeBrowsingUIManager::UIManagerClient::FromWebContents(
+-    WebContents* web_contents) {
+-  return AwContents::FromWebContents(web_contents);
+-}
+-
+-// static
+ AwRenderProcessGoneDelegate* AwRenderProcessGoneDelegate::FromWebContents(
+     content::WebContents* web_contents) {
+   return AwContents::FromWebContents(web_contents);
+@@ -261,10 +238,6 @@ AwContents::AwContents(std::unique_ptr<WebContents> web_contents)
+   permission_request_handler_.reset(
+       new PermissionRequestHandler(this, web_contents_.get()));
+ 
+-  AwAutofillClient* autofill_manager_delegate =
+-      AwAutofillClient::FromWebContents(web_contents_.get());
+-  if (autofill_manager_delegate)
+-    InitAutofillIfNecessary(autofill_manager_delegate->GetSaveFormData());
+   content::SynchronousCompositor::SetClientForWebContents(
+       web_contents_.get(), &browser_view_renderer_);
+   AwContentsLifecycleNotifier::OnWebViewCreated();
+@@ -277,8 +250,7 @@ void AwContents::SetJavaPeers(
+     const JavaParamRef<jobject>& web_contents_delegate,
+     const JavaParamRef<jobject>& contents_client_bridge,
+     const JavaParamRef<jobject>& io_thread_client,
+-    const JavaParamRef<jobject>& intercept_navigation_delegate,
+-    const JavaParamRef<jobject>& autofill_provider) {
++    const JavaParamRef<jobject>& intercept_navigation_delegate) {
+   DCHECK_CURRENTLY_ON(BrowserThread::UI);
+   // The |aw_content| param is technically spurious as it duplicates |obj| but
+   // is passed over anyway to make the binding more explicit.
+@@ -299,11 +271,6 @@ void AwContents::SetJavaPeers(
+       web_contents_.get(), std::make_unique<InterceptNavigationDelegate>(
+                                env, intercept_navigation_delegate));
+ 
+-  if (!autofill_provider.is_null()) {
+-    autofill_provider_ = std::make_unique<autofill::AutofillProviderAndroid>(
+-        autofill_provider, web_contents_.get());
+-  }
+-
+   // Finally, having setup the associations, release any deferred requests
+   for (content::RenderFrameHost* rfh : web_contents_->GetAllFrames()) {
+     int render_process_id = rfh->GetProcess()->GetID();
+@@ -315,47 +282,6 @@ void AwContents::SetJavaPeers(
+ 
+ void AwContents::SetSaveFormData(bool enabled) {
+   DCHECK_CURRENTLY_ON(BrowserThread::UI);
+-  InitAutofillIfNecessary(enabled);
+-  // We need to check for the existence, since autofill_manager_delegate
+-  // may not be created when the setting is false.
+-  if (AwAutofillClient::FromWebContents(web_contents_.get())) {
+-    AwAutofillClient::FromWebContents(web_contents_.get())
+-        ->SetSaveFormData(enabled);
+-  }
+-}
+-
+-void AwContents::InitAutofillIfNecessary(bool autocomplete_enabled) {
+-  // Check if the autofill driver factory already exists.
+-  content::WebContents* web_contents = web_contents_.get();
+-  if (ContentAutofillDriverFactory::FromWebContents(web_contents))
+-    return;
+-
+-  // Check if AutofillProvider is available.
+-  DCHECK_CURRENTLY_ON(BrowserThread::UI);
+-  JNIEnv* env = AttachCurrentThread();
+-  ScopedJavaLocalRef<jobject> obj = java_ref_.get(env);
+-  if (obj.is_null())
+-    return;
+-
+-  // Just return, if the app neither runs on O sdk nor enables autocomplete.
+-  if (!autofill_provider_ && !autocomplete_enabled)
+-    return;
+-
+-  AwAutofillClient::CreateForWebContents(web_contents);
+-  ContentAutofillDriverFactory::CreateForWebContentsAndDelegate(
+-      web_contents, AwAutofillClient::FromWebContents(web_contents),
+-      base::android::GetDefaultLocaleString(),
+-      AutofillManager::DISABLE_AUTOFILL_DOWNLOAD_MANAGER,
+-      autofill_provider_.get());
+-}
+-
+-void AwContents::SetAwAutofillClient(const JavaRef<jobject>& client) {
+-  DCHECK_CURRENTLY_ON(BrowserThread::UI);
+-  JNIEnv* env = AttachCurrentThread();
+-  ScopedJavaLocalRef<jobject> obj = java_ref_.get(env);
+-  if (obj.is_null())
+-    return;
+-  Java_AwContents_setAwAutofillClient(env, obj, client);
+ }
+ 
+ AwContents::~AwContents() {
+@@ -469,15 +395,6 @@ jint JNI_AwContents_GetNativeInstanceCount(JNIEnv* env,
+   return base::subtle::NoBarrier_Load(&g_instance_count);
+ }
+ 
+-// static
+-ScopedJavaLocalRef<jstring> JNI_AwContents_GetSafeBrowsingLocaleForTesting(
+-    JNIEnv* env,
+-    const JavaParamRef<jclass>&) {
+-  ScopedJavaLocalRef<jstring> locale =
+-      ConvertUTF8ToJavaString(env, base::i18n::GetConfiguredLocale());
+-  return locale;
+-}
+-
+ namespace {
+ void DocumentHasImagesCallback(const ScopedJavaGlobalRef<jobject>& message,
+                                bool has_images) {
+@@ -1357,12 +1274,6 @@ void AwContents::ResumeLoadingCreatedPopupWebContents(
+   web_contents_->ResumeLoadingCreatedWebContents();
+ }
+ 
+-jlong AwContents::GetAutofillProvider(
+-    JNIEnv* env,
+-    const base::android::JavaParamRef<jobject>& obj) {
+-  return reinterpret_cast<jlong>(autofill_provider_.get());
+-}
+-
+ void JNI_AwContents_SetShouldDownloadFavicons(
+     JNIEnv* env,
+     const JavaParamRef<jclass>& jclazz) {
+@@ -1432,49 +1343,6 @@ void AwContents::DidDetachInterstitialPage() {
+   browser_view_renderer_.SetActiveCompositorID(compositor_id);
+ }
+ 
+-bool AwContents::CanShowInterstitial() {
+-  JNIEnv* env = AttachCurrentThread();
+-  const ScopedJavaLocalRef<jobject> obj = java_ref_.get(env);
+-  if (obj.is_null())
+-    return false;
+-  return Java_AwContents_canShowInterstitial(env, obj);
+-}
+-
+-int AwContents::GetErrorUiType() {
+-  JNIEnv* env = AttachCurrentThread();
+-  const ScopedJavaLocalRef<jobject> obj = java_ref_.get(env);
+-  if (obj.is_null())
+-    return false;
+-  return Java_AwContents_getErrorUiType(env, obj);
+-}
+-
+-void AwContents::EvaluateJavaScriptOnInterstitialForTesting(
+-    JNIEnv* env,
+-    const base::android::JavaParamRef<jobject>& obj,
+-    const base::android::JavaParamRef<jstring>& script,
+-    const base::android::JavaParamRef<jobject>& callback) {
+-  content::InterstitialPage* interstitial =
+-      web_contents_->GetInterstitialPage();
+-  DCHECK(interstitial);
+-
+-  if (!callback) {
+-    // No callback requested.
+-    interstitial->GetMainFrame()->ExecuteJavaScriptForTests(
+-        ConvertJavaStringToUTF16(env, script));
+-    return;
+-  }
+-
+-  // Secure the Java callback in a scoped object and give ownership of it to the
+-  // base::Callback.
+-  ScopedJavaGlobalRef<jobject> j_callback;
+-  j_callback.Reset(env, callback);
+-  RenderFrameHost::JavaScriptResultCallback js_callback =
+-      base::Bind(&JavaScriptResultCallbackForTesting, j_callback);
+-
+-  interstitial->GetMainFrame()->ExecuteJavaScriptForTests(
+-      ConvertJavaStringToUTF16(env, script), js_callback);
+-}
+-
+ void AwContents::OnRenderProcessGone(int child_process_id) {
+   DCHECK_CURRENTLY_ON(BrowserThread::UI);
+   JNIEnv* env = AttachCurrentThread();
+diff --git a/android_webview/browser/aw_contents.h b/android_webview/browser/aw_contents.h
+index a621d32..08ae6a3 100644
+--- a/android_webview/browser/aw_contents.h
++++ b/android_webview/browser/aw_contents.h
+@@ -12,7 +12,6 @@
+ 
+ #include "android_webview/browser/aw_browser_permission_request_delegate.h"
+ #include "android_webview/browser/aw_render_process_gone_delegate.h"
+-#include "android_webview/browser/aw_safe_browsing_ui_manager.h"
+ #include "android_webview/browser/browser_view_renderer.h"
+ #include "android_webview/browser/browser_view_renderer_client.h"
+ #include "android_webview/browser/find_helper.h"
+@@ -29,10 +28,6 @@
+ class SkBitmap;
+ class TabContents;
+ 
+-namespace autofill {
+-class AutofillProvider;
+-}
+-
+ namespace content {
+ class WebContents;
+ }
+@@ -66,8 +61,7 @@ class AwContents : public FindHelper::Listener,
+                    public PermissionRequestHandlerClient,
+                    public AwBrowserPermissionRequestDelegate,
+                    public AwRenderProcessGoneDelegate,
+-                   public content::WebContentsObserver,
+-                   public AwSafeBrowsingUIManager::UIManagerClient {
++                   public content::WebContentsObserver {
+  public:
+   // Returns the AwContents instance associated with |web_contents|, or NULL.
+   static AwContents* FromWebContents(content::WebContents* web_contents);
+@@ -103,8 +97,7 @@ class AwContents : public FindHelper::Listener,
+       const base::android::JavaParamRef<jobject>& web_contents_delegate,
+       const base::android::JavaParamRef<jobject>& contents_client_bridge,
+       const base::android::JavaParamRef<jobject>& io_thread_client,
+-      const base::android::JavaParamRef<jobject>& intercept_navigation_delegate,
+-      const base::android::JavaParamRef<jobject>& autofill_provider);
++      const base::android::JavaParamRef<jobject>& intercept_navigation_delegate);
+   base::android::ScopedJavaLocalRef<jobject> GetWebContents(
+       JNIEnv* env,
+       const base::android::JavaParamRef<jobject>& obj);
+@@ -323,8 +316,6 @@ class AwContents : public FindHelper::Listener,
+   void SetSaveFormData(bool enabled);
+ 
+   // Sets the java client
+-  void SetAwAutofillClient(const base::android::JavaRef<jobject>& client);
+-
+   void SetJsOnlineProperty(JNIEnv* env,
+                            const base::android::JavaParamRef<jobject>& obj,
+                            jboolean network_up);
+@@ -341,9 +332,6 @@ class AwContents : public FindHelper::Listener,
+       JNIEnv* env,
+       const base::android::JavaParamRef<jobject>& obj);
+ 
+-  jlong GetAutofillProvider(JNIEnv* env,
+-                            const base::android::JavaParamRef<jobject>& obj);
+-
+   // content::WebContentsObserver overrides
+   void RenderViewHostChanged(content::RenderViewHost* old_host,
+                              content::RenderViewHost* new_host) override;
+@@ -352,22 +340,11 @@ class AwContents : public FindHelper::Listener,
+   void DidAttachInterstitialPage() override;
+   void DidDetachInterstitialPage() override;
+ 
+-  // AwSafeBrowsingUIManager::UIManagerClient implementation
+-  bool CanShowInterstitial() override;
+-  int GetErrorUiType() override;
+-
+-  void EvaluateJavaScriptOnInterstitialForTesting(
+-      JNIEnv* env,
+-      const base::android::JavaParamRef<jobject>& obj,
+-      const base::android::JavaParamRef<jstring>& script,
+-      const base::android::JavaParamRef<jobject>& callback);
+-
+   // AwRenderProcessGoneDelegate overrides
+   void OnRenderProcessGone(int child_process_id) override;
+   bool OnRenderProcessGoneDetail(int child_process_id, bool crashed) override;
+ 
+  private:
+-  void InitAutofillIfNecessary(bool autocomplete_enabled);
+ 
+   // Geolocation API support
+   void ShowGeolocationPrompt(const GURL& origin,
+@@ -390,7 +367,6 @@ class AwContents : public FindHelper::Listener,
+   std::unique_ptr<AwContents> pending_contents_;
+   std::unique_ptr<AwPdfExporter> pdf_exporter_;
+   std::unique_ptr<PermissionRequestHandler> permission_request_handler_;
+-  std::unique_ptr<autofill::AutofillProvider> autofill_provider_;
+ 
+   // GURL is supplied by the content layer as requesting frame.
+   // Callback is supplied by the content layer, and is invoked with the result
+diff --git a/android_webview/browser/aw_contents_client_bridge.cc b/android_webview/browser/aw_contents_client_bridge.cc
+index 6a96152..5af5bf1 100644
+--- a/android_webview/browser/aw_contents_client_bridge.cc
++++ b/android_webview/browser/aw_contents_client_bridge.cc
+@@ -456,29 +456,6 @@ void AwContentsClientBridge::OnReceivedError(
+       safebrowsing_hit);
+ }
+ 
+-void AwContentsClientBridge::OnSafeBrowsingHit(
+-    const AwWebResourceRequest& request,
+-    const safe_browsing::SBThreatType& threat_type,
+-    SafeBrowsingActionCallback callback) {
+-  int request_id = safe_browsing_callbacks_.Add(
+-      std::make_unique<SafeBrowsingActionCallback>(std::move(callback)));
+-
+-  DCHECK_CURRENTLY_ON(BrowserThread::UI);
+-  JNIEnv* env = AttachCurrentThread();
+-  ScopedJavaLocalRef<jobject> obj = java_ref_.get(env);
+-  if (obj.is_null())
+-    return;
+-
+-  AwWebResourceRequest::AwJavaWebResourceRequest java_web_resource_request;
+-  AwWebResourceRequest::ConvertToJava(env, request, &java_web_resource_request);
+-  Java_AwContentsClientBridge_onSafeBrowsingHit(
+-      env, obj, java_web_resource_request.jurl, request.is_main_frame,
+-      request.has_user_gesture, java_web_resource_request.jmethod,
+-      java_web_resource_request.jheader_names,
+-      java_web_resource_request.jheader_values, static_cast<int>(threat_type),
+-      request_id);
+-}
+-
+ void AwContentsClientBridge::OnReceivedHttpError(
+     const AwWebResourceRequest& request,
+     std::unique_ptr<HttpErrorInfo> http_error_info) {
+@@ -552,23 +529,6 @@ void AwContentsClientBridge::ConfirmJsResult(JNIEnv* env,
+   pending_js_dialog_callbacks_.Remove(id);
+ }
+ 
+-void AwContentsClientBridge::TakeSafeBrowsingAction(JNIEnv*,
+-                                                    const JavaRef<jobject>&,
+-                                                    int action,
+-                                                    bool reporting,
+-                                                    int request_id) {
+-  DCHECK_CURRENTLY_ON(BrowserThread::UI);
+-  auto* callback = safe_browsing_callbacks_.Lookup(request_id);
+-  if (!callback) {
+-    LOG(WARNING) << "Unexpected TakeSafeBrowsingAction. " << request_id;
+-    return;
+-  }
+-  std::move(*callback).Run(
+-      static_cast<AwUrlCheckerDelegateImpl::SafeBrowsingAction>(action),
+-      reporting);
+-  safe_browsing_callbacks_.Remove(request_id);
+-}
+-
+ void AwContentsClientBridge::CancelJsResult(JNIEnv*,
+                                             const JavaRef<jobject>&,
+                                             int id) {
+diff --git a/android_webview/browser/aw_contents_client_bridge.h b/android_webview/browser/aw_contents_client_bridge.h
+index bbe9d38..4d5702b 100644
+--- a/android_webview/browser/aw_contents_client_bridge.h
++++ b/android_webview/browser/aw_contents_client_bridge.h
+@@ -7,14 +7,12 @@
+ 
+ #include <memory>
+ 
+-#include "android_webview/browser/aw_url_checker_delegate_impl.h"
+ #include "android_webview/browser/net/aw_web_resource_request.h"
+ #include "base/android/jni_weak_ref.h"
+ #include "base/android/scoped_java_ref.h"
+ #include "base/callback.h"
+ #include "base/containers/id_map.h"
+ #include "base/supports_user_data.h"
+-#include "components/security_interstitials/content/unsafe_resource.h"
+ #include "content/public/browser/certificate_request_result_type.h"
+ #include "content/public/browser/javascript_dialog_manager.h"
+ #include "content/public/browser/resource_request_info.h"
+@@ -59,9 +57,6 @@ class AwContentsClientBridge {
+ 
+   using CertErrorCallback =
+       base::OnceCallback<void(content::CertificateRequestResultType)>;
+-  using SafeBrowsingActionCallback =
+-      base::OnceCallback<void(AwUrlCheckerDelegateImpl::SafeBrowsingAction,
+-                              bool)>;
+ 
+   // Adds the handler to the UserData registry.
+   static void Associate(content::WebContents* web_contents,
+@@ -119,10 +114,6 @@ class AwContentsClientBridge {
+                        int error_code,
+                        bool safebrowsing_hit);
+ 
+-  void OnSafeBrowsingHit(const AwWebResourceRequest& request,
+-                         const safe_browsing::SBThreatType& threat_type,
+-                         SafeBrowsingActionCallback callback);
+-
+   // Called when a response from the server is received with status code >= 400.
+   void OnReceivedHttpError(const AwWebResourceRequest& request,
+                            std::unique_ptr<HttpErrorInfo> error_info);
+@@ -148,18 +139,10 @@ class AwContentsClientBridge {
+                        const base::android::JavaRef<jstring>& prompt);
+   void CancelJsResult(JNIEnv*, const base::android::JavaRef<jobject>&, int id);
+ 
+-  void TakeSafeBrowsingAction(JNIEnv*,
+-                              const base::android::JavaRef<jobject>&,
+-                              int action,
+-                              bool reporting,
+-                              int request_id);
+-
+  private:
+   JavaObjectWeakGlobalRef java_ref_;
+ 
+   base::IDMap<std::unique_ptr<CertErrorCallback>> pending_cert_error_callbacks_;
+-  base::IDMap<std::unique_ptr<SafeBrowsingActionCallback>>
+-      safe_browsing_callbacks_;
+   base::IDMap<
+       std::unique_ptr<content::JavaScriptDialogManager::DialogClosedCallback>>
+       pending_js_dialog_callbacks_;
+diff --git a/android_webview/browser/aw_contents_statics.cc b/android_webview/browser/aw_contents_statics.cc
+index 6f9169e..5c8e2be 100644
+--- a/android_webview/browser/aw_contents_statics.cc
++++ b/android_webview/browser/aw_contents_statics.cc
+@@ -43,31 +43,9 @@ void NotifyClientCertificatesChanged() {
+   net::CertDatabase::GetInstance()->NotifyObserversCertDBChanged();
+ }
+ 
+-void SafeBrowsingWhitelistAssigned(const JavaRef<jobject>& callback,
+-                                   bool success) {
+-  DCHECK_CURRENTLY_ON(BrowserThread::UI);
+-  JNIEnv* env = AttachCurrentThread();
+-  Java_AwContentsStatics_safeBrowsingWhitelistAssigned(env, callback, success);
+-}
+-
+ }  // namespace
+ 
+ // static
+-ScopedJavaLocalRef<jstring>
+-JNI_AwContentsStatics_GetSafeBrowsingPrivacyPolicyUrl(
+-    JNIEnv* env,
+-    const JavaParamRef<jclass>&) {
+-  DCHECK_CURRENTLY_ON(BrowserThread::UI);
+-  GURL privacy_policy_url(
+-      security_interstitials::kSafeBrowsingPrivacyPolicyUrl);
+-  std::string locale =
+-      AwBrowserContext::GetDefault()->GetSafeBrowsingUIManager()->app_locale();
+-  privacy_policy_url =
+-      google_util::AppendGoogleLocaleParam(privacy_policy_url, locale);
+-  return base::android::ConvertUTF8ToJavaString(env, privacy_policy_url.spec());
+-}
+-
+-// static
+ void JNI_AwContentsStatics_ClearClientCertPreferences(
+     JNIEnv* env,
+     const JavaParamRef<jclass>&,
+@@ -97,22 +75,6 @@ ScopedJavaLocalRef<jstring> JNI_AwContentsStatics_GetProductVersion(
+ }
+ 
+ // static
+-void JNI_AwContentsStatics_SetSafeBrowsingWhitelist(
+-    JNIEnv* env,
+-    const JavaParamRef<jclass>&,
+-    const JavaParamRef<jobjectArray>& jrules,
+-    const JavaParamRef<jobject>& callback) {
+-  std::vector<std::string> rules;
+-  base::android::AppendJavaStringArrayToStringVector(env, jrules, &rules);
+-  AwSafeBrowsingWhitelistManager* whitelist_manager =
+-      AwBrowserContext::GetDefault()->GetSafeBrowsingWhitelistManager();
+-  whitelist_manager->SetWhitelistOnUIThread(
+-      std::move(rules),
+-      base::BindOnce(&SafeBrowsingWhitelistAssigned,
+-                     ScopedJavaGlobalRef<jobject>(env, callback)));
+-}
+-
+-// static
+ void JNI_AwContentsStatics_SetServiceWorkerIoThreadClient(
+     JNIEnv* env,
+     const JavaParamRef<jclass>&,
+diff --git a/android_webview/browser/aw_field_trial_creator.cc b/android_webview/browser/aw_field_trial_creator.cc
+index f491522..5a1016e 100644
+--- a/android_webview/browser/aw_field_trial_creator.cc
++++ b/android_webview/browser/aw_field_trial_creator.cc
+@@ -66,38 +66,6 @@ void AwFieldTrialCreator::SetUpFieldTrials() {
+ }
+ 
+ void AwFieldTrialCreator::DoSetUpFieldTrials() {
+-  // If the client ID isn't available yet, don't delay startup by creating it.
+-  // Instead, variations will be disabled for this run.
+-  std::string client_id;
+-  if (!AwMetricsServiceClient::GetPreloadedClientId(&client_id))
+-    return;
+-
+-  DCHECK(!field_trial_list_);
+-  field_trial_list_ = std::make_unique<base::FieldTrialList>(
+-      CreateLowEntropyProvider(client_id));
+-
+-  variations::UIStringOverrider ui_string_overrider;
+-  client_ = std::make_unique<AwVariationsServiceClient>();
+-  variations_field_trial_creator_ =
+-      std::make_unique<variations::VariationsFieldTrialCreator>(
+-          GetLocalState(), client_.get(), ui_string_overrider,
+-          GetAndClearJavaSeed());
+-  variations_field_trial_creator_->OverrideVariationsPlatform(
+-      variations::Study::PLATFORM_ANDROID_WEBVIEW);
+-
+-  // Unused by WebView, but required by
+-  // VariationsFieldTrialCreator::SetupFieldTrials().
+-  // TODO(isherman): We might want a more genuine SafeSeedManager:
+-  // https://crbug.com/801771
+-  std::set<std::string> unforceable_field_trials;
+-  variations::SafeSeedManager ignored_safe_seed_manager(true, GetLocalState());
+-  // Populates the FieldTrialList singleton via the static member functions.
+-  variations_field_trial_creator_->SetupFieldTrials(
+-      cc::switches::kEnableGpuBenchmarking, switches::kEnableFeatures,
+-      switches::kDisableFeatures, unforceable_field_trials,
+-      std::vector<std::string>(), CreateLowEntropyProvider(client_id),
+-      std::make_unique<base::FeatureList>(), aw_field_trials_.get(),
+-      &ignored_safe_seed_manager);
+ }
+ 
+ PrefService* AwFieldTrialCreator::GetLocalState() {
+diff --git a/android_webview/browser/aw_renderer_manifest_overlay.json b/android_webview/browser/aw_renderer_manifest_overlay.json
+index ef3340e..c489046 100644
+--- a/android_webview/browser/aw_renderer_manifest_overlay.json
++++ b/android_webview/browser/aw_renderer_manifest_overlay.json
+@@ -4,12 +4,6 @@
+     "navigation:frame": {
+       "provides": {
+         "browser": [
+-          "autofill.mojom.AutofillAgent",
+-          "autofill.mojom.PasswordAutofillAgent",
+-          "autofill.mojom.PasswordGenerationAgent",
+-          // TODO(crbug.com/811567): Remove this once AwSafeBrowsingBlockingPage
+-          // no longer sends a GetThreatDOMDetails IPC.
+-          "safe_browsing.mojom.ThreatReporter"
+         ]
+       }
+     }
+diff --git a/android_webview/browser/aw_utility_manifest_overlay.json b/android_webview/browser/aw_utility_manifest_overlay.json
+index 24a09c7..8be9ec2 100644
+--- a/android_webview/browser/aw_utility_manifest_overlay.json
++++ b/android_webview/browser/aw_utility_manifest_overlay.json
+@@ -4,7 +4,6 @@
+     "service_manager:connector": {
+       "provides": {
+         "browser": [
+-          "heap_profiling.mojom.ProfilingClient"
+         ]
+       }
+     }
+diff --git a/android_webview/browser/aw_web_ui_controller_factory.cc b/android_webview/browser/aw_web_ui_controller_factory.cc
+index 876da06..fe9a6de 100644
+--- a/android_webview/browser/aw_web_ui_controller_factory.cc
++++ b/android_webview/browser/aw_web_ui_controller_factory.cc
+@@ -5,9 +5,8 @@
+ #include "android_webview/browser/aw_web_ui_controller_factory.h"
+ 
+ #include "base/memory/ptr_util.h"
+-#include "components/safe_browsing/web_ui/constants.h"
+-#include "components/safe_browsing/web_ui/safe_browsing_ui.h"
+ #include "content/public/browser/web_ui.h"
++#include "content/public/browser/web_ui_controller.h"
+ #include "url/gurl.h"
+ 
+ using content::WebUI;
+@@ -29,18 +28,10 @@ WebUIController* NewWebUI(WebUI* web_ui, const GURL& url) {
+ }
+ 
+ WebUIFactoryFunctionPointer GetWebUIFactoryFunctionPointer(const GURL& url) {
+-  if (url.host() == safe_browsing::kChromeUISafeBrowsingHost) {
+-    return &NewWebUI<safe_browsing::SafeBrowsingUI>;
+-  }
+-
+   return nullptr;
+ }
+ 
+ WebUI::TypeID GetWebUITypeID(const GURL& url) {
+-  if (url.host() == safe_browsing::kChromeUISafeBrowsingHost) {
+-    return kSafeBrowsingID;
+-  }
+-
+   return WebUI::kNoWebUI;
+ }
+ 
+diff --git a/android_webview/browser/cookie_manager.cc b/android_webview/browser/cookie_manager.cc
+index 6429bbb..d2a25d8 100644
+--- a/android_webview/browser/cookie_manager.cc
++++ b/android_webview/browser/cookie_manager.cc
+@@ -324,11 +324,10 @@ net::CookieStore* CookieManager::GetCookieStore() {
+ }
+ 
+ void CookieManager::SetShouldAcceptCookies(bool accept) {
+-  AwCookieAccessPolicy::GetInstance()->SetShouldAcceptCookies(accept);
+ }
+ 
+ bool CookieManager::GetShouldAcceptCookies() {
+-  return AwCookieAccessPolicy::GetInstance()->GetShouldAcceptCookies();
++  return true;
+ }
+ 
+ void CookieManager::SetCookie(
+diff --git a/android_webview/browser/net/aw_network_delegate.cc b/android_webview/browser/net/aw_network_delegate.cc
+index 7ae5cf0..ebbe6bb 100644
+--- a/android_webview/browser/net/aw_network_delegate.cc
++++ b/android_webview/browser/net/aw_network_delegate.cc
+@@ -90,15 +90,13 @@ int AwNetworkDelegate::OnHeadersReceived(
+ 
+ bool AwNetworkDelegate::OnCanGetCookies(const net::URLRequest& request,
+                                         const net::CookieList& cookie_list) {
+-  return AwCookieAccessPolicy::GetInstance()->OnCanGetCookies(request,
+-                                                              cookie_list);
++  return true;
+ }
+ 
+ bool AwNetworkDelegate::OnCanSetCookie(const net::URLRequest& request,
+                                        const net::CanonicalCookie& cookie,
+                                        net::CookieOptions* options) {
+-  return AwCookieAccessPolicy::GetInstance()->OnCanSetCookie(request, cookie,
+-                                                             options);
++  return true;
+ }
+ 
+ bool AwNetworkDelegate::OnCanAccessFile(
+diff --git a/android_webview/browser/renderer_host/aw_resource_dispatcher_host_delegate.cc b/android_webview/browser/renderer_host/aw_resource_dispatcher_host_delegate.cc
+index 522110b..de02296 100644
+--- a/android_webview/browser/renderer_host/aw_resource_dispatcher_host_delegate.cc
++++ b/android_webview/browser/renderer_host/aw_resource_dispatcher_host_delegate.cc
+@@ -12,13 +12,10 @@
+ #include "android_webview/browser/aw_contents_client_bridge.h"
+ #include "android_webview/browser/aw_contents_io_thread_client.h"
+ #include "android_webview/browser/aw_resource_context.h"
+-#include "android_webview/browser/aw_safe_browsing_resource_throttle.h"
+ #include "android_webview/browser/net/aw_web_resource_request.h"
+ #include "android_webview/browser/renderer_host/auto_login_parser.h"
+ #include "android_webview/common/url_constants.h"
+ #include "components/navigation_interception/intercept_navigation_delegate.h"
+-#include "components/safe_browsing/android/safe_browsing_api_handler.h"
+-#include "components/safe_browsing/features.h"
+ #include "components/web_restrictions/browser/web_restrictions_resource_throttle.h"
+ #include "content/public/browser/browser_thread.h"
+ #include "content/public/browser/resource_dispatcher_host.h"
+@@ -129,7 +126,6 @@ class IoThreadClientThrottle : public content::ResourceThrottle {
+                              int new_render_frame_id);
+   bool MaybeBlockRequest();
+   bool ShouldBlockRequest();
+-  bool GetSafeBrowsingEnabled();
+   int render_process_id() const { return render_process_id_; }
+   int render_frame_id() const { return render_frame_id_; }
+ 
+@@ -217,13 +213,6 @@ bool IoThreadClientThrottle::MaybeBlockRequest() {
+   return false;
+ }
+ 
+-bool IoThreadClientThrottle::GetSafeBrowsingEnabled() {
+-  std::unique_ptr<AwContentsIoThreadClient> io_client = GetIoThreadClient();
+-  if (!io_client)
+-    return false;
+-  return io_client->GetSafeBrowsingEnabled();
+-}
+-
+ bool IoThreadClientThrottle::ShouldBlockRequest() {
+   std::unique_ptr<AwContentsIoThreadClient> io_client = GetIoThreadClient();
+   if (!io_client)
+@@ -296,26 +285,6 @@ void AwResourceDispatcherHostDelegate::RequestBeginning(
+                                                request_info->GetRenderFrameID(),
+                                                request);
+ 
+-  if (ioThreadThrottle->GetSafeBrowsingEnabled()) {
+-    DCHECK(!base::FeatureList::IsEnabled(network::features::kNetworkService));
+-    if (!base::FeatureList::IsEnabled(
+-            safe_browsing::kCheckByURLLoaderThrottle)) {
+-      content::ResourceThrottle* throttle =
+-          MaybeCreateAwSafeBrowsingResourceThrottle(
+-              request, resource_type,
+-              AwBrowserContext::GetDefault()->GetSafeBrowsingDBManager(),
+-              AwBrowserContext::GetDefault()->GetSafeBrowsingUIManager(),
+-              AwBrowserContext::GetDefault()
+-                  ->GetSafeBrowsingWhitelistManager());
+-      if (throttle == nullptr) {
+-        // Should not happen
+-        DLOG(WARNING) << "Failed creating safebrowsing throttle";
+-      } else {
+-        throttles->push_back(base::WrapUnique(throttle));
+-      }
+-    }
+-  }
+-
+   // We always push the throttles here. Checking the existence of io_client
+   // is racy when a popup window is created. That is because RequestBeginning
+   // is called whether or not requests are blocked via BlockRequestForRoute()
+@@ -347,9 +316,6 @@ void AwResourceDispatcherHostDelegate::RequestComplete(
+         content::ResourceRequestInfo::ForRequest(request);
+ 
+     bool safebrowsing_hit = false;
+-    if (IsCancelledBySafeBrowsing(request)) {
+-      safebrowsing_hit = true;
+-    }
+     BrowserThread::PostTask(
+         BrowserThread::UI, FROM_HERE,
+         base::BindOnce(&OnReceivedErrorOnUiThread,
+diff --git a/android_webview/common/aw_content_client.cc b/android_webview/common/aw_content_client.cc
+index 1514c94..eddb86c 100644
+--- a/android_webview/common/aw_content_client.cc
++++ b/android_webview/common/aw_content_client.cc
+@@ -11,7 +11,6 @@
+ #include "base/command_line.h"
+ #include "base/debug/crash_logging.h"
+ #include "base/no_destructor.h"
+-#include "components/services/heap_profiling/public/cpp/client.h"
+ #include "components/version_info/version_info.h"
+ #include "content/public/common/content_switches.h"
+ #include "content/public/common/service_manager_connection.h"
+@@ -98,17 +97,6 @@ media::MediaDrmBridgeClient* AwContentClient::GetMediaDrmBridgeClient() {
+ 
+ void AwContentClient::OnServiceManagerConnected(
+     content::ServiceManagerConnection* connection) {
+-  // This creates a process-wide HeapProfiling::Client that listens for requests
+-  // from the HeapProfilingService to start profiling the current process.
+-  static base::NoDestructor<heap_profiling::Client> profiling_client;
+-
+-  std::unique_ptr<service_manager::BinderRegistry> registry(
+-      new service_manager::BinderRegistry);
+-  registry->AddInterface(
+-      base::BindRepeating(&heap_profiling::Client::BindToInterface,
+-                          base::Unretained(profiling_client.get())));
+-  connection->AddConnectionFilter(
+-      std::make_unique<content::SimpleConnectionFilter>(std::move(registry)));
+ }
+ 
+ }  // namespace android_webview
+diff --git a/android_webview/glue/BUILD.gn b/android_webview/glue/BUILD.gn
+index 6dcd32a..dea5c16 100644
+--- a/android_webview/glue/BUILD.gn
++++ b/android_webview/glue/BUILD.gn
+@@ -33,18 +33,16 @@ android_library("glue") {
+     "java/src/com/android/webview/chromium/GlueApiHelperForM.java",
+     "java/src/com/android/webview/chromium/GlueApiHelperForN.java",
+     "java/src/com/android/webview/chromium/GlueApiHelperForO.java",
+-    "java/src/com/android/webview/chromium/GlueApiHelperForOMR1.java",
+-    "java/src/com/android/webview/chromium/GlueApiHelperForP.java",
+     "java/src/com/android/webview/chromium/GraphicsUtils.java",
+     "java/src/com/android/webview/chromium/MonochromeLibraryPreloader.java",
+-    "java/src/com/android/webview/chromium/SafeBrowsingResponseAdapter.java",
++    #"java/src/com/android/webview/chromium/SafeBrowsingResponseAdapter.java",
+     "java/src/com/android/webview/chromium/ServiceWorkerClientAdapter.java",
+     "java/src/com/android/webview/chromium/ServiceWorkerControllerAdapter.java",
+     "java/src/com/android/webview/chromium/ServiceWorkerSettingsAdapter.java",
+     "java/src/com/android/webview/chromium/SharedStatics.java",
+     "java/src/com/android/webview/chromium/SplitApkWorkaround.java",
+     "java/src/com/android/webview/chromium/TokenBindingManagerAdapter.java",
+-    "java/src/com/android/webview/chromium/TracingControllerAdapter.java",
++    #"java/src/com/android/webview/chromium/TracingControllerAdapter.java",
+     "java/src/com/android/webview/chromium/WebBackForwardListChromium.java",
+     "java/src/com/android/webview/chromium/WebHistoryItemChromium.java",
+     "java/src/com/android/webview/chromium/WebIconDatabaseAdapter.java",
+diff --git a/android_webview/glue/glue.gni b/android_webview/glue/glue.gni
+index 0581c9b..0bd062b 100644
+--- a/android_webview/glue/glue.gni
++++ b/android_webview/glue/glue.gni
+@@ -12,8 +12,6 @@ glue_library_deps = [
+   "//android_webview/support_library/boundary_interfaces:boundary_interface_java",
+   "//android_webview/support_library/callback:callback_java",
+   "//base:base_java",
+-  "//components/autofill/android:autofill_java",
+-  "//components/autofill/android:provider_java",
+   "//content/public/android:content_java",
+   "//net/android:net_java",
+   "//ui/android:ui_java",
+diff --git a/android_webview/glue/java/src/com/android/webview/chromium/SharedStatics.java b/android_webview/glue/java/src/com/android/webview/chromium/SharedStatics.java
+index 7fe5fbb..c79bfe0 100644
+--- a/android_webview/glue/java/src/com/android/webview/chromium/SharedStatics.java
++++ b/android_webview/glue/java/src/com/android/webview/chromium/SharedStatics.java
+@@ -12,7 +12,6 @@ import android.os.Looper;
+ 
+ import org.chromium.android_webview.AwContentsClient;
+ import org.chromium.android_webview.AwContentsStatics;
+-import org.chromium.android_webview.AwDevToolsServer;
+ import org.chromium.android_webview.AwSettings;
+ import org.chromium.android_webview.command_line.CommandLineUtil;
+ import org.chromium.base.Callback;
+@@ -31,7 +30,6 @@ import java.util.List;
+  * (right now there are dependencies from this class on the webkit-glue layer though).
+  */
+ public class SharedStatics {
+-    private AwDevToolsServer mDevToolsServer;
+ 
+     public SharedStatics() {}
+ 
+@@ -55,11 +53,6 @@ public class SharedStatics {
+             throw new RuntimeException(
+                     "Toggling of Web Contents Debugging must be done on the UI thread");
+         }
+-        if (mDevToolsServer == null) {
+-            if (!enable) return;
+-            mDevToolsServer = new AwDevToolsServer();
+-        }
+-        mDevToolsServer.setRemoteDebuggingEnabled(enable);
+     }
+ 
+     public void clearClientCertPreferences(Runnable onCleared) {
+@@ -94,28 +87,9 @@ public class SharedStatics {
+      * successful. The callback will be run on the UI thread.
+      */
+     public void initSafeBrowsing(Context context, Callback<Boolean> callback) {
+-        // clang-format off
+-        ThreadUtils.runOnUiThread(() -> AwContentsStatics.initSafeBrowsing(context,
+-                    callback));
+-        // clang-format on
+     }
+ 
+     public void setSafeBrowsingWhitelist(List<String> urls, Callback<Boolean> callback) {
+-        // clang-format off
+-        ThreadUtils.runOnUiThread(() -> AwContentsStatics.setSafeBrowsingWhitelist(
+-                urls, callback));
+-        // clang-format on
+-    }
+-
+-    /**
+-     * Returns a URL pointing to the privacy policy for Safe Browsing reporting.
+-     *
+-     * @return the url pointing to a privacy policy document which can be displayed
+-     * to users.
+-     */
+-    public Uri getSafeBrowsingPrivacyPolicyUrl() {
+-        return ThreadUtils.runOnUiThreadBlockingNoException(
+-                () -> AwContentsStatics.getSafeBrowsingPrivacyPolicyUrl());
+     }
+ 
+     public void setProxyOverride(String host, int port, String[] exclusionList) {
+diff --git a/android_webview/glue/java/src/com/android/webview/chromium/WebViewChromium.java b/android_webview/glue/java/src/com/android/webview/chromium/WebViewChromium.java
+index a78264d..b0bafff 100644
+--- a/android_webview/glue/java/src/com/android/webview/chromium/WebViewChromium.java
++++ b/android_webview/glue/java/src/com/android/webview/chromium/WebViewChromium.java
+@@ -64,7 +64,6 @@ import org.chromium.android_webview.renderer_priority.RendererPriority;
+ import org.chromium.base.BuildInfo;
+ import org.chromium.base.ThreadUtils;
+ import org.chromium.base.metrics.CachedMetrics.TimesHistogramSample;
+-import org.chromium.components.autofill.AutofillProvider;
+ import org.chromium.content_public.browser.NavigationHistory;
+ import org.chromium.content_public.browser.SmartClipProvider;
+ 
+@@ -269,11 +268,6 @@ class WebViewChromium implements WebViewProvider, WebViewProvider.ScrollDelegate
+                     new InternalAccessAdapter(), new WebViewNativeDrawGLFunctorFactory(),
+                     mContentsClientAdapter, mWebSettings.getAwSettings(),
+                     new AwContents.DependencyFactory() {
+-                        @Override
+-                        public AutofillProvider createAutofillProvider(
+-                                Context context, ViewGroup containerView) {
+-                            return mFactory.createAutofillProvider(context, mWebView);
+-                        }
+                     });
+             mSharedWebViewChromium.setAwContentsOnUiThread(mAwContents);
+ 
+@@ -1550,31 +1544,10 @@ class WebViewChromium implements WebViewProvider, WebViewProvider.ScrollDelegate
+ 
+     @Override
+     public void autofill(final SparseArray<AutofillValue> values) {
+-        mFactory.startYourEngines(false);
+-        if (checkNeedsPost()) {
+-            mFactory.runVoidTaskOnUiThreadBlocking(new Runnable() {
+-                @Override
+-                public void run() {
+-                    autofill(values);
+-                }
+-            });
+-        }
+-        mAwContents.autofill(values);
+     }
+ 
+     @Override
+     public void onProvideAutofillVirtualStructure(final ViewStructure structure, final int flags) {
+-        mFactory.startYourEngines(false);
+-        if (checkNeedsPost()) {
+-            mFactory.runVoidTaskOnUiThreadBlocking(new Runnable() {
+-                @Override
+-                public void run() {
+-                    onProvideAutofillVirtualStructure(structure, flags);
+-                }
+-            });
+-            return;
+-        }
+-        mAwContents.onProvideAutoFillVirtualStructure(structure, flags);
+     }
+ 
+     // WebViewProvider glue methods ---------------------------------------------------------------
+diff --git a/android_webview/glue/java/src/com/android/webview/chromium/WebViewChromiumAwInit.java b/android_webview/glue/java/src/com/android/webview/chromium/WebViewChromiumAwInit.java
+index f31a909..8ea3411 100644
+--- a/android_webview/glue/java/src/com/android/webview/chromium/WebViewChromiumAwInit.java
++++ b/android_webview/glue/java/src/com/android/webview/chromium/WebViewChromiumAwInit.java
+@@ -29,7 +29,6 @@ import org.chromium.android_webview.AwNetworkChangeNotifierRegistrationPolicy;
+ import org.chromium.android_webview.AwQuotaManagerBridge;
+ import org.chromium.android_webview.AwResource;
+ import org.chromium.android_webview.AwServiceWorkerController;
+-import org.chromium.android_webview.AwTracingController;
+ import org.chromium.android_webview.HttpAuthDatabase;
+ import org.chromium.android_webview.ScopedSysTraceEvent;
+ import org.chromium.android_webview.VariationsSeedLoader;
+@@ -67,7 +66,6 @@ public class WebViewChromiumAwInit {
+     private WebStorageAdapter mWebStorage;
+     private WebViewDatabaseAdapter mWebViewDatabase;
+     private AwServiceWorkerController mServiceWorkerController;
+-    private AwTracingController mAwTracingController;
+     private VariationsSeedLoader mSeedLoader;
+     private Thread mSetUpResourcesThread;
+ 
+@@ -88,15 +86,6 @@ public class WebViewChromiumAwInit {
+         // WebViewChromiumFactoryProvider ctor, so 'factory' is not properly initialized yet.
+     }
+ 
+-    AwTracingController getAwTracingController() {
+-        synchronized (mLock) {
+-            if (mAwTracingController == null) {
+-                ensureChromiumStartedLocked(true);
+-            }
+-        }
+-        return mAwTracingController;
+-    }
+-
+     // TODO: DIR_RESOURCE_PAKS_ANDROID needs to live somewhere sensible,
+     // inlined here for simplicity setting up the HTMLViewer demo. Unfortunately
+     // it can't go into base.PathService, as the native constant it refers to
+@@ -177,8 +166,6 @@ public class WebViewChromiumAwInit {
+                 mGeolocationPermissions = new GeolocationPermissionsAdapter(
+                         mFactory, awBrowserContext.getGeolocationPermissions());
+                 mWebStorage = new WebStorageAdapter(mFactory, AwQuotaManagerBridge.getInstance());
+-                mAwTracingController = awBrowserContext.getTracingController();
+-                mServiceWorkerController = awBrowserContext.getServiceWorkerController();
+             }
+ 
+             mFactory.getRunQueue().drainQueue();
+diff --git a/android_webview/glue/java/src/com/android/webview/chromium/WebViewChromiumFactoryProvider.java b/android_webview/glue/java/src/com/android/webview/chromium/WebViewChromiumFactoryProvider.java
+index 17dbf9d..fd62fac 100644
+--- a/android_webview/glue/java/src/com/android/webview/chromium/WebViewChromiumFactoryProvider.java
++++ b/android_webview/glue/java/src/com/android/webview/chromium/WebViewChromiumFactoryProvider.java
+@@ -30,7 +30,6 @@ import android.webkit.WebViewProvider;
+ 
+ import com.android.webview.chromium.WebViewDelegateFactory.WebViewDelegate;
+ 
+-import org.chromium.android_webview.AwAutofillProvider;
+ import org.chromium.android_webview.AwBrowserContext;
+ import org.chromium.android_webview.AwBrowserProcess;
+ import org.chromium.android_webview.ResourcesContextWrapperFactory;
+@@ -48,7 +47,6 @@ import org.chromium.base.ThreadUtils;
+ import org.chromium.base.library_loader.NativeLibraries;
+ import org.chromium.base.metrics.CachedMetrics.TimesHistogramSample;
+ import org.chromium.base.process_launcher.ChildProcessService;
+-import org.chromium.components.autofill.AutofillProvider;
+ import org.chromium.content_public.browser.LGEmailActionModeWorkaround;
+ 
+ import java.io.File;
+@@ -104,7 +102,6 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
+ 
+     private SharedPreferences mWebViewPrefs;
+     private WebViewDelegate mWebViewDelegate;
+-    private TracingController mTracingController;
+ 
+     boolean mShouldDisableThreadChecking;
+ 
+@@ -401,20 +398,16 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
+ 
+                     @Override
+                     public void initSafeBrowsing(Context context, ValueCallback<Boolean> callback) {
+-                        sharedStatics.initSafeBrowsing(
+-                                context, CallbackConverter.fromValueCallback(callback));
+                     }
+ 
+                     @Override
+                     public void setSafeBrowsingWhitelist(
+                             List<String> urls, ValueCallback<Boolean> callback) {
+-                        sharedStatics.setSafeBrowsingWhitelist(
+-                                urls, CallbackConverter.fromValueCallback(callback));
+                     }
+ 
+                     @Override
+                     public Uri getSafeBrowsingPrivacyPolicyUrl() {
+-                        return sharedStatics.getSafeBrowsingPrivacyPolicyUrl();
++                        return null;
+                     }
+                 };
+             }
+@@ -523,11 +516,6 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
+         }
+     }
+ 
+-    AutofillProvider createAutofillProvider(Context context, ViewGroup containerView) {
+-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return null;
+-        return new AwAutofillProvider(context, containerView);
+-    }
+-
+     void startYourEngines(boolean onMainThread) {
+         try (ScopedSysTraceEvent e1 = ScopedSysTraceEvent.scoped(
+                      "WebViewChromiumFactoryProvider.startYourEngines")) {
+@@ -550,17 +538,7 @@ public class WebViewChromiumFactoryProvider implements WebViewFactoryProvider {
+ 
+     @Override
+     public TracingController getTracingController() {
+-        synchronized (mAwInit.getLock()) {
+-            mAwInit.ensureChromiumStartedLocked(true);
+-            // ensureChromiumStartedLocked() can release the lock on first call while
+-            // waiting for startup. Hence check the mTracingControler here to ensure
+-            // the singleton property.
+-            if (mTracingController == null) {
+-                mTracingController =
+-                        GlueApiHelperForP.createTracingControllerAdapter(this, mAwInit);
+-            }
+-        }
+-        return mTracingController;
++        return null;
+     }
+ 
+     private static class FilteredClassLoader extends ClassLoader {
+diff --git a/android_webview/glue/java/src/com/android/webview/chromium/WebViewContentsClientAdapter.java b/android_webview/glue/java/src/com/android/webview/chromium/WebViewContentsClientAdapter.java
+index f022593..2c00efc 100644
+--- a/android_webview/glue/java/src/com/android/webview/chromium/WebViewContentsClientAdapter.java
++++ b/android_webview/glue/java/src/com/android/webview/chromium/WebViewContentsClientAdapter.java
+@@ -44,11 +44,9 @@ import org.chromium.android_webview.AwContentsClientBridge;
+ import org.chromium.android_webview.AwGeolocationPermissions;
+ import org.chromium.android_webview.AwHttpAuthHandler;
+ import org.chromium.android_webview.AwRenderProcessGoneDetail;
+-import org.chromium.android_webview.AwSafeBrowsingResponse;
+ import org.chromium.android_webview.AwWebResourceResponse;
+ import org.chromium.android_webview.JsPromptResultReceiver;
+ import org.chromium.android_webview.JsResultReceiver;
+-import org.chromium.android_webview.SafeBrowsingAction;
+ import org.chromium.android_webview.ScopedSysTraceEvent;
+ import org.chromium.android_webview.permission.AwPermissionRequest;
+ import org.chromium.android_webview.permission.Resource;
+@@ -595,27 +593,6 @@ class WebViewContentsClientAdapter extends AwContentsClient {
+     }
+ 
+     @Override
+-    public void onSafeBrowsingHit(AwWebResourceRequest request, int threatType,
+-            final Callback<AwSafeBrowsingResponse> callback) {
+-        try {
+-            TraceEvent.begin("WebViewContentsClientAdapter.onSafeBrowsingHit");
+-            if (mSupportLibClient.isFeatureAvailable(Features.SAFE_BROWSING_HIT)) {
+-                mSupportLibClient.onSafeBrowsingHit(
+-                        mWebView, new WebResourceRequestAdapter(request), threatType, callback);
+-            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+-                GlueApiHelperForOMR1.onSafeBrowsingHit(
+-                        mWebViewClient, mWebView, request, threatType, callback);
+-
+-            } else {
+-                callback.onResult(new AwSafeBrowsingResponse(SafeBrowsingAction.SHOW_INTERSTITIAL,
+-                        /* reporting */ true));
+-            }
+-        } finally {
+-            TraceEvent.end("WebViewContentsClientAdapter.onSafeBrowsingHit");
+-        }
+-    }
+-
+-    @Override
+     public void onReceivedHttpError(AwWebResourceRequest request, AwWebResourceResponse response) {
+         try {
+             TraceEvent.begin("WebViewContentsClientAdapter.onReceivedHttpError");
+diff --git a/android_webview/glue/java/src/com/android/webview/chromium/WebViewDatabaseAdapter.java b/android_webview/glue/java/src/com/android/webview/chromium/WebViewDatabaseAdapter.java
+index fce6608..cfbde6b 100644
+--- a/android_webview/glue/java/src/com/android/webview/chromium/WebViewDatabaseAdapter.java
++++ b/android_webview/glue/java/src/com/android/webview/chromium/WebViewDatabaseAdapter.java
+@@ -7,7 +7,6 @@ package com.android.webview.chromium;
+ import android.os.Build;
+ import android.webkit.WebViewDatabase;
+ 
+-import org.chromium.android_webview.AwFormDatabase;
+ import org.chromium.android_webview.HttpAuthDatabase;
+ import org.chromium.base.ThreadUtils;
+ 
+@@ -98,35 +97,11 @@ final class WebViewDatabaseAdapter extends WebViewDatabase {
+ 
+     @Override
+     public boolean hasFormData() {
+-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) return false;
+-
+-        if (checkNeedsPost()) {
+-            return mFactory.runOnUiThreadBlocking(new Callable<Boolean>() {
+-                @Override
+-                public Boolean call() {
+-                    return AwFormDatabase.hasFormData();
+-                }
+-
+-            });
+-        }
+-        return AwFormDatabase.hasFormData();
++        return false;
+     }
+ 
+     @Override
+     public void clearFormData() {
+-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) return;
+-
+-        if (checkNeedsPost()) {
+-            mFactory.addTask(new Runnable() {
+-                @Override
+-                public void run() {
+-                    AwFormDatabase.clearFormData();
+-                }
+-
+-            });
+-            return;
+-        }
+-        AwFormDatabase.clearFormData();
+     }
+ 
+     private static boolean checkNeedsPost() {
+diff --git a/android_webview/glue/java/src/com/android/webview/chromium/WebkitToSharedGlueConverter.java b/android_webview/glue/java/src/com/android/webview/chromium/WebkitToSharedGlueConverter.java
+index ff60a4c..837f283 100644
+--- a/android_webview/glue/java/src/com/android/webview/chromium/WebkitToSharedGlueConverter.java
++++ b/android_webview/glue/java/src/com/android/webview/chromium/WebkitToSharedGlueConverter.java
+@@ -4,7 +4,6 @@
+ 
+ package com.android.webview.chromium;
+ 
+-import android.webkit.SafeBrowsingResponse;
+ import android.webkit.ServiceWorkerWebSettings;
+ import android.webkit.WebMessagePort;
+ import android.webkit.WebResourceError;
+@@ -14,7 +13,6 @@ import android.webkit.WebView;
+ 
+ import org.chromium.android_webview.AwContentsClient.AwWebResourceError;
+ import org.chromium.android_webview.AwContentsClient.AwWebResourceRequest;
+-import org.chromium.android_webview.AwSafeBrowsingResponse;
+ import org.chromium.android_webview.AwServiceWorkerSettings;
+ import org.chromium.android_webview.AwSettings;
+ import org.chromium.base.Callback;
+@@ -55,11 +53,6 @@ public class WebkitToSharedGlueConverter {
+         return ((WebResourceErrorAdapter) error).getAwWebResourceError();
+     }
+ 
+-    public static Callback<AwSafeBrowsingResponse> getAwSafeBrowsingResponseCallback(
+-            SafeBrowsingResponse response) {
+-        return ((SafeBrowsingResponseAdapter) response).getAwSafeBrowsingResponseCallback();
+-    }
+-
+     public static MessagePort getMessagePort(WebMessagePort messagePort) {
+         return ((WebMessagePortAdapter) messagePort).getPort();
+     }
+diff --git a/android_webview/java/src/org/chromium/android_webview/AwBrowserContext.java b/android_webview/java/src/org/chromium/android_webview/AwBrowserContext.java
+index 1189c29..08eb4ca 100644
+--- a/android_webview/java/src/org/chromium/android_webview/AwBrowserContext.java
++++ b/android_webview/java/src/org/chromium/android_webview/AwBrowserContext.java
+@@ -23,9 +23,7 @@ public class AwBrowserContext {
+     private final SharedPreferences mSharedPreferences;
+ 
+     private AwGeolocationPermissions mGeolocationPermissions;
+-    private AwFormDatabase mFormDatabase;
+     private AwServiceWorkerController mServiceWorkerController;
+-    private AwTracingController mTracingController;
+     private Context mApplicationContext;
+ 
+     public AwBrowserContext(SharedPreferences sharedPreferences, Context applicationContext) {
+@@ -56,13 +54,6 @@ public class AwBrowserContext {
+         return mGeolocationPermissions;
+     }
+ 
+-    public AwFormDatabase getFormDatabase() {
+-        if (mFormDatabase == null) {
+-            mFormDatabase = new AwFormDatabase();
+-        }
+-        return mFormDatabase;
+-    }
+-
+     public AwServiceWorkerController getServiceWorkerController() {
+         if (mServiceWorkerController == null) {
+             mServiceWorkerController = new AwServiceWorkerController(mApplicationContext, this);
+@@ -70,13 +61,6 @@ public class AwBrowserContext {
+         return mServiceWorkerController;
+     }
+ 
+-    public AwTracingController getTracingController() {
+-        if (mTracingController == null) {
+-            mTracingController = new AwTracingController();
+-        }
+-        return mTracingController;
+-    }
+-
+     /**
+      * @see android.webkit.WebView#pauseTimers()
+      */
+diff --git a/android_webview/java/src/org/chromium/android_webview/AwBrowserProcess.java b/android_webview/java/src/org/chromium/android_webview/AwBrowserProcess.java
+index be40932..d405992 100644
+--- a/android_webview/java/src/org/chromium/android_webview/AwBrowserProcess.java
++++ b/android_webview/java/src/org/chromium/android_webview/AwBrowserProcess.java
+@@ -15,7 +15,6 @@ import android.os.RemoteException;
+ import android.os.StrictMode;
+ 
+ import org.chromium.android_webview.command_line.CommandLineUtil;
+-import org.chromium.android_webview.policy.AwPolicyProvider;
+ import org.chromium.android_webview.services.CrashReceiverService;
+ import org.chromium.android_webview.services.ICrashReceiverService;
+ import org.chromium.base.AsyncTask;
+@@ -34,7 +33,6 @@ import org.chromium.components.minidump_uploader.CrashFileManager;
+ import org.chromium.content_public.browser.BrowserStartupController;
+ import org.chromium.content_public.browser.ChildProcessCreationParams;
+ import org.chromium.content_public.browser.ChildProcessLauncherHelper;
+-import org.chromium.policy.CombinedPolicyProvider;
+ 
+ import java.io.File;
+ import java.io.FileNotFoundException;
+@@ -115,16 +113,6 @@ public final class AwBrowserProcess {
+                 if (multiProcess) {
+                     ChildProcessLauncherHelper.warmUp(appContext);
+                 }
+-                // The policies are used by browser startup, so we need to register the policy
+-                // providers before starting the browser process. This only registers java objects
+-                // and doesn't need the native library.
+-                CombinedPolicyProvider.get().registerProvider(new AwPolicyProvider(appContext));
+-
+-                // Check android settings but only when safebrowsing is enabled.
+-                try (ScopedSysTraceEvent e2 =
+-                                ScopedSysTraceEvent.scoped("AwBrowserProcess.maybeEnable")) {
+-                    AwSafeBrowsingConfigHelper.maybeEnableSafeBrowsingFromManifest(appContext);
+-                }
+ 
+                 try (ScopedSysTraceEvent e2 = ScopedSysTraceEvent.scoped(
+                              "AwBrowserProcess.startBrowserProcessesSync")) {
+@@ -213,26 +201,6 @@ public final class AwBrowserProcess {
+      * Android Checkbox toggle.
+      */
+     public static void handleMinidumpsAndSetMetricsConsent(final boolean updateMetricsConsent) {
+-        try (ScopedSysTraceEvent e1 = ScopedSysTraceEvent.scoped(
+-                     "AwBrowserProcess.handleMinidumpsAndSetMetricsConsent")) {
+-            final boolean enableMinidumpUploadingForTesting = CommandLine.getInstance().hasSwitch(
+-                    CommandLineUtil.CRASH_UPLOADS_ENABLED_FOR_TESTING_SWITCH);
+-            if (enableMinidumpUploadingForTesting) {
+-                handleMinidumps(true /* enabled */);
+-            }
+-
+-            PlatformServiceBridge.getInstance().queryMetricsSetting(enabled -> {
+-                ThreadUtils.assertOnUiThread();
+-                if (updateMetricsConsent) {
+-                    AwMetricsServiceClient.setConsentSetting(
+-                            ContextUtils.getApplicationContext(), enabled);
+-                }
+-
+-                if (!enableMinidumpUploadingForTesting) {
+-                    handleMinidumps(enabled);
+-                }
+-            });
+-        }
+     }
+ 
+     /**
+diff --git a/android_webview/java/src/org/chromium/android_webview/AwContents.java b/android_webview/java/src/org/chromium/android_webview/AwContents.java
+index 808f8df..c4ec169 100644
+--- a/android_webview/java/src/org/chromium/android_webview/AwContents.java
++++ b/android_webview/java/src/org/chromium/android_webview/AwContents.java
+@@ -39,7 +39,6 @@ import android.view.ViewGroup;
+ import android.view.ViewStructure;
+ import android.view.accessibility.AccessibilityNodeProvider;
+ import android.view.animation.AnimationUtils;
+-import android.view.autofill.AutofillValue;
+ import android.view.inputmethod.EditorInfo;
+ import android.view.inputmethod.InputConnection;
+ import android.view.textclassifier.TextClassifier;
+@@ -60,7 +59,6 @@ import org.chromium.base.annotations.CalledByNative;
+ import org.chromium.base.annotations.JNINamespace;
+ import org.chromium.base.metrics.RecordHistogram;
+ import org.chromium.blink_public.web.WebReferrerPolicy;
+-import org.chromium.components.autofill.AutofillProvider;
+ import org.chromium.components.navigation_interception.InterceptNavigationDelegate;
+ import org.chromium.components.navigation_interception.NavigationParams;
+ import org.chromium.content_public.browser.ChildProcessImportance;
+@@ -285,10 +283,6 @@ public class AwContents implements SmartClipProvider {
+                 AwScrollOffsetManager.Delegate delegate) {
+             return new AwScrollOffsetManager(delegate);
+         }
+-
+-        public AutofillProvider createAutofillProvider(Context context, ViewGroup containerView) {
+-            return null;
+-        }
+     }
+ 
+     /**
+@@ -380,8 +374,6 @@ public class AwContents implements SmartClipProvider {
+     private float mContentWidthDip;
+     private float mContentHeightDip;
+ 
+-    private AwAutofillClient mAwAutofillClient;
+-
+     private AwPdfExporter mAwPdfExporter;
+ 
+     private AwViewMethods mAwViewMethods;
+@@ -410,8 +402,6 @@ public class AwContents implements SmartClipProvider {
+     // Do not use directly, call isNoOperation() instead.
+     private boolean mIsNoOperation;
+ 
+-    private AutofillProvider mAutofillProvider;
+-
+     private static String sCurrentLocales = "";
+ 
+     private Paint mPaintForNWorkaround;
+@@ -822,7 +812,6 @@ public class AwContents implements SmartClipProvider {
+ 
+             mHandler = new Handler();
+             mContext = context;
+-            mAutofillProvider = dependencyFactory.createAutofillProvider(context, mContainerView);
+             mAppTargetSdkVersion = mContext.getApplicationInfo().targetSdkVersion;
+             mInternalAccessAdapter = internalAccessAdapter;
+             mNativeDrawGLFunctorFactory = nativeDrawGLFunctorFactory;
+@@ -883,10 +872,6 @@ public class AwContents implements SmartClipProvider {
+         mViewEventSink.setHideKeyboardOnBlur(false);
+         SelectionPopupController controller = SelectionPopupController.fromWebContents(webContents);
+         controller.setActionModeCallback(new AwActionModeCallback(mContext, this, webContents));
+-        if (mAutofillProvider != null) {
+-            controller.setNonSelectionActionModeCallback(
+-                    new AutofillActionModeCallback(mContext, mAutofillProvider));
+-        }
+         controller.setSelectionClient(SelectionClient.createSmartSelectionClient(webContents));
+ 
+         // Listen for dpad events from IMEs (e.g. Samsung Cursor Control) so we know to enable
+@@ -1043,7 +1028,6 @@ public class AwContents implements SmartClipProvider {
+         awViewMethodsImpl.onWindowFocusChanged(mContainerView.hasWindowFocus());
+         awViewMethodsImpl.onFocusChanged(mContainerView.hasFocus(), 0, null);
+         mContainerView.requestLayout();
+-        if (mAutofillProvider != null) mAutofillProvider.onContainerViewChanged(mContainerView);
+     }
+ 
+     // This class destroys the WindowAndroid when after it is gc-ed.
+@@ -1166,14 +1150,13 @@ public class AwContents implements SmartClipProvider {
+         initWebContents(mViewAndroidDelegate, mInternalAccessAdapter, mWebContents,
+                 mWindowAndroid.getWindowAndroid(), mWebContentsInternalsHolder);
+         nativeSetJavaPeers(mNativeAwContents, this, mWebContentsDelegate, mContentsClientBridge,
+-                mIoThreadClient, mInterceptNavigationDelegate, mAutofillProvider);
++                mIoThreadClient, mInterceptNavigationDelegate);
+         GestureListenerManager.fromWebContents(mWebContents)
+                 .addListener(new AwGestureStateListener());
+ 
+         mNavigationController = mWebContents.getNavigationController();
+         installWebContentsObserver();
+         mSettings.setWebContents(mWebContents);
+-        if (mAutofillProvider != null) mAutofillProvider.setWebContents(mWebContents);
+ 
+         mDisplayObserver.onDIPScaleChanged(getDeviceScaleFactor());
+ 
+@@ -2459,18 +2442,6 @@ public class AwContents implements SmartClipProvider {
+         getWebContentsAccessibility().onProvideVirtualStructure(structure, true);
+     }
+ 
+-    public void onProvideAutoFillVirtualStructure(ViewStructure structure, int flags) {
+-        if (mAutofillProvider != null) {
+-            mAutofillProvider.onProvideAutoFillVirtualStructure(structure, flags);
+-        }
+-    }
+-
+-    public void autofill(final SparseArray<AutofillValue> values) {
+-        if (mAutofillProvider != null) {
+-            mAutofillProvider.autofill(values);
+-        }
+-    }
+-
+     public boolean isSelectActionModeAllowed(int actionModeItem) {
+         return (mSettings.getDisabledActionModeMenuItems() & actionModeItem) != actionModeItem;
+     }
+@@ -2771,10 +2742,6 @@ public class AwContents implements SmartClipProvider {
+      * @see android.webkit.WebView#clearFormData()
+      */
+     public void hideAutofillPopup() {
+-        if (TRACE) Log.i(TAG, "%s hideAutofillPopup", this);
+-        if (mAwAutofillClient != null) {
+-            mAwAutofillClient.hideAutofillPopup();
+-        }
+     }
+ 
+     public void setNetworkAvailable(boolean networkUp) {
+@@ -3043,12 +3010,6 @@ public class AwContents implements SmartClipProvider {
+     }
+ 
+     @CalledByNative
+-    private void setAwAutofillClient(AwAutofillClient client) {
+-        mAwAutofillClient = client;
+-        client.init(mContext);
+-    }
+-
+-    @CalledByNative
+     private void didOverscroll(int deltaX, int deltaY, float velocityX, float velocityY) {
+         mScrollOffsetManager.overScrollBy(deltaX, deltaY);
+ 
+@@ -3134,34 +3095,6 @@ public class AwContents implements SmartClipProvider {
+                 && percentOfScreenHeight >= MIN_SCREEN_HEIGHT_PERCENTAGE_FOR_INTERSTITIAL;
+     }
+ 
+-    @VisibleForTesting
+-    public void evaluateJavaScriptOnInterstitialForTesting(
+-            String script, final Callback<String> callback) {
+-        if (TRACE) Log.i(TAG, "%s evaluateJavaScriptOnInterstitialForTesting=%s", this, script);
+-        if (isDestroyedOrNoOperation(WARN)) return;
+-        JavaScriptCallback jsCallback = null;
+-        if (callback != null) {
+-            jsCallback = jsonResult -> callback.onResult(jsonResult);
+-        }
+-
+-        nativeEvaluateJavaScriptOnInterstitialForTesting(mNativeAwContents, script, jsCallback);
+-    }
+-
+-    @CalledByNative
+-    private static void onEvaluateJavaScriptResultForTesting(
+-            String jsonResult, JavaScriptCallback callback) {
+-        callback.handleJavaScriptResult(jsonResult);
+-    }
+-
+-    /**
+-     * Return the device locale in the same format we use to populate the 'hl' query parameter for
+-     * Safe Browsing interstitial urls, as done in BaseUIManager::app_locale().
+-     */
+-    @VisibleForTesting
+-    public static String getSafeBrowsingLocaleForTesting() {
+-        return nativeGetSafeBrowsingLocaleForTesting();
+-    }
+-
+     // -------------------------------------------------------------------------------------------
+     // Helper methods
+     // -------------------------------------------------------------------------------------------
+@@ -3501,7 +3434,6 @@ public class AwContents implements SmartClipProvider {
+                 return;
+             }
+             mIsAttachedToWindow = false;
+-            hideAutofillPopup();
+             nativeOnDetachedFromWindow(mNativeAwContents);
+ 
+             mViewEventSink.onDetachedFromWindow();
+@@ -3657,15 +3589,11 @@ public class AwContents implements SmartClipProvider {
+     private static native int nativeGetNativeInstanceCount();
+     private static native void nativeSetShouldDownloadFavicons();
+     private static native void nativeUpdateDefaultLocale(String locale, String localeList);
+-    private static native String nativeGetSafeBrowsingLocaleForTesting();
+ 
+-    private native void nativeEvaluateJavaScriptOnInterstitialForTesting(
+-            long nativeAwContents, String script, JavaScriptCallback jsCallback);
+     private native void nativeSetJavaPeers(long nativeAwContents, AwContents awContents,
+             AwWebContentsDelegate webViewWebContentsDelegate,
+             AwContentsClientBridge contentsClientBridge, AwContentsIoThreadClient ioThreadClient,
+-            InterceptNavigationDelegate navigationInterceptionDelegate,
+-            AutofillProvider autofillProvider);
++            InterceptNavigationDelegate navigationInterceptionDelegate);
+     private native WebContents nativeGetWebContents(long nativeAwContents);
+     private native void nativeSetAwGLFunctor(long nativeAwContents, long nativeAwGLFunctor);
+ 
+diff --git a/android_webview/java/src/org/chromium/android_webview/AwContentsClient.java b/android_webview/java/src/org/chromium/android_webview/AwContentsClient.java
+index ec44351..a6fc4ae 100644
+--- a/android_webview/java/src/org/chromium/android_webview/AwContentsClient.java
++++ b/android_webview/java/src/org/chromium/android_webview/AwContentsClient.java
+@@ -375,9 +375,6 @@ public abstract class AwContentsClient {
+     protected abstract void onReceivedError2(
+             AwWebResourceRequest request, AwWebResourceError error);
+ 
+-    protected abstract void onSafeBrowsingHit(AwWebResourceRequest request, int threatType,
+-            Callback<AwSafeBrowsingResponse> callback);
+-
+     public abstract void onReceivedHttpError(AwWebResourceRequest request,
+             AwWebResourceResponse response);
+ 
+diff --git a/android_webview/java/src/org/chromium/android_webview/AwContentsClientBridge.java b/android_webview/java/src/org/chromium/android_webview/AwContentsClientBridge.java
+index 6e19c61..b8145b8 100644
+--- a/android_webview/java/src/org/chromium/android_webview/AwContentsClientBridge.java
++++ b/android_webview/java/src/org/chromium/android_webview/AwContentsClientBridge.java
+@@ -319,34 +319,6 @@ public class AwContentsClientBridge {
+     }
+ 
+     @CalledByNative
+-    public void onSafeBrowsingHit(
+-            // WebResourceRequest
+-            String url, boolean isMainFrame, boolean hasUserGesture, String method,
+-            String[] requestHeaderNames, String[] requestHeaderValues, int threatType,
+-            final int requestId) {
+-        AwContentsClient.AwWebResourceRequest request = new AwContentsClient.AwWebResourceRequest();
+-        request.url = url;
+-        request.isMainFrame = isMainFrame;
+-        request.hasUserGesture = hasUserGesture;
+-        request.method = method;
+-        request.requestHeaders = new HashMap<String, String>(requestHeaderNames.length);
+-        for (int i = 0; i < requestHeaderNames.length; ++i) {
+-            request.requestHeaders.put(requestHeaderNames[i], requestHeaderValues[i]);
+-        }
+-
+-        // TODO(ntfschr): remove clang-format directives once crbug/764582 is resolved
+-        // clang-format off
+-        Callback<AwSafeBrowsingResponse> callback =
+-                response -> ThreadUtils.runOnUiThread(
+-                        () -> nativeTakeSafeBrowsingAction(mNativeContentsClientBridge,
+-                                response.action(), response.reporting(), requestId));
+-        // clang-format on
+-
+-        mClient.getCallbackHelper().postOnSafeBrowsingHit(
+-                request, AwSafeBrowsingConversionHelper.convertThreatType(threatType), callback);
+-    }
+-
+-    @CalledByNative
+     private void onReceivedHttpError(
+             // WebResourceRequest
+             String url, boolean isMainFrame, boolean hasUserGesture, String method,
+@@ -403,8 +375,6 @@ public class AwContentsClientBridge {
+     //--------------------------------------------------------------------------------------------
+     //  Native methods
+     //--------------------------------------------------------------------------------------------
+-    private native void nativeTakeSafeBrowsingAction(
+-            long nativeAwContentsClientBridge, int action, boolean reporting, int requestId);
+     private native void nativeProceedSslError(long nativeAwContentsClientBridge, boolean proceed,
+             int id);
+     private native void nativeProvideClientCertificateResponse(long nativeAwContentsClientBridge,
+diff --git a/android_webview/java/src/org/chromium/android_webview/AwContentsClientCallbackHelper.java b/android_webview/java/src/org/chromium/android_webview/AwContentsClientCallbackHelper.java
+index 3fa731a..a582484 100644
+--- a/android_webview/java/src/org/chromium/android_webview/AwContentsClientCallbackHelper.java
++++ b/android_webview/java/src/org/chromium/android_webview/AwContentsClientCallbackHelper.java
+@@ -74,19 +74,6 @@ public class AwContentsClientCallbackHelper {
+         }
+     }
+ 
+-    private static class OnSafeBrowsingHitInfo {
+-        final AwContentsClient.AwWebResourceRequest mRequest;
+-        final int mThreatType;
+-        final Callback<AwSafeBrowsingResponse> mCallback;
+-
+-        OnSafeBrowsingHitInfo(AwContentsClient.AwWebResourceRequest request, int threatType,
+-                Callback<AwSafeBrowsingResponse> callback) {
+-            mRequest = request;
+-            mThreatType = threatType;
+-            mCallback = callback;
+-        }
+-    }
+-
+     private static class OnReceivedHttpErrorInfo {
+         final AwContentsClient.AwWebResourceRequest mRequest;
+         final AwWebResourceResponse mResponse;
+@@ -187,9 +174,6 @@ public class AwContentsClientCallbackHelper {
+                     break;
+                 }
+                 case MSG_ON_SAFE_BROWSING_HIT: {
+-                    OnSafeBrowsingHitInfo info = (OnSafeBrowsingHitInfo) msg.obj;
+-                    mContentsClient.onSafeBrowsingHit(
+-                            info.mRequest, info.mThreatType, info.mCallback);
+                     break;
+                 }
+                 case MSG_ON_NEW_PICTURE: {
+@@ -294,12 +278,6 @@ public class AwContentsClientCallbackHelper {
+         mHandler.sendMessage(mHandler.obtainMessage(MSG_ON_RECEIVED_ERROR, info));
+     }
+ 
+-    public void postOnSafeBrowsingHit(AwContentsClient.AwWebResourceRequest request, int threatType,
+-            Callback<AwSafeBrowsingResponse> callback) {
+-        OnSafeBrowsingHitInfo info = new OnSafeBrowsingHitInfo(request, threatType, callback);
+-        mHandler.sendMessage(mHandler.obtainMessage(MSG_ON_SAFE_BROWSING_HIT, info));
+-    }
+-
+     public void postOnNewPicture(Callable<Picture> pictureProvider) {
+         if (mHasPendingOnNewPicture) return;
+         mHasPendingOnNewPicture = true;
+diff --git a/android_webview/java/src/org/chromium/android_webview/AwContentsStatics.java b/android_webview/java/src/org/chromium/android_webview/AwContentsStatics.java
+index 6a12a9c..04446cc 100644
+--- a/android_webview/java/src/org/chromium/android_webview/AwContentsStatics.java
++++ b/android_webview/java/src/org/chromium/android_webview/AwContentsStatics.java
+@@ -27,9 +27,6 @@ public class AwContentsStatics {
+ 
+     private static boolean sRecordFullDocument;
+ 
+-    private static final String sSafeBrowsingWarmUpHelper =
+-            "com.android.webview.chromium.SafeBrowsingWarmUpHelper";
+-
+     /**
+      * Return the client certificate lookup table.
+      */
+@@ -90,32 +87,6 @@ public class AwContentsStatics {
+         callback.onResult(success);
+     }
+ 
+-    public static void setSafeBrowsingWhitelist(List<String> urls, Callback<Boolean> callback) {
+-        String[] urlArray = urls.toArray(new String[urls.size()]);
+-        if (callback == null) {
+-            callback = b -> {
+-            };
+-        }
+-        nativeSetSafeBrowsingWhitelist(urlArray, callback);
+-    }
+-
+-    public static void initSafeBrowsing(Context context, final Callback<Boolean> callback) {
+-        // Wrap the callback to make sure we always invoke it on the UI thread, as guaranteed by the
+-        // API.
+-        final Context appContext = context.getApplicationContext();
+-        Callback<Boolean> wrapperCallback = b -> {
+-            if (callback != null) {
+-                ThreadUtils.runOnUiThread(() -> callback.onResult(b));
+-            }
+-        };
+-
+-        PlatformServiceBridge.getInstance().warmUpSafeBrowsing(appContext, wrapperCallback);
+-    }
+-
+-    public static Uri getSafeBrowsingPrivacyPolicyUrl() {
+-        return Uri.parse(nativeGetSafeBrowsingPrivacyPolicyUrl());
+-    }
+-
+     public static void setCheckClearTextPermitted(boolean permitted) {
+         nativeSetCheckClearTextPermitted(permitted);
+     }
+@@ -145,14 +116,11 @@ public class AwContentsStatics {
+     //--------------------------------------------------------------------------------------------
+     //  Native methods
+     //--------------------------------------------------------------------------------------------
+-    private static native String nativeGetSafeBrowsingPrivacyPolicyUrl();
+     private static native void nativeClearClientCertPreferences(Runnable callback);
+     private static native String nativeGetUnreachableWebDataUrl();
+     private static native String nativeGetProductVersion();
+     private static native void nativeSetServiceWorkerIoThreadClient(
+             AwContentsIoThreadClient ioThreadClient, AwBrowserContext browserContext);
+-    private static native void nativeSetSafeBrowsingWhitelist(
+-            String[] urls, Callback<Boolean> callback);
+     private static native void nativeSetCheckClearTextPermitted(boolean permitted);
+     private static native void nativeSetProxyOverride(
+             String host, int port, String[] exclusionList);
+diff --git a/android_webview/java/src/org/chromium/android_webview/AwServiceWorkerController.java b/android_webview/java/src/org/chromium/android_webview/AwServiceWorkerController.java
+index 571210c..cf34b5a 100644
+--- a/android_webview/java/src/org/chromium/android_webview/AwServiceWorkerController.java
++++ b/android_webview/java/src/org/chromium/android_webview/AwServiceWorkerController.java
+@@ -84,7 +84,7 @@ public class AwServiceWorkerController {
+ 
+         @Override
+         public boolean getSafeBrowsingEnabled() {
+-            return AwSafeBrowsingConfigHelper.getSafeBrowsingEnabledByManifest();
++            return false;
+         }
+     }
+ 
+diff --git a/android_webview/java/src/org/chromium/android_webview/AwSettings.java b/android_webview/java/src/org/chromium/android_webview/AwSettings.java
+index dce5551..64960ac 100644
+--- a/android_webview/java/src/org/chromium/android_webview/AwSettings.java
++++ b/android_webview/java/src/org/chromium/android_webview/AwSettings.java
+@@ -110,9 +110,6 @@ public class AwSettings {
+     // Although this bit is stored on AwSettings it is actually controlled via the CookieManager.
+     private boolean mAcceptThirdPartyCookies;
+ 
+-    // if null, default to AwSafeBrowsingConfigHelper.getSafeBrowsingEnabledByManifest()
+-    private Boolean mSafeBrowsingEnabled;
+-
+     private final boolean mSupportLegacyQuirks;
+     private final boolean mAllowEmptyDocumentPersistence;
+     private final boolean mAllowGeolocationOnInsecureOrigins;
+@@ -350,9 +347,6 @@ public class AwSettings {
+      * @param enabled true if this WebView should have SafeBrowsing
+      */
+     public void setSafeBrowsingEnabled(boolean enabled) {
+-        synchronized (mAwSettingsLock) {
+-            mSafeBrowsingEnabled = enabled;
+-        }
+     }
+ 
+     /**
+@@ -370,18 +364,7 @@ public class AwSettings {
+      * @return true if SafeBrowsing is enabled
+      */
+     public boolean getSafeBrowsingEnabled() {
+-        synchronized (mAwSettingsLock) {
+-            Boolean userOptIn = AwSafeBrowsingConfigHelper.getSafeBrowsingUserOptIn();
+-
+-            // If we don't know yet what the user's preference is, we go through Safe Browsing logic
+-            // anyway and correct the assumption before sending data to GMS.
+-            if (userOptIn != null && !userOptIn) return false;
+-
+-            if (mSafeBrowsingEnabled == null) {
+-                return AwSafeBrowsingConfigHelper.getSafeBrowsingEnabledByManifest();
+-            }
+-            return mSafeBrowsingEnabled;
+-        }
++        return false;
+     }
+ 
+     /**
+diff --git a/android_webview/java/src/org/chromium/android_webview/VariationsSeedLoader.java b/android_webview/java/src/org/chromium/android_webview/VariationsSeedLoader.java
+index 9fbd9e4..d90b7bc 100644
+--- a/android_webview/java/src/org/chromium/android_webview/VariationsSeedLoader.java
++++ b/android_webview/java/src/org/chromium/android_webview/VariationsSeedLoader.java
+@@ -19,8 +19,6 @@ import org.chromium.android_webview.services.VariationsSeedServer;
+ import org.chromium.base.ContextUtils;
+ import org.chromium.base.Log;
+ import org.chromium.base.VisibleForTesting;
+-import org.chromium.base.metrics.CachedMetrics.EnumeratedHistogramSample;
+-import org.chromium.base.metrics.CachedMetrics.TimesHistogramSample;
+ import org.chromium.components.variations.LoadSeedResult;
+ import org.chromium.components.variations.firstrun.VariationsSeedFetcher.SeedInfo;
+ 
+@@ -80,9 +78,6 @@ public class VariationsSeedLoader {
+     private SeedLoadAndUpdateRunnable mRunnable;
+ 
+     private static void recordLoadSeedResult(int result) {
+-        EnumeratedHistogramSample histogram = new EnumeratedHistogramSample(
+-                "Variations.SeedLoadResult", LoadSeedResult.ENUM_SIZE);
+-        histogram.record(result);
+     }
+ 
+     private static boolean isExpired(long seedFileTime) {
+@@ -105,7 +100,6 @@ public class VariationsSeedLoader {
+         private long mCurrentSeedDate = Long.MIN_VALUE;
+ 
+         private FutureTask<SeedInfo> mLoadTask = new FutureTask<>(() -> {
+-            AwMetricsServiceClient.preloadClientId();
+ 
+             File newSeedFile = VariationsUtils.getNewSeedFile();
+             File oldSeedFile = VariationsUtils.getSeedFile();
+@@ -233,10 +227,6 @@ public class VariationsSeedLoader {
+             try {
+                 return mRunnable.get(SEED_LOAD_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
+             } finally {
+-                long end = SystemClock.elapsedRealtime();
+-                TimesHistogramSample histogram = new TimesHistogramSample(
+-                        "Variations.SeedLoadBlockingTime", TimeUnit.MILLISECONDS);
+-                histogram.record(end - start);
+             }
+         } catch (TimeoutException e) {
+             recordLoadSeedResult(LoadSeedResult.LOAD_TIMED_OUT);
+diff --git a/android_webview/lib/aw_main_delegate.cc b/android_webview/lib/aw_main_delegate.cc
+index 251cc41..cb314a5 100644
+--- a/android_webview/lib/aw_main_delegate.cc
++++ b/android_webview/lib/aw_main_delegate.cc
+@@ -33,9 +33,6 @@
+ #include "components/autofill/core/common/autofill_features.h"
+ #include "components/crash/content/app/breakpad_linux.h"
+ #include "components/crash/core/common/crash_key.h"
+-#include "components/safe_browsing/android/safe_browsing_api_handler_bridge.h"
+-#include "components/services/heap_profiling/public/cpp/allocator_shim.h"
+-#include "components/spellcheck/spellcheck_buildflags.h"
+ #include "components/viz/common/features.h"
+ #include "content/public/browser/android/browser_media_player_manager_register.h"
+ #include "content/public/browser/browser_main_runner.h"
+@@ -53,10 +50,6 @@
+ #include "ui/base/resource/resource_bundle.h"
+ #include "ui/events/gesture_detection/gesture_configuration.h"
+ 
+-#if BUILDFLAG(ENABLE_SPELLCHECK)
+-#include "components/spellcheck/common/spellcheck_features.h"
+-#endif  // ENABLE_SPELLCHECK
+-
+ namespace android_webview {
+ 
+ AwMainDelegate::AwMainDelegate() {}
+@@ -155,11 +148,6 @@ bool AwMainDelegate::BasicStartupComplete(int* exit_code) {
+     cl->AppendSwitch(switches::kInProcessGPU);
+   }
+ 
+-#if BUILDFLAG(ENABLE_SPELLCHECK)
+-  CommandLineHelper::AddEnabledFeature(
+-      *cl, spellcheck::kAndroidSpellCheckerNonLowEnd.name);
+-#endif  // ENABLE_SPELLCHECK
+-
+   CommandLineHelper::AddDisabledFeature(*cl, features::kWebPayments.name);
+ 
+   // WebView does not and should not support WebAuthN.
+@@ -184,33 +172,8 @@ bool AwMainDelegate::BasicStartupComplete(int* exit_code) {
+   CommandLineHelper::AddDisabledFeature(*cl,
+                                         media::kMediaDrmPersistentLicense.name);
+ 
+-  CommandLineHelper::AddEnabledFeature(
+-      *cl, autofill::features::kAutofillSkipComparingInferredLabels.name);
+-
+-  CommandLineHelper::AddDisabledFeature(
+-      *cl, autofill::features::kAutofillRestrictUnownedFieldsToFormlessCheckout
+-               .name);
+-
+   android_webview::RegisterPathProvider();
+ 
+-  safe_browsing_api_handler_.reset(
+-      new safe_browsing::SafeBrowsingApiHandlerBridge());
+-  safe_browsing::SafeBrowsingApiHandler::SetInstance(
+-      safe_browsing_api_handler_.get());
+-
+-  // Used only if the argument filter is enabled in tracing config,
+-  // as is the case by default in aw_tracing_controller.cc
+-  base::trace_event::TraceLog::GetInstance()->SetArgumentFilterPredicate(
+-      base::BindRepeating(&IsTraceEventArgsWhitelisted));
+-
+-  // The TLS slot used by the memlog allocator shim needs to be initialized
+-  // early to ensure that it gets assigned a low slot number. If it gets
+-  // initialized too late, the glibc TLS system will require a malloc call in
+-  // order to allocate storage for a higher slot number. Since malloc is hooked,
+-  // this causes re-entrancy into the allocator shim, while the TLS object is
+-  // partially-initialized, which the TLS object is supposed to protect again.
+-  heap_profiling::InitTLSSlot();
+-
+   return false;
+ }
+ 
+diff --git a/android_webview/lib/aw_main_delegate.h b/android_webview/lib/aw_main_delegate.h
+index 4648702..eae3337 100644
+--- a/android_webview/lib/aw_main_delegate.h
++++ b/android_webview/lib/aw_main_delegate.h
+@@ -16,10 +16,6 @@ namespace content {
+ class BrowserMainRunner;
+ }
+ 
+-namespace safe_browsing {
+-class SafeBrowsingApiHandler;
+-}
+-
+ namespace android_webview {
+ 
+ class AwContentBrowserClient;
+@@ -55,8 +51,6 @@ class AwMainDelegate : public content::ContentMainDelegate {
+   std::unique_ptr<AwContentGpuClient> content_gpu_client_;
+   std::unique_ptr<AwContentRendererClient> content_renderer_client_;
+   std::unique_ptr<AwContentUtilityClient> content_utility_client_;
+-  std::unique_ptr<safe_browsing::SafeBrowsingApiHandler>
+-      safe_browsing_api_handler_;
+ 
+   DISALLOW_COPY_AND_ASSIGN(AwMainDelegate);
+ };
+diff --git a/android_webview/renderer/aw_content_renderer_client.cc b/android_webview/renderer/aw_content_renderer_client.cc
+index 5133898..8dd51f4 100644
+--- a/android_webview/renderer/aw_content_renderer_client.cc
++++ b/android_webview/renderer/aw_content_renderer_client.cc
+@@ -57,11 +57,6 @@
+ #include "url/gurl.h"
+ #include "url/url_constants.h"
+ 
+-#if BUILDFLAG(ENABLE_SPELLCHECK)
+-#include "components/spellcheck/renderer/spellcheck.h"
+-#include "components/spellcheck/renderer/spellcheck_provider.h"
+-#endif
+-
+ using content::RenderThread;
+ 
+ namespace android_webview {
+@@ -90,11 +85,6 @@ void AwContentRendererClient::RenderThreadStarted() {
+       ->GetServiceManagerConnection()
+       ->AddConnectionFilter(std::make_unique<content::SimpleConnectionFilter>(
+           std::move(registry)));
+-
+-#if BUILDFLAG(ENABLE_SPELLCHECK)
+-  if (!spellcheck_)
+-    spellcheck_ = std::make_unique<SpellCheck>(nullptr, this);
+-#endif
+ }
+ 
+ bool AwContentRendererClient::HandleNavigation(
+@@ -177,10 +167,6 @@ void AwContentRendererClient::RenderFrameCreated(
+     RenderThread::Get()->Send(new AwViewHostMsg_SubFrameCreated(
+         parent_frame->GetRoutingID(), render_frame->GetRoutingID()));
+   }
+-
+-#if BUILDFLAG(ENABLE_SPELLCHECK)
+-  new SpellCheckProvider(render_frame, spellcheck_.get(), this);
+-#endif
+ }
+ 
+ void AwContentRendererClient::RenderViewCreated(
+@@ -283,11 +269,6 @@ void AwContentRendererClient::AddSupportedKeySystems(
+   AwAddKeySystems(key_systems);
+ }
+ 
+-std::unique_ptr<content::WebSocketHandshakeThrottleProvider>
+-AwContentRendererClient::CreateWebSocketHandshakeThrottleProvider() {
+-  return std::make_unique<AwWebSocketHandshakeThrottleProvider>();
+-}
+-
+ bool AwContentRendererClient::ShouldUseMediaPlayerForURL(const GURL& url) {
+   // Android WebView needs to support codecs that Chrome does not, for these
+   // cases we must force the usage of Android MediaPlayer instead of Chrome's
+@@ -334,12 +315,6 @@ bool AwContentRendererClient::ShouldUseMediaPlayerForURL(const GURL& url) {
+   return false;
+ }
+ 
+-std::unique_ptr<content::URLLoaderThrottleProvider>
+-AwContentRendererClient::CreateURLLoaderThrottleProvider(
+-    content::URLLoaderThrottleProviderType provider_type) {
+-  return std::make_unique<AwURLLoaderThrottleProvider>(provider_type);
+-}
+-
+ void AwContentRendererClient::GetInterface(
+     const std::string& interface_name,
+     mojo::ScopedMessagePipeHandle interface_pipe) {
+diff --git a/android_webview/renderer/aw_content_renderer_client.h b/android_webview/renderer/aw_content_renderer_client.h
+index 8b8bf37..7cd0110 100644
+--- a/android_webview/renderer/aw_content_renderer_client.h
++++ b/android_webview/renderer/aw_content_renderer_client.h
+@@ -11,15 +11,10 @@
+ #include "android_webview/renderer/aw_render_thread_observer.h"
+ #include "base/compiler_specific.h"
+ #include "base/memory/weak_ptr.h"
+-#include "components/spellcheck/spellcheck_buildflags.h"
+ #include "components/web_restrictions/interfaces/web_restrictions.mojom.h"
+ #include "content/public/renderer/content_renderer_client.h"
+ #include "services/service_manager/public/cpp/local_interface_provider.h"
+ 
+-#if BUILDFLAG(ENABLE_SPELLCHECK)
+-class SpellCheck;
+-#endif
+-
+ namespace visitedlink {
+ class VisitedLinkSlave;
+ }
+@@ -48,8 +43,6 @@ class AwContentRendererClient : public content::ContentRendererClient,
+   void AddSupportedKeySystems(
+       std::vector<std::unique_ptr<::media::KeySystemProperties>>* key_systems)
+       override;
+-  std::unique_ptr<content::WebSocketHandshakeThrottleProvider>
+-  CreateWebSocketHandshakeThrottleProvider() override;
+   bool HandleNavigation(content::RenderFrame* render_frame,
+                         bool is_content_initiated,
+                         bool render_view_was_created_by_renderer,
+@@ -59,9 +52,6 @@ class AwContentRendererClient : public content::ContentRendererClient,
+                         blink::WebNavigationPolicy default_policy,
+                         bool is_redirect) override;
+   bool ShouldUseMediaPlayerForURL(const GURL& url) override;
+-  std::unique_ptr<content::URLLoaderThrottleProvider>
+-  CreateURLLoaderThrottleProvider(
+-      content::URLLoaderThrottleProviderType provider_type) override;
+ 
+  private:
+   // service_manager::LocalInterfaceProvider:
+@@ -72,10 +62,6 @@ class AwContentRendererClient : public content::ContentRendererClient,
+   std::unique_ptr<visitedlink::VisitedLinkSlave> visited_link_slave_;
+   web_restrictions::mojom::WebRestrictionsPtr web_restrictions_service_;
+ 
+-#if BUILDFLAG(ENABLE_SPELLCHECK)
+-  std::unique_ptr<SpellCheck> spellcheck_;
+-#endif
+-
+   DISALLOW_COPY_AND_ASSIGN(AwContentRendererClient);
+ };
+ 
+diff --git a/android_webview/renderer/aw_render_frame_ext.cc b/android_webview/renderer/aw_render_frame_ext.cc
+index 8f23bb6..522e4ef 100644
+--- a/android_webview/renderer/aw_render_frame_ext.cc
++++ b/android_webview/renderer/aw_render_frame_ext.cc
+@@ -9,8 +9,6 @@
+ #include "android_webview/common/aw_hit_test_data.h"
+ #include "android_webview/common/render_view_messages.h"
+ #include "base/strings/utf_string_conversions.h"
+-#include "components/autofill/content/renderer/autofill_agent.h"
+-#include "components/autofill/content/renderer/password_autofill_agent.h"
+ #include "content/public/renderer/document_state.h"
+ #include "content/public/renderer/render_frame.h"
+ #include "content/public/renderer/render_view.h"
+@@ -144,10 +142,6 @@ AwRenderFrameExt::AwRenderFrameExt(content::RenderFrame* render_frame)
+     : content::RenderFrameObserver(render_frame) {
+   // TODO(sgurun) do not create a password autofill agent (change
+   // autofill agent to store a weakptr).
+-  autofill::PasswordAutofillAgent* password_autofill_agent =
+-      new autofill::PasswordAutofillAgent(render_frame, &registry_);
+-  new autofill::AutofillAgent(render_frame, password_autofill_agent, nullptr,
+-                              &registry_);
+ }
+ 
+ AwRenderFrameExt::~AwRenderFrameExt() {
+diff --git a/android_webview/renderer/aw_url_loader_throttle_provider.cc b/android_webview/renderer/aw_url_loader_throttle_provider.cc
+index 061bb1a..49db8e4 100644
+--- a/android_webview/renderer/aw_url_loader_throttle_provider.cc
++++ b/android_webview/renderer/aw_url_loader_throttle_provider.cc
+@@ -7,8 +7,6 @@
+ #include <memory>
+ 
+ #include "base/feature_list.h"
+-#include "components/safe_browsing/features.h"
+-#include "components/safe_browsing/renderer/renderer_url_loader_throttle.h"
+ #include "content/public/common/content_features.h"
+ #include "content/public/common/service_names.mojom.h"
+ #include "content/public/renderer/render_thread.h"
+@@ -22,27 +20,17 @@ AwURLLoaderThrottleProvider::AwURLLoaderThrottleProvider(
+     : type_(type) {
+   DETACH_FROM_THREAD(thread_checker_);
+ 
+-  if (base::FeatureList::IsEnabled(network::features::kNetworkService) ||
+-      base::FeatureList::IsEnabled(safe_browsing::kCheckByURLLoaderThrottle)) {
+-    content::RenderThread::Get()->GetConnector()->BindInterface(
+-        content::mojom::kBrowserServiceName,
+-        mojo::MakeRequest(&safe_browsing_info_));
+-  }
+ }
+ 
+ AwURLLoaderThrottleProvider::AwURLLoaderThrottleProvider(
+     const AwURLLoaderThrottleProvider& other)
+     : type_(other.type_) {
+   DETACH_FROM_THREAD(thread_checker_);
+-  if (other.safe_browsing_)
+-    other.safe_browsing_->Clone(mojo::MakeRequest(&safe_browsing_info_));
+ }
+ 
+ std::unique_ptr<content::URLLoaderThrottleProvider>
+ AwURLLoaderThrottleProvider::Clone() {
+   DCHECK_CALLED_ON_VALID_THREAD(thread_checker_);
+-  if (safe_browsing_info_)
+-    safe_browsing_.Bind(std::move(safe_browsing_info_));
+   return base::WrapUnique(new AwURLLoaderThrottleProvider(*this));
+ }
+ 
+@@ -68,17 +56,6 @@ AwURLLoaderThrottleProvider::CreateThrottles(
+   DCHECK(!is_frame_resource ||
+          type_ == content::URLLoaderThrottleProviderType::kFrame);
+ 
+-  if ((network_service_enabled ||
+-       base::FeatureList::IsEnabled(
+-           safe_browsing::kCheckByURLLoaderThrottle)) &&
+-      !is_frame_resource) {
+-    if (safe_browsing_info_)
+-      safe_browsing_.Bind(std::move(safe_browsing_info_));
+-    throttles.push_back(
+-        std::make_unique<safe_browsing::RendererURLLoaderThrottle>(
+-            safe_browsing_.get(), render_frame_id));
+-  }
+-
+   return throttles;
+ }
+ 
+diff --git a/android_webview/renderer/aw_url_loader_throttle_provider.h b/android_webview/renderer/aw_url_loader_throttle_provider.h
+index aed73c8..a93d775 100644
+--- a/android_webview/renderer/aw_url_loader_throttle_provider.h
++++ b/android_webview/renderer/aw_url_loader_throttle_provider.h
+@@ -6,7 +6,6 @@
+ #define ANDROID_WEBVIEW_RENDERER_AW_URL_LOADER_THROTTLE_PROVIDER_H_
+ 
+ #include "base/threading/thread_checker.h"
+-#include "components/safe_browsing/common/safe_browsing.mojom.h"
+ #include "content/public/renderer/url_loader_throttle_provider.h"
+ 
+ namespace android_webview {
+@@ -35,9 +34,6 @@ class AwURLLoaderThrottleProvider : public content::URLLoaderThrottleProvider {
+ 
+   content::URLLoaderThrottleProviderType type_;
+ 
+-  safe_browsing::mojom::SafeBrowsingPtrInfo safe_browsing_info_;
+-  safe_browsing::mojom::SafeBrowsingPtr safe_browsing_;
+-
+   THREAD_CHECKER(thread_checker_);
+ 
+   DISALLOW_ASSIGN(AwURLLoaderThrottleProvider);
+diff --git a/android_webview/renderer/aw_websocket_handshake_throttle_provider.cc b/android_webview/renderer/aw_websocket_handshake_throttle_provider.cc
+index c19f95a..d2845a3 100644
+--- a/android_webview/renderer/aw_websocket_handshake_throttle_provider.cc
++++ b/android_webview/renderer/aw_websocket_handshake_throttle_provider.cc
+@@ -7,8 +7,6 @@
+ #include <utility>
+ 
+ #include "base/feature_list.h"
+-#include "components/safe_browsing/features.h"
+-#include "components/safe_browsing/renderer/websocket_sb_handshake_throttle.h"
+ #include "content/public/common/content_features.h"
+ #include "content/public/common/service_names.mojom.h"
+ #include "content/public/renderer/render_thread.h"
+@@ -20,11 +18,6 @@ namespace android_webview {
+ 
+ AwWebSocketHandshakeThrottleProvider::AwWebSocketHandshakeThrottleProvider() {
+   DETACH_FROM_THREAD(thread_checker_);
+-  if (!base::FeatureList::IsEnabled(network::features::kNetworkService))
+-    return;
+-  content::RenderThread::Get()->GetConnector()->BindInterface(
+-      content::mojom::kBrowserServiceName,
+-      mojo::MakeRequest(&safe_browsing_info_));
+ }
+ 
+ AwWebSocketHandshakeThrottleProvider::~AwWebSocketHandshakeThrottleProvider() {
+@@ -34,27 +27,18 @@ AwWebSocketHandshakeThrottleProvider::~AwWebSocketHandshakeThrottleProvider() {
+ AwWebSocketHandshakeThrottleProvider::AwWebSocketHandshakeThrottleProvider(
+     const AwWebSocketHandshakeThrottleProvider& other) {
+   DETACH_FROM_THREAD(thread_checker_);
+-  if (other.safe_browsing_)
+-    other.safe_browsing_->Clone(mojo::MakeRequest(&safe_browsing_info_));
+ }
+ 
+ std::unique_ptr<content::WebSocketHandshakeThrottleProvider>
+ AwWebSocketHandshakeThrottleProvider::Clone() {
+   DCHECK_CALLED_ON_VALID_THREAD(thread_checker_);
+-  if (safe_browsing_info_)
+-    safe_browsing_.Bind(std::move(safe_browsing_info_));
+   return base::WrapUnique(new AwWebSocketHandshakeThrottleProvider(*this));
+ }
+ 
+ std::unique_ptr<blink::WebSocketHandshakeThrottle>
+ AwWebSocketHandshakeThrottleProvider::CreateThrottle(int render_frame_id) {
+   DCHECK_CALLED_ON_VALID_THREAD(thread_checker_);
+-  if (!base::FeatureList::IsEnabled(network::features::kNetworkService))
+     return nullptr;
+-  if (safe_browsing_info_)
+-    safe_browsing_.Bind(std::move(safe_browsing_info_));
+-  return std::make_unique<safe_browsing::WebSocketSBHandshakeThrottle>(
+-      safe_browsing_.get(), render_frame_id);
+ }
+ 
+ }  // namespace android_webview
+diff --git a/android_webview/renderer/aw_websocket_handshake_throttle_provider.h b/android_webview/renderer/aw_websocket_handshake_throttle_provider.h
+index 33d9f56..e876d8d 100644
+--- a/android_webview/renderer/aw_websocket_handshake_throttle_provider.h
++++ b/android_webview/renderer/aw_websocket_handshake_throttle_provider.h
+@@ -9,7 +9,6 @@
+ 
+ #include "base/macros.h"
+ #include "base/threading/thread_checker.h"
+-#include "components/safe_browsing/common/safe_browsing.mojom.h"
+ #include "content/public/renderer/websocket_handshake_throttle_provider.h"
+ 
+ namespace android_webview {
+@@ -33,9 +32,6 @@ class AwWebSocketHandshakeThrottleProvider final
+   AwWebSocketHandshakeThrottleProvider(
+       const AwWebSocketHandshakeThrottleProvider& other);
+ 
+-  safe_browsing::mojom::SafeBrowsingPtrInfo safe_browsing_info_;
+-  safe_browsing::mojom::SafeBrowsingPtr safe_browsing_;
+-
+   THREAD_CHECKER(thread_checker_);
+ 
+   DISALLOW_ASSIGN(AwWebSocketHandshakeThrottleProvider);
+diff --git a/android_webview/support_library/callback/BUILD.gn b/android_webview/support_library/callback/BUILD.gn
+index 214eeb0..3e3df5b 100644
+--- a/android_webview/support_library/callback/BUILD.gn
++++ b/android_webview/support_library/callback/BUILD.gn
+@@ -7,7 +7,7 @@ import("//build/config/android/rules.gni")
+ 
+ android_library("callback_java") {
+   java_files = [
+-    "java/src/org/chromium/support_lib_callback_glue/SupportLibSafeBrowsingResponse.java",
++    #"java/src/org/chromium/support_lib_callback_glue/SupportLibSafeBrowsingResponse.java",
+     "java/src/org/chromium/support_lib_callback_glue/SupportLibWebResourceError.java",
+     "java/src/org/chromium/support_lib_callback_glue/SupportLibWebViewContentsClientAdapter.java",
+   ]
+diff --git a/android_webview/support_library/callback/java/src/org/chromium/support_lib_callback_glue/SupportLibWebViewContentsClientAdapter.java b/android_webview/support_library/callback/java/src/org/chromium/support_lib_callback_glue/SupportLibWebViewContentsClientAdapter.java
+index eac6f83..700bc9a6 100644
+--- a/android_webview/support_library/callback/java/src/org/chromium/support_lib_callback_glue/SupportLibWebViewContentsClientAdapter.java
++++ b/android_webview/support_library/callback/java/src/org/chromium/support_lib_callback_glue/SupportLibWebViewContentsClientAdapter.java
+@@ -11,10 +11,8 @@ import android.webkit.WebView;
+ import android.webkit.WebViewClient;
+ 
+ import org.chromium.android_webview.AwContentsClient.AwWebResourceError;
+-import org.chromium.android_webview.AwSafeBrowsingResponse;
+ import org.chromium.android_webview.ScopedSysTraceEvent;
+ import org.chromium.base.Callback;
+-import org.chromium.support_lib_boundary.SafeBrowsingResponseBoundaryInterface;
+ import org.chromium.support_lib_boundary.WebResourceErrorBoundaryInterface;
+ import org.chromium.support_lib_boundary.WebViewClientBoundaryInterface;
+ import org.chromium.support_lib_boundary.util.BoundaryInterfaceReflectionUtil;
+@@ -107,16 +105,6 @@ public class SupportLibWebViewContentsClientAdapter {
+         mWebViewClient.onReceivedHttpError(webView, request, response);
+     }
+ 
+-    public void onSafeBrowsingHit(WebView webView, WebResourceRequest request, int threatType,
+-            Callback<AwSafeBrowsingResponse> callback) {
+-        assert isFeatureAvailable(Features.SAFE_BROWSING_HIT);
+-        SafeBrowsingResponseBoundaryInterface supportLibResponse =
+-                new SupportLibSafeBrowsingResponse(callback);
+-        InvocationHandler responseHandler =
+-                BoundaryInterfaceReflectionUtil.createInvocationHandlerFor(supportLibResponse);
+-        mWebViewClient.onSafeBrowsingHit(webView, request, threatType, responseHandler);
+-    }
+-
+     public boolean shouldOverrideUrlLoading(WebView webView, WebResourceRequest request) {
+         assert isFeatureAvailable(Features.SHOULD_OVERRIDE_WITH_REDIRECTS);
+         return mWebViewClient.shouldOverrideUrlLoading(webView, request);
+diff --git a/android_webview/support_library/java/src/org/chromium/support_lib_glue/SupportLibWebViewChromiumFactory.java b/android_webview/support_library/java/src/org/chromium/support_lib_glue/SupportLibWebViewChromiumFactory.java
+index aa9990f..a095f65 100644
+--- a/android_webview/support_library/java/src/org/chromium/support_lib_glue/SupportLibWebViewChromiumFactory.java
++++ b/android_webview/support_library/java/src/org/chromium/support_lib_glue/SupportLibWebViewChromiumFactory.java
+@@ -100,18 +100,15 @@ class SupportLibWebViewChromiumFactory implements WebViewProviderFactoryBoundary
+ 
+         @Override
+         public void initSafeBrowsing(Context context, ValueCallback<Boolean> callback) {
+-            mSharedStatics.initSafeBrowsing(context, CallbackConverter.fromValueCallback(callback));
+         }
+ 
+         @Override
+         public void setSafeBrowsingWhitelist(List<String> hosts, ValueCallback<Boolean> callback) {
+-            mSharedStatics.setSafeBrowsingWhitelist(
+-                    hosts, CallbackConverter.fromValueCallback(callback));
+         }
+ 
+         @Override
+         public Uri getSafeBrowsingPrivacyPolicyUrl() {
+-            return mSharedStatics.getSafeBrowsingPrivacyPolicyUrl();
++            return null;
+         }
+ 
+         @Override
+diff --git a/android_webview/support_library/java/src/org/chromium/support_lib_glue/SupportLibWebkitToCompatConverterAdapter.java b/android_webview/support_library/java/src/org/chromium/support_lib_glue/SupportLibWebkitToCompatConverterAdapter.java
+index 53f119d..993c359 100644
+--- a/android_webview/support_library/java/src/org/chromium/support_lib_glue/SupportLibWebkitToCompatConverterAdapter.java
++++ b/android_webview/support_library/java/src/org/chromium/support_lib_glue/SupportLibWebkitToCompatConverterAdapter.java
+@@ -11,7 +11,6 @@ import android.webkit.WebResourceError;
+ import android.webkit.WebResourceRequest;
+ import android.webkit.WebSettings;
+ 
+-import com.android.webview.chromium.SafeBrowsingResponseAdapter;
+ import com.android.webview.chromium.ServiceWorkerSettingsAdapter;
+ import com.android.webview.chromium.WebMessagePortAdapter;
+ import com.android.webview.chromium.WebResourceErrorAdapter;
+@@ -19,7 +18,6 @@ import com.android.webview.chromium.WebkitToSharedGlueConverter;
+ 
+ import org.chromium.support_lib_boundary.WebkitToCompatConverterBoundaryInterface;
+ import org.chromium.support_lib_boundary.util.BoundaryInterfaceReflectionUtil;
+-import org.chromium.support_lib_callback_glue.SupportLibSafeBrowsingResponse;
+ import org.chromium.support_lib_callback_glue.SupportLibWebResourceError;
+ 
+ import java.lang.reflect.InvocationHandler;
+@@ -86,20 +84,13 @@ class SupportLibWebkitToCompatConverterAdapter implements WebkitToCompatConverte
+     @Override
+     public /* SupportLibSafeBrowsingResponse */ InvocationHandler convertSafeBrowsingResponse(
+             /* SafeBrowsingResponse */ Object safeBrowsingResponse) {
+-        return BoundaryInterfaceReflectionUtil.createInvocationHandlerFor(
+-                new SupportLibSafeBrowsingResponse(
+-                        WebkitToSharedGlueConverter.getAwSafeBrowsingResponseCallback(
+-                                (SafeBrowsingResponse) safeBrowsingResponse)));
++        return null;
+     }
+ 
+     @Override
+     public /* SafeBrowsingResponse */ Object convertSafeBrowsingResponse(
+             /* SupportLibSafeBrowsingResponse */ InvocationHandler safeBrowsingResponse) {
+-        SupportLibSafeBrowsingResponse supportLibResponse =
+-                (SupportLibSafeBrowsingResponse) BoundaryInterfaceReflectionUtil
+-                        .getDelegateFromInvocationHandler(safeBrowsingResponse);
+-        return new SafeBrowsingResponseAdapter(
+-                supportLibResponse.getAwSafeBrowsingResponseCallback());
++        return null;
+     }
+ 
+     @Override
+diff --git a/android_webview/system_webview_apk_tmpl.gni b/android_webview/system_webview_apk_tmpl.gni
+index 09fd7aa..c45f8da 100644
+--- a/android_webview/system_webview_apk_tmpl.gni
++++ b/android_webview/system_webview_apk_tmpl.gni
+@@ -23,13 +23,13 @@ template("system_webview_apk_tmpl") {
+     }
+ 
+     shared_resources = true
+-    shared_libraries = [ "//android_webview:libwebviewchromium" ]
++    shared_libraries = [ "//android_webview:libwebcr" ]
+     native_lib_version_rule = "//build/util:chrome_version_json"
+     _native_lib_file =
+         rebase_path("$root_gen_dir/CHROME_VERSION.json", root_out_dir)
+     native_lib_version_arg = "@FileArg($_native_lib_file:full-quoted)"
+     if (build_apk_secondary_abi && android_64bit_target_cpu) {
+-      secondary_abi_shared_libraries = [ "//android_webview:libwebviewchromium($android_secondary_abi_toolchain)" ]
++      secondary_abi_shared_libraries = [ "//android_webview:libwebcr($android_secondary_abi_toolchain)" ]
+     }
+     aapt_locale_whitelist = locales
+ 
+diff --git a/android_webview/utility/aw_content_utility_client.cc b/android_webview/utility/aw_content_utility_client.cc
+index a1b8291..31b58f1 100644
+--- a/android_webview/utility/aw_content_utility_client.cc
++++ b/android_webview/utility/aw_content_utility_client.cc
+@@ -4,8 +4,6 @@
+ 
+ #include "android_webview/utility/aw_content_utility_client.h"
+ 
+-#include "components/services/heap_profiling/heap_profiling_service.h"
+-#include "components/services/heap_profiling/public/mojom/constants.mojom.h"
+ #include "content/public/child/child_thread.h"
+ #include "content/public/common/service_manager_connection.h"
+ #include "content/public/common/simple_connection_filter.h"
+@@ -28,11 +26,6 @@ void AwContentUtilityClient::UtilityThreadStarted() {
+ 
+ void AwContentUtilityClient::RegisterServices(
+     AwContentUtilityClient::StaticServiceMap* services) {
+-  service_manager::EmbeddedServiceInfo profiling_info;
+-  profiling_info.task_runner = content::ChildThread::Get()->GetIOTaskRunner();
+-  profiling_info.factory =
+-      base::BindRepeating(&heap_profiling::HeapProfilingService::CreateService);
+-  services->emplace(heap_profiling::mojom::kServiceName, profiling_info);
+ }
+ 
+ }  // namespace android_webview
+diff --git a/build/android/gyp/dist_aar.py b/build/android/gyp/dist_aar.py
+index ed823f1..752ebab 100755
+--- a/build/android/gyp/dist_aar.py
++++ b/build/android/gyp/dist_aar.py
+@@ -23,9 +23,21 @@ _ANDROID_BUILD_DIR = os.path.dirname(os.path.dirname(__file__))
+ def _MergeRTxt(r_paths):
+   """Merging the given R.txt files and returns them as a string."""
+   all_lines = set()
++  all_keys = set()
+   for r_path in r_paths:
++    if 'android_deps' in r_path:
++        continue
++    print(r_path)
+     with open(r_path) as f:
+-      all_lines.update(f.readlines())
++      #all_lines.update(f.readlines())
++      lines = f.readlines()
++      for line in lines:
++        tokens = line.split(' ')
++        key = tokens[0] + tokens[1] + tokens[2]
++        if key in all_keys:
++           continue
++        all_keys.add(key)
++        all_lines.add(line)
+   return ''.join(sorted(all_lines))
+ 
+ 
+@@ -46,11 +58,16 @@ def _AddResources(aar_zip, resource_zips):
+   """
+   for i, path in enumerate(resource_zips):
+     with zipfile.ZipFile(path) as res_zip:
++      if 'android_deps' in path:
++        continue
++      print(path)
+       for info in res_zip.infolist():
+         data = res_zip.read(info)
+         dirname, basename = posixpath.split(info.filename)
++        #print("AddResources " + dirname)
+         if 'values' in dirname:
+-          basename = '{}_{}'.format(basename, i)
++          fname,fext = posixpath.splitext(basename)
++          basename = '{}_{}{}'.format(fname, i, fext)
+           info.filename = posixpath.join(dirname, basename)
+         info.filename = posixpath.join('res', info.filename)
+         aar_zip.writestr(info, data)
+diff --git a/build/config/BUILDCONFIG.gn b/build/config/BUILDCONFIG.gn
+index 387fdb2..3b45081 100644
+--- a/build/config/BUILDCONFIG.gn
++++ b/build/config/BUILDCONFIG.gn
+@@ -519,8 +519,8 @@ set_sources_assignment_filter(sources_assignment_filter)
+ # Holds all configs used for running the compiler.
+ default_compiler_configs = [
+   "//build/config:feature_flags",
+-  "//build/config/compiler:afdo",
+-  "//build/config/compiler:afdo_optimize_size",
++  #"//build/config/compiler:afdo",
++  #"//build/config/compiler:afdo_optimize_size",
+   "//build/config/compiler:compiler",
+   "//build/config/compiler:compiler_arm_fpu",
+   "//build/config/compiler:compiler_arm_thumb",
+diff --git a/build/config/compiler/BUILD.gn b/build/config/compiler/BUILD.gn
+index d1bb559..eaa2c553 100644
+--- a/build/config/compiler/BUILD.gn
++++ b/build/config/compiler/BUILD.gn
+@@ -259,14 +259,14 @@ config("compiler") {
+     } else if ((is_posix && !is_chromeos && !is_nacl) || is_fuchsia) {
+       # TODO(phajdan.jr): Use -fstack-protector-strong when our gcc supports it.
+       # See also https://crbug.com/533294
+-      cflags += [ "--param=ssp-buffer-size=4" ]
++      #cflags += [ "--param=ssp-buffer-size=4" ]
+ 
+       # The x86 toolchain currently has problems with stack-protector.
+       if (is_android && current_cpu == "x86") {
+         cflags += [ "-fno-stack-protector" ]
+       } else if (current_os != "aix") {
+         # Not available on aix.
+-        cflags += [ "-fstack-protector" ]
++        cflags += [ "-fno-stack-protector" ]
+       }
+     }
+ 
+@@ -1569,7 +1569,7 @@ config("chromium_code") {
+       # Non-chromium code is not guaranteed to compile cleanly with
+       # _FORTIFY_SOURCE. Also, fortified build may fail when optimizations are
+       # disabled, so only do that for Release build.
+-      defines += [ "_FORTIFY_SOURCE=2" ]
++      #defines += [ "_FORTIFY_SOURCE=2" ]
+     }
+ 
+     if (is_mac || is_ios) {
+diff --git a/net/base/address_tracker_linux.cc b/net/base/address_tracker_linux.cc
+index 62b39d0..3b6ccc9 100644
+--- a/net/base/address_tracker_linux.cc
++++ b/net/base/address_tracker_linux.cc
+@@ -290,7 +290,7 @@ void AddressTrackerLinux::ReadMessages(bool* address_changed,
+   *address_changed = false;
+   *link_changed = false;
+   *tunnel_changed = false;
+-  char buffer[4096];
++  int buffer[1024];
+   bool first_loop = true;
+   {
+     base::Optional<base::ScopedBlockingCall> blocking_call;
+@@ -302,7 +302,7 @@ void AddressTrackerLinux::ReadMessages(bool* address_changed,
+     }
+ 
+     for (;;) {
+-      int rv = HANDLE_EINTR(recv(netlink_fd_, buffer, sizeof(buffer),
++      int rv = HANDLE_EINTR(recv(netlink_fd_, (char*) buffer, sizeof(buffer),
+                                  // Block the first time through loop.
+                                  first_loop ? 0 : MSG_DONTWAIT));
+       first_loop = false;
+@@ -316,7 +316,7 @@ void AddressTrackerLinux::ReadMessages(bool* address_changed,
+         PLOG(ERROR) << "Failed to recv from netlink socket";
+         return;
+       }
+-      HandleMessage(buffer, rv, address_changed, link_changed, tunnel_changed);
++      HandleMessage((char*) buffer, rv, address_changed, link_changed, tunnel_changed);
+     }
+   }
+   if (*link_changed || *address_changed)
+diff --git a/skia/BUILD.gn b/skia/BUILD.gn
+index 55bcd12..abb79b2 100644
+--- a/skia/BUILD.gn
++++ b/skia/BUILD.gn
+@@ -638,7 +638,7 @@ template("skia_source_set") {
+     # source_sets. However, that also comes at a relatively big performance
+     # cost.
+     if (using_mismatched_sample_profile) {
+-      configs -= [ "//build/config/compiler:afdo_optimize_size" ]
++      #configs -= [ "//build/config/compiler:afdo_optimize_size" ]
+     }
+   }
+ }
