@@ -1,0 +1,1976 @@
+diff --git a/base/BUILD.gn b/base/BUILD.gn
+index 6d823e4..165b9b1 100644
+--- a/base/BUILD.gn
++++ b/base/BUILD.gn
+@@ -1521,6 +1521,9 @@ component("i18n") {
+     "i18n/timezone.h",
+     "i18n/utf8_validator_tables.cc",
+     "i18n/utf8_validator_tables.h",
++    "i18n/android_icu.S",
++    "i18n/android_expat.S",
++    #"i18n/android_ssl.S",
+   ]
+   defines = [ "BASE_I18N_IMPLEMENTATION" ]
+   configs += [ "//build/config/compiler:wexit_time_destructors" ]
+diff --git a/base/i18n/file_util_icu.cc b/base/i18n/file_util_icu.cc
+index 7b3375e..2d202c6 100644
+--- a/base/i18n/file_util_icu.cc
++++ b/base/i18n/file_util_icu.cc
+@@ -35,18 +35,18 @@ class IllegalCharacters {
+   }
+ 
+   bool DisallowedEverywhere(UChar32 ucs4) {
+-    return !!illegal_anywhere_->contains(ucs4);
++    return false; //!!illegal_anywhere_->contains(ucs4);
+   }
+ 
+   bool DisallowedLeadingOrTrailing(UChar32 ucs4) {
+-    return !!illegal_at_ends_->contains(ucs4);
++    return false;// !!illegal_at_ends_->contains(ucs4);
+   }
+ 
+   bool IsAllowedName(const string16& s) {
+-    return s.empty() || (!!illegal_anywhere_->containsNone(
+-                             icu::UnicodeString(s.c_str(), s.size())) &&
+-                         !illegal_at_ends_->contains(*s.begin()) &&
+-                         !illegal_at_ends_->contains(*s.rbegin()));
++    return true;//s.empty() || (!!illegal_anywhere_->containsNone(
++                //             icu::UnicodeString(s.c_str(), s.size())) &&
++                //         !illegal_at_ends_->contains(*s.begin()) &&
++                //         !illegal_at_ends_->contains(*s.rbegin()));
+   }
+ 
+  private:
+@@ -57,10 +57,10 @@ class IllegalCharacters {
+   ~IllegalCharacters() { }
+ 
+   // set of characters considered invalid anywhere inside a filename.
+-  std::unique_ptr<icu::UnicodeSet> illegal_anywhere_;
++//  std::unique_ptr<icu::UnicodeSet> illegal_anywhere_;
+ 
+   // set of characters considered invalid at either end of a filename.
+-  std::unique_ptr<icu::UnicodeSet> illegal_at_ends_;
++//  std::unique_ptr<icu::UnicodeSet> illegal_at_ends_;
+ 
+   DISALLOW_COPY_AND_ASSIGN(IllegalCharacters);
+ };
+@@ -77,11 +77,11 @@ IllegalCharacters::IllegalCharacters() {
+   // legitimate in Arabic and some S/SE Asian scripts. In addition tilde (~) is
+   // also excluded due to the possibility of interacting poorly with short
+   // filenames on VFAT. (Related to CVE-2014-9390)
+-  illegal_anywhere_.reset(new icu::UnicodeSet(
+-      UNICODE_STRING_SIMPLE("[[\"~*/:<>?\\\\|][:Cc:][:Cf:]]"),
+-      everywhere_status));
+-  illegal_at_ends_.reset(new icu::UnicodeSet(
+-      UNICODE_STRING_SIMPLE("[[:WSpace:][.]]"), ends_status));
++//  illegal_anywhere_.reset(new icu::UnicodeSet(
++//      UNICODE_STRING_SIMPLE("[[\"~*/:<>?\\\\|][:Cc:][:Cf:]]"),
++//      everywhere_status));
++//  illegal_at_ends_.reset(new icu::UnicodeSet(
++//      UNICODE_STRING_SIMPLE("[[:WSpace:][.]]"), ends_status));
+   DCHECK(U_SUCCESS(everywhere_status));
+   DCHECK(U_SUCCESS(ends_status));
+ 
+@@ -89,13 +89,13 @@ IllegalCharacters::IllegalCharacters() {
+   // any chance, do not add these to |set| and change IsFilenameLegal()
+   // to check |ucs4 & 0xFFFEu == 0xFFFEu|, in addiition to calling
+   // IsAllowedName().
+-  illegal_anywhere_->add(0xFDD0, 0xFDEF);
+-  for (int i = 0; i <= 0x10; ++i) {
+-    int plane_base = 0x10000 * i;
+-    illegal_anywhere_->add(plane_base + 0xFFFE, plane_base + 0xFFFF);
+-  }
+-  illegal_anywhere_->freeze();
+-  illegal_at_ends_->freeze();
++//  illegal_anywhere_->add(0xFDD0, 0xFDEF);
++//  for (int i = 0; i <= 0x10; ++i) {
++//    int plane_base = 0x10000 * i;
++//    illegal_anywhere_->add(plane_base + 0xFFFE, plane_base + 0xFFFF);
++//  }
++//  illegal_anywhere_->freeze();
++//  illegal_at_ends_->freeze();
+ }
+ 
+ }  // namespace
+@@ -150,25 +150,26 @@ bool LocaleAwareCompareFilenames(const FilePath& a, const FilePath& b) {
+   UErrorCode error_code = U_ZERO_ERROR;
+   // Use the default collator. The default locale should have been properly
+   // set by the time this constructor is called.
+-  std::unique_ptr<icu::Collator> collator(
+-      icu::Collator::createInstance(error_code));
++  UCollator* collator = ucol_open(NULL, &error_code);
+   DCHECK(U_SUCCESS(error_code));
+   // Make it case-sensitive.
+-  collator->setStrength(icu::Collator::TERTIARY);
++  ucol_setStrength(collator, UCOL_TERTIARY);
+ 
+ #if defined(OS_WIN)
+-  return CompareString16WithCollator(*collator, WideToUTF16(a.value()),
++  bool res = CompareString16WithCollator(collator, WideToUTF16(a.value()),
+                                      WideToUTF16(b.value())) == UCOL_LESS;
+ 
+ #elif defined(OS_POSIX)
+   // On linux, the file system encoding is not defined. We assume
+   // SysNativeMBToWide takes care of it.
+-  return CompareString16WithCollator(
+-             *collator, WideToUTF16(SysNativeMBToWide(a.value().c_str())),
++  bool res = CompareString16WithCollator(
++             collator, WideToUTF16(SysNativeMBToWide(a.value().c_str())),
+              WideToUTF16(SysNativeMBToWide(b.value().c_str()))) == UCOL_LESS;
+ #else
+   #error Not implemented on your system
+ #endif
++  ucol_close(collator);
++  return res;
+ }
+ 
+ void NormalizeFileNameEncoding(FilePath* file_name) {
+diff --git a/base/i18n/icu_util.cc b/base/i18n/icu_util.cc
+index 30876f4..abaf2dd 100644
+--- a/base/i18n/icu_util.cc
++++ b/base/i18n/icu_util.cc
+@@ -17,6 +17,7 @@
+ #include "base/path_service.h"
+ #include "base/strings/string_util.h"
+ #include "base/strings/sys_string_conversions.h"
++#include "base/strings/stringprintf.h"
+ #include "build/build_config.h"
+ #include "third_party/icu/source/common/unicode/putil.h"
+ #include "third_party/icu/source/common/unicode/udata.h"
+@@ -25,6 +26,9 @@
+ #endif
+ 
+ #if defined(OS_ANDROID)
++#include <dirent.h>
++#include <dlfcn.h>
++#include <android/log.h>
+ #include "base/android/apk_assets.h"
+ #endif
+ 
+@@ -71,9 +75,6 @@ wchar_t g_debug_icu_pf_filename[_MAX_PATH];
+ // build pkg configurations, etc). 'l' stands for Little Endian.
+ // This variable is exported through the header file.
+ const char kIcuDataFileName[] = "icudtl.dat";
+-#if defined(OS_ANDROID)
+-const char kAndroidAssetsIcuDataFileName[] = "assets/icudtl.dat";
+-#endif
+ 
+ // File handle intentionally never closed. Not using File here because its
+ // Windows implementation guards against two instances owning the same
+@@ -82,19 +83,219 @@ PlatformFile g_icudtl_pf = kInvalidPlatformFile;
+ MemoryMappedFile* g_icudtl_mapped_file = nullptr;
+ MemoryMappedFile::Region g_icudtl_region;
+ 
++#if defined(OS_ANDROID)
++namespace {
++extern "C" {
++// Allowed icu4c version numbers are in the range [44, 999].
++// Gingerbread's icu4c 4.4 is the minimum supported ICU version.
++static constexpr auto ICUDATA_VERSION_MIN_LENGTH = 2;
++static constexpr auto ICUDATA_VERSION_MAX_LENGTH = 3;
++static constexpr auto ICUDATA_VERSION_MIN = 44;
++
++static char icudata_version[ICUDATA_VERSION_MAX_LENGTH + 1];
++static int  icudt_vernum = 0;
++static void* uc_handle = nullptr;
++static void* i18n_handle = nullptr;
++static void* expat_handle = nullptr;
++
++struct Record {
++  void*       addr;
++  const char* name;
++};
++extern Record __icu_funcs_begin[];
++extern Record __icu_i18n_funcs[];
++extern Record __icu_funcs_end[];
++
++extern Record __expat_funcs[];
++extern Record __ssl_funcs[];
++
++static int __icu_dat_file_filter(const dirent* dirp) {
++  const char* name = dirp->d_name;
++  // Is the name the right length to match 'icudt(\d\d\d)l.dat'?
++  const size_t len = strlen(name);
++  if (len < 10 + ICUDATA_VERSION_MIN_LENGTH || len > 10 + ICUDATA_VERSION_MAX_LENGTH) return 0;
++  return !strncmp(name, "icudt", 5) && !strncmp(&name[len - 5], "l.dat", 5);
++}
++
++extern "C" int panic(int a, int b, int c) {
++  LOG(ERROR) << "xwalk-panic" << " a:" << a << " b: " << b << " c: " << c;
++  __android_log_print(ANDROID_LOG_ERROR, "xwalk-panic", "a: %d, b: %d, c: %d", a, b, c);
++  sleep(3);
++  __android_log_print(ANDROID_LOG_ERROR, "xwalk-panic", "bye!");
++  sleep(1);
++  exit(0);
++  return 0;
++}
++
++extern "C" void* __resolve(void **symptr, void ***PTR, int lit, void *pc) {
++__android_log_print(ANDROID_LOG_ERROR, "xwalk-icu", "***\n\n %p: <%x>  __resolving... %p, [%p, %p]\n\n***", pc, lit, symptr, symptr[0], symptr[1]);
++//sleep(1);
++  char full_name[100];
++  snprintf(full_name, sizeof(full_name), "%s%s", *(char**)(symptr + 1), icudata_version);
++  void* symbol = dlsym(uc_handle, full_name);
++  if (symbol == nullptr) {
++      symbol = dlsym(i18n_handle, full_name);
++      if (symbol == nullptr) {
++        __android_log_print(ANDROID_LOG_ERROR, "xwalk-icu", "couldn't find %s", full_name);
++        return NULL;
++    }
++  }
++  __android_log_print(ANDROID_LOG_ERROR, "xwalk-icu", "resolve %s => %p", full_name, symbol);
++  *symptr = symbol;
++  return symbol;
++}
++
++extern "C" void* __resolve2(const char *name) {
++//__android_log_print(ANDROID_LOG_ERROR, "xwalk-icu", "***\n\n __resolving... %p\n\n***", name);
++//sleep(1);
++  char full_name[100];
++  snprintf(full_name, sizeof(full_name), "%s%s", name, icudata_version);
++  void* symbol = dlsym(uc_handle, full_name);
++  if (symbol == nullptr) {
++      symbol = dlsym(i18n_handle, full_name);
++      if (symbol == nullptr) {
++        __android_log_print(ANDROID_LOG_ERROR, "xwalk-icu", "couldn't find %s", full_name);
++        return NULL;
++    }
++  }
++  //__android_log_print(ANDROID_LOG_ERROR, "xwalk-icu", "resolve %s => %p", full_name, symbol);
++  return symbol;
++}
++
++extern char ICU_i18n__begin;
++
++extern "C" void* __resolve3(int id) {
++  if (__icu_funcs_begin[id].addr != NULL) return __icu_funcs_begin[id].addr;
++
++  char full_name[100];
++  sprintf(full_name, "%s%s", __icu_funcs_begin[id].name, icudata_version);
++  void* symbol = dlsym(id < (intptr_t)&ICU_i18n__begin ? uc_handle : i18n_handle, full_name);
++  if (symbol == nullptr) {
++    __android_log_print(ANDROID_LOG_ERROR, "xwalk-icu", "couldn't find %s", full_name);
++    return NULL;
++  }
++  //__android_log_print(ANDROID_LOG_ERROR, "xwalk-icu", "resolve %s => %p", full_name, symbol);
++  __icu_funcs_begin[id].addr = symbol;
++  return symbol;
++}
++
++extern char SSL_crypto__begin;
++static void* ssl_handle = nullptr;
++static void* crypto_handle = nullptr;
++
++extern "C" void* __resolve_ssl(int id) {
++  void* symbol = __ssl_funcs[id].addr;
++  if (symbol != NULL) return symbol;
++
++  const char* name = __ssl_funcs[id].name;
++  symbol = dlsym(RTLD_DEFAULT/*id < (intptr_t)&SSL_crypto__begin ? ssl_handle : crypto_handle*/, name);
++  if (symbol == nullptr) {
++    __android_log_print(ANDROID_LOG_ERROR, "xwalk-ssl", "couldn't find %s (id=%d)", name, id);
++    return NULL;
++  }
++  //__android_log_print(ANDROID_LOG_ERROR, "xwalk-ssl", "resolve %s => %p", name, symbol);
++  __ssl_funcs[id].addr = symbol;
++  return symbol;
++}
++
++extern "C" void* __resolve_expat(int id) {
++  void* symbol = __expat_funcs[id].addr;
++  if (symbol != NULL) return symbol;
++
++  const char* name = __expat_funcs[id].name;
++  symbol = dlsym(expat_handle, name);
++  if (symbol == nullptr) {
++    __android_log_print(ANDROID_LOG_ERROR, "xwalk-expat", "couldn't find %s", name);
++    return NULL;
++  }
++  //__android_log_print(ANDROID_LOG_ERROR, "xwalk-expat", "resolve %s => %p", name, symbol);
++  __expat_funcs[id].addr = symbol;
++  return symbol;
++}
++
++#define UNormalizationMode int
++extern "C" {
++extern int32_t (*Fx_unorm_normalize)(const UChar *src, int32_t srcLength,
++                UNormalizationMode mode, int32_t options,
++                UChar *dest, int32_t destCapacity,
++                UErrorCode *pErrorCode);
++int32_t
++unorm_normalize__(const UChar *src, int32_t srcLength,
++                UNormalizationMode mode, int32_t options,
++                UChar *dest, int32_t destCapacity,
++                UErrorCode *pErrorCode) {
++  __android_log_print(ANDROID_LOG_ERROR, "xwalk-icu", "***\n\n unorm_normalize hook...\n\n***");
++  return Fx_unorm_normalize(src, srcLength, mode, options, dest, destCapacity, pErrorCode);
++}
++}
++
++static bool __init_android_icu() {
++  dirent** namelist = nullptr;
++  int n = scandir("/system/usr/icu", &namelist, &__icu_dat_file_filter, alphasort);
++  int max_version = -1;
++  while (n--) {
++    // We prefer the latest version available.
++    int version = atoi(&namelist[n]->d_name[strlen("icudt")]);
++    if (version != 0 && version > max_version) max_version = version;
++    free(namelist[n]);
++  }
++  free(namelist);
++
++  if (max_version < ICUDATA_VERSION_MIN) {
++    __android_log_print(ANDROID_LOG_ERROR, "xwalk-icu", "couldn't find an ICU .dat file");
++    return false;
++  }
++
++  snprintf(icudata_version, sizeof(icudata_version), "_%d", max_version);
++  icudt_vernum = max_version;
++
++  uc_handle = dlopen("libicuuc.so", RTLD_LAZY);
++  if (uc_handle == nullptr) {
++    __android_log_print(ANDROID_LOG_ERROR, "xwalk-icu", "couldn't open libicuuc.so: %s",
++                          dlerror());
++    return false;
++  }
++  i18n_handle = dlopen("libicui18n.so", RTLD_LAZY);
++  if (i18n_handle == nullptr) {
++    __android_log_print(ANDROID_LOG_ERROR, "xwalk-icu", "couldn't open libicui18n.so: %s",
++                          dlerror());
++    return false;
++  }
++
++  /*char full_name[100];
++  for (Record *r = __icu_funcs_begin; r < __icu_funcs_end; r++) {
++    snprintf(full_name, sizeof(full_name), "%s%s", r->name, icudata_version);
++
++    void* symbol = dlsym(r >= __icu_i18n_funcs ? i18n_handle : uc_handle, full_name);
++    if (symbol == nullptr) {
++      __android_log_print(ANDROID_LOG_ERROR, "xwalk-icu", "couldn't find %s", full_name);
++      //return false;
++    }
++    r->addr = symbol;
++    __android_log_print(ANDROID_LOG_ERROR, "xwalk-icu", "<%d> ...found %s => %p  @[%p]", (int)(r - __icu_funcs_begin), r->name, symbol, &r->addr);
++  }*/
++#if 0
++  for (Record *r = __ssl_funcs; r->name != NULL; r++) {
++    int id = (int)(r - __ssl_funcs);
++    void* symbol = dlsym(/*id < (intptr_t)&SSL_crypto__begin ? ssl_handle : crypto_handle*/RTLD_DEFAULT, r->name);
++    if (symbol == nullptr) {
++      __android_log_print(ANDROID_LOG_ERROR, "xwalk-ssl", "couldn't find %s", r->name);
++      //return false;
++    }
++    r->addr = symbol;
++    __android_log_print(ANDROID_LOG_ERROR, "xwalk-ssl", "<%d> ...found %s => %p  @[%p]", id, r->name, symbol, &r->addr);
++  }
++#endif
++  return true;
++}
++}
++}
++#endif
++
+ void LazyInitIcuDataFile() {
+   if (g_icudtl_pf != kInvalidPlatformFile) {
+     return;
+   }
+-#if defined(OS_ANDROID)
+-  int fd = base::android::OpenApkAsset(kAndroidAssetsIcuDataFileName,
+-                                       &g_icudtl_region);
+-  g_icudtl_pf = fd;
+-  if (fd != -1) {
+-    return;
+-  }
+-// For unit tests, data file is located on disk, so try there as a fallback.
+-#endif  // defined(OS_ANDROID)
+ #if !defined(OS_MACOSX)
+   FilePath data_path;
+ #if defined(OS_WIN)
+@@ -105,15 +306,22 @@ void LazyInitIcuDataFile() {
+   debug::Alias(tmp_buffer);
+   CHECK(path_ok);  // TODO(scottmg): http://crbug.com/445616
+ #elif defined(OS_ANDROID)
+-  bool path_ok = PathService::Get(DIR_ANDROID_APP_DATA, &data_path);
++  /**/
+ #else
+   // For now, expect the data file to be alongside the executable.
+   // This is sufficient while we work on unit tests, but will eventually
+   // likely live in a data directory.
+   bool path_ok = PathService::Get(DIR_EXE, &data_path);
+ #endif
++
++#if defined(OS_ANDROID)
++  char buf[128];
++  sprintf(buf, "/system/usr/icu/icudt%dl.dat", icudt_vernum);
++  data_path = data_path.AppendASCII(buf);
++#else
+   DCHECK(path_ok);
+   data_path = data_path.AppendASCII(kIcuDataFileName);
++#endif
+ 
+ #if defined(OS_WIN)
+   // TODO(scottmg): http://crbug.com/445616
+@@ -160,6 +368,8 @@ void LazyInitIcuDataFile() {
+ #endif  // OS_WIN
+ }
+ 
++typedef void** (*getSingletonF)();
++
+ bool InitializeICUWithFileDescriptorInternal(
+     PlatformFile data_fd,
+     const MemoryMappedFile::Region& data_region) {
+@@ -184,6 +394,7 @@ bool InitializeICUWithFileDescriptorInternal(
+ 
+   UErrorCode err = U_ZERO_ERROR;
+   udata_setCommonData(const_cast<uint8_t*>(g_icudtl_mapped_file->data()), &err);
++  
+   if (err != U_ZERO_ERROR) {
+     g_debug_icu_load = 3;  // To debug http://crbug.com/445616.
+     g_debug_icu_last_error = err;
+@@ -243,6 +454,18 @@ bool InitializeICU() {
+   g_called_once = true;
+ #endif
+ 
++#if defined(OS_ANDROID)
++  expat_handle = dlopen("libexpat.so", RTLD_LAZY);
++
++  crypto_handle = dlopen("libcrypto.so", RTLD_LAZY);
++  ssl_handle = dlopen("libssl.so", RTLD_LAZY);
++
++  if (!__init_android_icu()) {
++    LOG(ERROR) << "android icu not found.";
++    return false;
++  }
++#endif
++
+   bool result;
+ #if (ICU_UTIL_DATA_IMPL == ICU_UTIL_DATA_SHARED)
+   // We expect to find the ICU data module alongside the current module.
+@@ -302,6 +525,7 @@ bool InitializeICU() {
+   if (result)
+     std::unique_ptr<icu::TimeZone> zone(icu::TimeZone::createDefault());
+ #endif
++
+   return result;
+ }
+ #endif  // !defined(OS_NACL)
+diff --git a/base/i18n/number_formatting.cc b/base/i18n/number_formatting.cc
+index b510833..882b1eb 100644
+--- a/base/i18n/number_formatting.cc
++++ b/base/i18n/number_formatting.cc
+@@ -20,63 +20,14 @@
+ 
+ namespace base {
+ 
+-namespace {
+-
+-// A simple wrapper around icu::NumberFormat that allows for resetting it
+-// (as LazyInstance does not).
+-struct NumberFormatWrapper {
+-  NumberFormatWrapper() {
+-    Reset();
+-  }
+-
+-  void Reset() {
+-    // There's no ICU call to destroy a NumberFormat object other than
+-    // operator delete, so use the default Delete, which calls operator delete.
+-    // This can cause problems if a different allocator is used by this file
+-    // than by ICU.
+-    UErrorCode status = U_ZERO_ERROR;
+-    number_format.reset(icu::NumberFormat::createInstance(status));
+-    DCHECK(U_SUCCESS(status));
+-  }
+-
+-  std::unique_ptr<icu::NumberFormat> number_format;
+-};
+-
+-LazyInstance<NumberFormatWrapper> g_number_format_int =
+-    LAZY_INSTANCE_INITIALIZER;
+-LazyInstance<NumberFormatWrapper> g_number_format_float =
+-    LAZY_INSTANCE_INITIALIZER;
+-
+-}  // namespace
+-
+ string16 FormatNumber(int64_t number) {
+-  icu::NumberFormat* number_format =
+-      g_number_format_int.Get().number_format.get();
+-
+-  if (!number_format) {
+     // As a fallback, just return the raw number in a string.
+     return ASCIIToUTF16(StringPrintf("%" PRId64, number));
+-  }
+-  icu::UnicodeString ustr;
+-  number_format->format(number, ustr);
+-
+-  return string16(ustr.getBuffer(), static_cast<size_t>(ustr.length()));
+ }
+ 
+ string16 FormatDouble(double number, int fractional_digits) {
+-  icu::NumberFormat* number_format =
+-      g_number_format_float.Get().number_format.get();
+-
+-  if (!number_format) {
+     // As a fallback, just return the raw number in a string.
+     return ASCIIToUTF16(StringPrintf("%f", number));
+-  }
+-  number_format->setMaximumFractionDigits(fractional_digits);
+-  number_format->setMinimumFractionDigits(fractional_digits);
+-  icu::UnicodeString ustr;
+-  number_format->format(number, ustr);
+-
+-  return string16(ustr.getBuffer(), static_cast<size_t>(ustr.length()));
+ }
+ 
+ string16 FormatPercent(int number) {
+@@ -87,8 +38,6 @@ string16 FormatPercent(int number) {
+ namespace testing {
+ 
+ void ResetFormatters() {
+-  g_number_format_int.Get().Reset();
+-  g_number_format_float.Get().Reset();
+ }
+ 
+ }  // namespace testing
+diff --git a/base/i18n/rtl.cc b/base/i18n/rtl.cc
+index 095d66c..e7a45fa 100644
+--- a/base/i18n/rtl.cc
++++ b/base/i18n/rtl.cc
+@@ -105,7 +105,7 @@ static TextDirection g_icu_text_direction = UNKNOWN_DIRECTION;
+ 
+ // Convert the ICU default locale to a string.
+ std::string GetConfiguredLocale() {
+-  return GetLocaleString(icu::Locale::getDefault());
++  return uloc_getDefault();
+ }
+ 
+ // Convert the ICU canonicalized locale to a string.
+@@ -159,8 +159,7 @@ bool IsRTL() {
+ 
+ bool ICUIsRTL() {
+   if (g_icu_text_direction == UNKNOWN_DIRECTION) {
+-    const icu::Locale& locale = icu::Locale::getDefault();
+-    g_icu_text_direction = GetTextDirectionForLocaleInStartUp(locale.getName());
++    g_icu_text_direction = GetTextDirectionForLocaleInStartUp(uloc_getDefault());
+   }
+   return g_icu_text_direction == RIGHT_TO_LEFT;
+ }
+diff --git a/base/i18n/string_compare.cc b/base/i18n/string_compare.cc
+index 2851e7d..6457a91 100644
+--- a/base/i18n/string_compare.cc
++++ b/base/i18n/string_compare.cc
+@@ -12,15 +12,12 @@ namespace i18n {
+ 
+ // Compares the character data stored in two different string16 strings by
+ // specified Collator instance.
+-UCollationResult CompareString16WithCollator(const icu::Collator& collator,
++UCollationResult CompareString16WithCollator(UCollator* collator,
+                                              const string16& lhs,
+                                              const string16& rhs) {
+-  UErrorCode error = U_ZERO_ERROR;
+-  UCollationResult result = collator.compare(
++  UCollationResult result = ucol_strcoll(collator,
+       static_cast<const UChar*>(lhs.c_str()), static_cast<int>(lhs.length()),
+-      static_cast<const UChar*>(rhs.c_str()), static_cast<int>(rhs.length()),
+-      error);
+-  DCHECK(U_SUCCESS(error));
++      static_cast<const UChar*>(rhs.c_str()), static_cast<int>(rhs.length()));
+   return result;
+ }
+ 
+diff --git a/base/i18n/string_compare.h b/base/i18n/string_compare.h
+index 5fcc5fe..867189e 100644
+--- a/base/i18n/string_compare.h
++++ b/base/i18n/string_compare.h
+@@ -18,7 +18,7 @@ namespace i18n {
+ 
+ // Compares the two strings using the specified collator.
+ BASE_I18N_EXPORT UCollationResult
+-CompareString16WithCollator(const icu::Collator& collator,
++CompareString16WithCollator(UCollator* collator,
+                             const string16& lhs,
+                             const string16& rhs);
+ 
+diff --git a/base/i18n/time_formatting.cc b/base/i18n/time_formatting.cc
+index 024b865..a17c8f2 100644
+--- a/base/i18n/time_formatting.cc
++++ b/base/i18n/time_formatting.cc
+@@ -20,54 +20,56 @@
+ namespace base {
+ namespace {
+ 
+-string16 TimeFormat(const icu::DateFormat* formatter,
++string16 TimeFormat(UDateFormat* formatter,
+                     const Time& time) {
+   DCHECK(formatter);
+-  icu::UnicodeString date_string;
++  UErrorCode status = U_ZERO_ERROR;
++  UChar buf[256];
++
++  size_t len = udat_format(formatter, static_cast<UDate>(time.ToDoubleT() * 1000), buf, sizeof(buf)/sizeof(buf[0]), NULL, &status);
+ 
+-  formatter->format(static_cast<UDate>(time.ToDoubleT() * 1000), date_string);
+-  return string16(date_string.getBuffer(),
+-                  static_cast<size_t>(date_string.length()));
++  udat_close(formatter);
++  return string16(buf, len);
+ }
+ 
+-string16 TimeFormatWithoutAmPm(const icu::DateFormat* formatter,
++string16 TimeFormatWithoutAmPm(UDateFormat* formatter,
+                                const Time& time) {
+   DCHECK(formatter);
+-  icu::UnicodeString time_string;
++  UErrorCode status = U_ZERO_ERROR;
++  UChar buf[256];
+ 
+-  icu::FieldPosition ampm_field(icu::DateFormat::kAmPmField);
+-  formatter->format(
+-      static_cast<UDate>(time.ToDoubleT() * 1000), time_string, ampm_field);
+-  int ampm_length = ampm_field.getEndIndex() - ampm_field.getBeginIndex();
++  UFieldPosition ampm_field = {UDAT_AM_PM_FIELD, 0, 0};
++  size_t len = udat_format(formatter,
++      static_cast<UDate>(time.ToDoubleT() * 1000), buf, sizeof(buf)/sizeof(buf[0]), &ampm_field, &status);
++  int ampm_length = ampm_field.endIndex - ampm_field.beginIndex;
+   if (ampm_length) {
+-    int begin = ampm_field.getBeginIndex();
++    int begin = ampm_field.beginIndex;
+     // Doesn't include any spacing before the field.
+     if (begin)
+       begin--;
+-    time_string.removeBetween(begin, ampm_field.getEndIndex());
++    memmove(&buf[begin], &buf[ampm_field.endIndex], len - ampm_field.endIndex);
++    len -= ampm_length;
+   }
+-  return string16(time_string.getBuffer(),
+-                  static_cast<size_t>(time_string.length()));
++  udat_close(formatter);
++  return string16(buf, len);
+ }
+ 
+-icu::SimpleDateFormat CreateSimpleDateFormatter(const char* pattern) {
++UDateFormat* CreateSimpleDateFormatter(const char* pattern) {
+   // Generate a locale-dependent format pattern. The generator will take
+   // care of locale-dependent formatting issues like which separator to
+   // use (some locales use '.' instead of ':'), and where to put the am/pm
+   // marker.
+   UErrorCode status = U_ZERO_ERROR;
+-  std::unique_ptr<icu::DateTimePatternGenerator> generator(
+-      icu::DateTimePatternGenerator::createInstance(status));
+-  DCHECK(U_SUCCESS(status));
+-  icu::UnicodeString generated_pattern =
+-      generator->getBestPattern(icu::UnicodeString(pattern), status);
++  UChar tmp[256];
++  int32_t len;
++
++  u_strFromUTF8(tmp, 256, &len, pattern, strlen(pattern), &status);
+   DCHECK(U_SUCCESS(status));
+ 
+-  // Then, format the time using the generated pattern.
+-  icu::SimpleDateFormat formatter(generated_pattern, status);
++  UDateFormat* fmt = udat_open(UDAT_PATTERN, UDAT_PATTERN, NULL, NULL, 0, tmp, len, &status);
+   DCHECK(U_SUCCESS(status));
+ 
+-  return formatter;
++  return fmt;
+ }
+ 
+ UMeasureFormatWidth DurationWidthToMeasureWidth(DurationFormatWidth width) {
+@@ -86,14 +88,15 @@ UMeasureFormatWidth DurationWidthToMeasureWidth(DurationFormatWidth width) {
+ string16 TimeFormatTimeOfDay(const Time& time) {
+   // We can omit the locale parameter because the default should match
+   // Chrome's application locale.
+-  std::unique_ptr<icu::DateFormat> formatter(
+-      icu::DateFormat::createTimeInstance(icu::DateFormat::kShort));
+-  return TimeFormat(formatter.get(), time);
++  UErrorCode status = U_ZERO_ERROR;
++  UDateFormat* fmt = udat_open(UDAT_SHORT, UDAT_NONE, NULL, NULL, 0, NULL, 0, &status);
++  DCHECK(U_SUCCESS(status));
++  return TimeFormat(fmt, time);
+ }
+ 
+ string16 TimeFormatTimeOfDayWithMilliseconds(const Time& time) {
+-  icu::SimpleDateFormat formatter = CreateSimpleDateFormatter("HmsSSS");
+-  return TimeFormatWithoutAmPm(&formatter, time);
++  UDateFormat* fmt = CreateSimpleDateFormatter("HmsSSS");
++  return TimeFormatWithoutAmPm(fmt, time);
+ }
+ 
+ string16 TimeFormatTimeOfDayWithHourClockType(const Time& time,
+@@ -107,50 +110,55 @@ string16 TimeFormatTimeOfDayWithHourClockType(const Time& time,
+   }
+ 
+   const char* base_pattern = (type == k12HourClock ? "ahm" : "Hm");
+-  icu::SimpleDateFormat formatter = CreateSimpleDateFormatter(base_pattern);
++  UDateFormat* formatter = CreateSimpleDateFormatter(base_pattern);
+ 
+   if (ampm == kKeepAmPm) {
+-    return TimeFormat(&formatter, time);
++    return TimeFormat(formatter, time);
+   } else {
+-    return TimeFormatWithoutAmPm(&formatter, time);
++    return TimeFormatWithoutAmPm(formatter, time);
+   }
+ }
+ 
+ string16 TimeFormatShortDate(const Time& time) {
+-  std::unique_ptr<icu::DateFormat> formatter(
+-      icu::DateFormat::createDateInstance(icu::DateFormat::kMedium));
+-  return TimeFormat(formatter.get(), time);
++  UErrorCode status = U_ZERO_ERROR;
++  UDateFormat* fmt = udat_open(UDAT_NONE, UDAT_MEDIUM, NULL, NULL, 0, NULL, 0, &status);
++  DCHECK(U_SUCCESS(status));
++  return TimeFormat(fmt, time);
+ }
+ 
+ string16 TimeFormatShortDateNumeric(const Time& time) {
+-  std::unique_ptr<icu::DateFormat> formatter(
+-      icu::DateFormat::createDateInstance(icu::DateFormat::kShort));
+-  return TimeFormat(formatter.get(), time);
++  UErrorCode status = U_ZERO_ERROR;
++  UDateFormat* fmt = udat_open(UDAT_NONE, UDAT_SHORT, NULL, NULL, 0, NULL, 0, &status);
++  DCHECK(U_SUCCESS(status));
++  return TimeFormat(fmt, time);
+ }
+ 
+ string16 TimeFormatShortDateAndTime(const Time& time) {
+-  std::unique_ptr<icu::DateFormat> formatter(
+-      icu::DateFormat::createDateTimeInstance(icu::DateFormat::kShort));
+-  return TimeFormat(formatter.get(), time);
++  UErrorCode status = U_ZERO_ERROR;
++  UDateFormat* fmt = udat_open(UDAT_SHORT, UDAT_SHORT, NULL, NULL, 0, NULL, 0, &status);
++  DCHECK(U_SUCCESS(status));
++  return TimeFormat(fmt, time);
+ }
+ 
+ string16 TimeFormatShortDateAndTimeWithTimeZone(const Time& time) {
+-  std::unique_ptr<icu::DateFormat> formatter(
+-      icu::DateFormat::createDateTimeInstance(icu::DateFormat::kShort,
+-                                              icu::DateFormat::kLong));
+-  return TimeFormat(formatter.get(), time);
++  UErrorCode status = U_ZERO_ERROR;
++  UDateFormat* fmt = udat_open(UDAT_SHORT, UDAT_LONG, NULL, NULL, 0, NULL, 0, &status);
++  DCHECK(U_SUCCESS(status));
++  return TimeFormat(fmt, time);
+ }
+ 
+ string16 TimeFormatFriendlyDateAndTime(const Time& time) {
+-  std::unique_ptr<icu::DateFormat> formatter(
+-      icu::DateFormat::createDateTimeInstance(icu::DateFormat::kFull));
+-  return TimeFormat(formatter.get(), time);
++  UErrorCode status = U_ZERO_ERROR;
++  UDateFormat* fmt = udat_open(UDAT_FULL, UDAT_FULL, NULL, NULL, 0, NULL, 0, &status);
++  DCHECK(U_SUCCESS(status));
++  return TimeFormat(fmt, time);
+ }
+ 
+ string16 TimeFormatFriendlyDate(const Time& time) {
+-  std::unique_ptr<icu::DateFormat> formatter(
+-      icu::DateFormat::createDateInstance(icu::DateFormat::kFull));
+-  return TimeFormat(formatter.get(), time);
++  UErrorCode status = U_ZERO_ERROR;
++  UDateFormat* fmt = udat_open(UDAT_NONE, UDAT_FULL, NULL, NULL, 0, NULL, 0, &status);
++  DCHECK(U_SUCCESS(status));
++  return TimeFormat(fmt, time);
+ }
+ 
+ string16 TimeDurationFormat(const TimeDelta& time,
+diff --git a/components/url_formatter/url_formatter.cc b/components/url_formatter/url_formatter.cc
+index 75f1726..eb688fb 100644
+--- a/components/url_formatter/url_formatter.cc
++++ b/components/url_formatter/url_formatter.cc
+@@ -234,6 +234,7 @@ base::string16 IDNToUnicodeWithAdjustments(
+   return out16;
+ }
+ 
++#if 0
+ // A helper class for IDN Spoof checking, used to ensure that no IDN input is
+ // spoofable per Chromium's standard of spoofability. For a more thorough
+ // explanation of how spoof checking works in Chromium, see
+@@ -250,9 +251,9 @@ class IDNSpoofChecker {
+   void SetAllowedUnicodeSet(UErrorCode* status);
+ 
+   USpoofChecker* checker_;
+-  icu::UnicodeSet deviation_characters_;
+-  icu::UnicodeSet latin_letters_;
+-  icu::UnicodeSet non_ascii_latin_letters_;
++  USet* deviation_characters_;
++  USet* latin_letters_;
++  USet* non_ascii_latin_letters_;
+ 
+   DISALLOW_COPY_AND_ASSIGN(IDNSpoofChecker);
+ };
+@@ -414,11 +415,11 @@ void IDNSpoofChecker::SetAllowedUnicodeSet(UErrorCode* status) {
+   // in idenfiers" of UTR 31 (http://www.unicode.org/reports/tr31). The list
+   // may change over the time and will be updated whenever the version of ICU
+   // used in Chromium is updated.
+-  const icu::UnicodeSet* recommended_set =
++  const USet** recommended_set =
+       uspoof_getRecommendedUnicodeSet(status);
+-  icu::UnicodeSet allowed_set;
++  USet* allowed_set;
+   allowed_set.addAll(*recommended_set);
+-  const icu::UnicodeSet* inclusion_set = uspoof_getInclusionUnicodeSet(status);
++  const USet** inclusion_set = uspoof_getInclusionUnicodeSet(status);
+   allowed_set.addAll(*inclusion_set);
+ 
+   // Five aspirational scripts are taken from UTR 31 Table 6 at
+@@ -432,7 +433,7 @@ void IDNSpoofChecker::SetAllowedUnicodeSet(UErrorCode* status) {
+   // version of Unicode is released. The current version is 8.0.0 and ICU 58
+   // will have Unicode 9.0 data.
+ #if U_ICU_VERSION_MAJOR_NUM < 58
+-  const icu::UnicodeSet aspirational_scripts(
++  const USet* aspirational_scripts(
+       icu::UnicodeString(
+           // Unified Canadian Syllabics
+           "[\\u1401-\\u166C\\u166F-\\u167F"
+@@ -468,13 +469,14 @@ void IDNSpoofChecker::SetAllowedUnicodeSet(UErrorCode* status) {
+ 
+   uspoof_setAllowedUnicodeSet(checker_, &allowed_set, status);
+ }
++#endif
+ 
+ // Returns true if the given Unicode host component is safe to display to the
+ // user. Note that this function does not deal with pure ASCII domain labels at
+ // all even though it's possible to make up look-alike labels with ASCII
+ // characters alone.
+ bool IsIDNComponentSafe(base::StringPiece16 label) {
+-  return g_idn_spoof_checker.Get().Check(label);
++  return true;//g_idn_spoof_checker.Get().Check(label);
+ }
+ 
+ // A wrapper to use LazyInstance<>::Leaky with ICU's UIDNA, a C pointer to
+diff --git a/content/browser/android/browser_jni_registrar.cc b/content/browser/android/browser_jni_registrar.cc
+index 76ebb8c..d72b57a5 100644
+--- a/content/browser/android/browser_jni_registrar.cc
++++ b/content/browser/android/browser_jni_registrar.cc
+@@ -77,7 +77,7 @@ base::android::RegistrationMethod kContentRegisteredMethods[] = {
+     {"SensorManagerAndroid", content::SensorManagerAndroid::Register},
+     {"ServiceRegistrarAndroid", content::ServiceRegistrarAndroid::Register},
+     {"ServiceRegistryAndroid", content::ServiceRegistryAndroidImpl::Register},
+-    {"TimeZoneMonitorAndroid", content::TimeZoneMonitorAndroid::Register},
++    //{"TimeZoneMonitorAndroid", content::TimeZoneMonitorAndroid::Register},
+     {"WebContentsAndroid", content::WebContentsAndroid::Register},
+     {"WebContentsObserver", content::RegisterWebContentsObserverProxy},
+     {"WebViewStatics", content::RegisterWebViewStatics},
+diff --git a/content/browser/android/date_time_chooser_android.cc b/content/browser/android/date_time_chooser_android.cc
+index 35d7038..38a29f1 100644
+--- a/content/browser/android/date_time_chooser_android.cc
++++ b/content/browser/android/date_time_chooser_android.cc
+@@ -28,16 +28,16 @@ namespace {
+ 
+ base::string16 SanitizeSuggestionString(const base::string16& string) {
+   base::string16 trimmed = string.substr(0, 255);
+-  icu::UnicodeString sanitized;
++  UChar sanitized[256];
++  size_t len = 0;
+   base::i18n::UTF16CharIterator sanitized_iterator(&trimmed);
+   while (!sanitized_iterator.end()) {
+     UChar c = sanitized_iterator.get();
+-    if (u_isprint(c))
+-      sanitized.append(c);
++    if (u_isprint(c) && len < sizeof(sanitized)/sizeof(sanitized[0]))
++      sanitized[len++] = c;
+     sanitized_iterator.Advance();
+   }
+-  return base::string16(sanitized.getBuffer(),
+-                        static_cast<size_t>(sanitized.length()));
++  return base::string16(sanitized, len);
+ }
+ 
+ }  // namespace
+diff --git a/content/browser/browser_main_loop.cc b/content/browser/browser_main_loop.cc
+index 67acfa9..9fe71f3 100644
+--- a/content/browser/browser_main_loop.cc
++++ b/content/browser/browser_main_loop.cc
+@@ -56,7 +56,6 @@
+ #include "content/browser/renderer_host/media/media_stream_manager.h"
+ #include "content/browser/renderer_host/render_process_host_impl.h"
+ #include "content/browser/startup_task_runner.h"
+-#include "content/browser/time_zone_monitor.h"
+ #include "content/browser/utility_process_host_impl.h"
+ #include "content/browser/webui/content_web_ui_controller_factory.h"
+ #include "content/browser/webui/url_data_manager.h"
+@@ -1223,12 +1222,6 @@ int BrowserMainLoop::BrowserThreadsStarted() {
+         io_thread_->task_runner(), main_thread_->task_runner());
+   }
+ 
+-  {
+-    TRACE_EVENT0("startup",
+-                 "BrowserMainLoop::BrowserThreadsStarted::TimeZoneMonitor");
+-    time_zone_monitor_ = TimeZoneMonitor::Create();
+-  }
+-
+   // Alert the clipboard class to which threads are allowed to access the
+   // clipboard:
+   std::vector<base::PlatformThreadId> allowed_clipboard_threads;
+diff --git a/content/browser/browser_main_loop.h b/content/browser/browser_main_loop.h
+index 0dd0af2..1e03b1e 100644
+--- a/content/browser/browser_main_loop.h
++++ b/content/browser/browser_main_loop.h
+@@ -280,7 +280,6 @@ class CONTENT_EXPORT BrowserMainLoop {
+   std::unique_ptr<LoaderDelegateImpl> loader_delegate_;
+   std::unique_ptr<ResourceDispatcherHostImpl> resource_dispatcher_host_;
+   std::unique_ptr<MediaStreamManager> media_stream_manager_;
+-  std::unique_ptr<TimeZoneMonitor> time_zone_monitor_;
+ 
+   // DO NOT add members here. Add them to the right categories above.
+ 
+diff --git a/content/child/BUILD.gn b/content/child/BUILD.gn
+index 00229d5..ae06b66 100644
+--- a/content/child/BUILD.gn
++++ b/content/child/BUILD.gn
+@@ -40,7 +40,7 @@ source_set("child") {
+     "//components/scheduler:scheduler",
+     #"//components/tracing",
+     #"//components/tracing:startup_tracing",
+-    "//components/webcrypto",
++    #"//components/webcrypto",
+     "//content/app/resources",
+     "//content/app/strings",
+     "//content/common",
+diff --git a/content/child/blink_platform_impl.cc b/content/child/blink_platform_impl.cc
+index 3fd72bf..2e32a60 100644
+--- a/content/child/blink_platform_impl.cc
++++ b/content/child/blink_platform_impl.cc
+@@ -860,7 +860,7 @@ bool BlinkPlatformImpl::allowScriptExtensionForServiceWorker(
+ }
+ 
+ blink::WebCrypto* BlinkPlatformImpl::crypto() {
+-  return &web_crypto_;
++  return nullptr;
+ }
+ 
+ blink::WebNotificationManager*
+diff --git a/content/child/blink_platform_impl.h b/content/child/blink_platform_impl.h
+index 2c15044..6cc441b 100644
+--- a/content/child/blink_platform_impl.h
++++ b/content/child/blink_platform_impl.h
+@@ -49,7 +49,6 @@ class PermissionDispatcher;
+ class PushDispatcher;
+ class ThreadSafeSender;
+ class TraceLogObserverAdapter;
+-class WebCryptoImpl;
+ 
+ class CONTENT_EXPORT BlinkPlatformImpl
+     : NON_EXPORTED_BASE(public blink::Platform) {
+@@ -151,7 +150,6 @@ class CONTENT_EXPORT BlinkPlatformImpl
+   WebThemeEngineImpl native_theme_engine_;
+   WebFallbackThemeEngineImpl fallback_theme_engine_;
+   base::ThreadLocalStorage::Slot current_thread_slot_;
+-  webcrypto::WebCryptoImpl web_crypto_;
+   base::ScopedPtrHashMap<blink::Platform::TraceLogEnabledStateObserver*,
+                          std::unique_ptr<TraceLogObserverAdapter>>
+       trace_log_observers_;
+diff --git a/content/content_browser.gypi b/content/content_browser.gypi
+index 20078ee..73f2d95 100644
+--- a/content/content_browser.gypi
++++ b/content/content_browser.gypi
+@@ -1389,14 +1389,6 @@
+       'browser/streams/stream_write_observer.h',
+       'browser/theme_helper_mac.h',
+       'browser/theme_helper_mac.mm',
+-      'browser/time_zone_monitor.cc',
+-      'browser/time_zone_monitor.h',
+-      'browser/time_zone_monitor_android.cc',
+-      'browser/time_zone_monitor_android.h',
+-      'browser/time_zone_monitor_chromeos.cc',
+-      'browser/time_zone_monitor_linux.cc',
+-      'browser/time_zone_monitor_mac.mm',
+-      'browser/time_zone_monitor_win.cc',
+       'browser/user_metrics.cc',
+       'browser/utility_process_host_impl.cc',
+       'browser/utility_process_host_impl.h',
+diff --git a/content/content_child.gypi b/content/content_child.gypi
+index 02e10f7..756aeb0 100644
+--- a/content/content_child.gypi
++++ b/content/content_child.gypi
+@@ -7,7 +7,7 @@
+     '../components/mime_util/mime_util.gyp:mime_util',
+     '../components/scheduler/scheduler.gyp:scheduler',
+     '../components/tracing.gyp:tracing',
+-    '../components/webcrypto/webcrypto.gyp:webcrypto',
++    #'../components/webcrypto/webcrypto.gyp:webcrypto',
+     '../ipc/ipc.gyp:ipc',
+     '../mojo/mojo_base.gyp:mojo_common_lib',
+     '../services/shell/shell.gyp:shell_runner_common_lib',
+diff --git a/content/content_jni.gypi b/content/content_jni.gypi
+index 04d7215..8ae67d4 100644
+--- a/content/content_jni.gypi
++++ b/content/content_jni.gypi
+@@ -33,7 +33,7 @@
+     'public/android/java/src/org/chromium/content/browser/ServiceRegistry.java',
+     'public/android/java/src/org/chromium/content/browser/ScreenOrientationProvider.java',
+     'public/android/java/src/org/chromium/content/browser/SpeechRecognition.java',
+-    'public/android/java/src/org/chromium/content/browser/TimeZoneMonitor.java',
++    #'public/android/java/src/org/chromium/content/browser/TimeZoneMonitor.java',
+     'public/android/java/src/org/chromium/content/browser/TracingControllerAndroid.java',
+     'public/android/java/src/org/chromium/content/browser/framehost/NavigationControllerImpl.java',
+     'public/android/java/src/org/chromium/content/browser/webcontents/WebContentsImpl.java',
+diff --git a/content/public/android/BUILD.gn b/content/public/android/BUILD.gn
+index d44f4aa..f606090 100644
+--- a/content/public/android/BUILD.gn
++++ b/content/public/android/BUILD.gn
+@@ -142,7 +142,7 @@ android_library("content_java") {
+     "java/src/org/chromium/content/browser/ServiceRegistry.java",
+     "java/src/org/chromium/content/browser/SmartClipProvider.java",
+     "java/src/org/chromium/content/browser/SpeechRecognition.java",
+-    "java/src/org/chromium/content/browser/TimeZoneMonitor.java",
++    #"java/src/org/chromium/content/browser/TimeZoneMonitor.java",
+     "java/src/org/chromium/content/browser/TracingControllerAndroid.java",
+     "java/src/org/chromium/content/browser/ViewPositionObserver.java",
+     "java/src/org/chromium/content/browser/WebActionMode.java",
+diff --git a/content/renderer/render_thread_impl.cc b/content/renderer/render_thread_impl.cc
+index 64192ae..19a8804 100644
+--- a/content/renderer/render_thread_impl.cc
++++ b/content/renderer/render_thread_impl.cc
+@@ -1935,14 +1935,6 @@ void RenderThreadImpl::OnNetworkConnectionChanged(
+ }
+ 
+ void RenderThreadImpl::OnUpdateTimezone(const std::string& zone_id) {
+-  if (!blink_platform_impl_)
+-    return;
+-  if (!zone_id.empty()) {
+-    icu::TimeZone *new_zone = icu::TimeZone::createTimeZone(
+-        icu::UnicodeString::fromUTF8(zone_id));
+-    icu::TimeZone::adoptDefault(new_zone);
+-    VLOG(1) << "ICU default timezone is set to " << zone_id;
+-  }
+   NotifyTimezoneChange();
+ }
+ 
+diff --git a/content/renderer/render_view_impl.cc b/content/renderer/render_view_impl.cc
+index 19a9fcf..3ece122 100644
+--- a/content/renderer/render_view_impl.cc
++++ b/content/renderer/render_view_impl.cc
+@@ -583,14 +583,16 @@ UScriptCode GetScriptForWebSettings(UScriptCode scriptCode) {
+ void ApplyFontsFromMap(const ScriptFontFamilyMap& map,
+                        SetFontFamilyWrapper setter,
+                        WebSettings* settings) {
+-  for (ScriptFontFamilyMap::const_iterator it = map.begin(); it != map.end();
++  /*for (ScriptFontFamilyMap::const_iterator it = map.begin(); it != map.end();
+        ++it) {
++    LOG(ERROR) << "u_getPropertyValueEnum( << " << it->first;
+     int32_t script = u_getPropertyValueEnum(UCHAR_SCRIPT, (it->first).c_str());
++    LOG(ERROR) << script;
+     if (script >= 0 && script < USCRIPT_CODE_LIMIT) {
+       UScriptCode code = static_cast<UScriptCode>(script);
+       (*setter)(settings, it->second, GetScriptForWebSettings(code));
+     }
+-  }
++  }*/
+ }
+ 
+ void ApplyBlinkSettings(const base::CommandLine& command_line,
+diff --git a/third_party/WebKit/Source/core/BUILD.gn b/third_party/WebKit/Source/core/BUILD.gn
+index 43f75b5..ec07084 100644
+--- a/third_party/WebKit/Source/core/BUILD.gn
++++ b/third_party/WebKit/Source/core/BUILD.gn
+@@ -77,7 +77,7 @@ source_set("generated") {
+     "//third_party/iccjpeg",
+     "//third_party/libpng",
+     "//third_party/libwebp",
+-    "//third_party/libxml",
++    #"//third_party/libxml",
+     #"//third_party/libxslt",
+     "//third_party/qcms",
+     "//third_party/sqlite",
+@@ -103,7 +103,7 @@ source_set("prerequisites") {
+     "//third_party/icu",
+     "//third_party/libpng",
+     "//third_party/libwebp",
+-    "//third_party/libxml",
++    #"//third_party/libxml",
+     #"//third_party/libxslt",
+     "//third_party/ots",
+     "//third_party/qcms",
+@@ -429,7 +429,7 @@ source_set("core_generated") {
+     "//third_party/iccjpeg",
+     "//third_party/libpng",
+     "//third_party/libwebp",
+-    "//third_party/libxml",
++    #"//third_party/libxml",
+     #"//third_party/libxslt",
+     "//third_party/qcms",
+     "//third_party/sqlite",
+diff --git a/third_party/WebKit/Source/core/core.gypi b/third_party/WebKit/Source/core/core.gypi
+index 4e87d0b..d692161 100644
+--- a/third_party/WebKit/Source/core/core.gypi
++++ b/third_party/WebKit/Source/core/core.gypi
+@@ -1827,9 +1827,9 @@
+             'inspector/ConsoleMessage.cpp',
+             'inspector/ConsoleMessage.h',
+             'inspector/ConsoleTypes.h',
+-            'inspector/DOMEditor.cpp',
++            #'inspector/DOMEditor.cpp',
+             'inspector/DOMEditor.h',
+-            'inspector/DOMPatchSupport.cpp',
++            #'inspector/DOMPatchSupport.cpp',
+             'inspector/DOMPatchSupport.h',
+             'inspector/DevToolsHost.h',
+             'inspector/IdentifiersFactory.h',
+@@ -2595,8 +2595,6 @@
+             'dom/Touch.h',
+             'dom/TouchList.cpp',
+             'dom/TouchList.h',
+-            'dom/TransformSource.h',
+-            'dom/TransformSourceLibxslt.cpp',
+             'dom/TreeScope.cpp',
+             'dom/TreeScope.h',
+             'dom/TreeScopeAdopter.cpp',
+diff --git a/third_party/WebKit/Source/core/dom/Document.cpp b/third_party/WebKit/Source/core/dom/Document.cpp
+index 08d45d7..9cee321 100644
+--- a/third_party/WebKit/Source/core/dom/Document.cpp
++++ b/third_party/WebKit/Source/core/dom/Document.cpp
+@@ -101,10 +101,8 @@
+ #include "core/dom/StyleChangeReason.h"
+ #include "core/dom/StyleEngine.h"
+ #include "core/dom/TouchList.h"
+-#include "core/dom/TransformSource.h"
+ #include "core/dom/TreeWalker.h"
+ #include "core/dom/VisitedLinkState.h"
+-#include "core/dom/XMLDocument.h"
+ #include "core/dom/custom/CustomElement.h"
+ #include "core/dom/custom/V0CustomElementMicrotaskRunQueue.h"
+ #include "core/dom/custom/V0CustomElementRegistrationContext.h"
+@@ -206,7 +204,6 @@
+ #include "core/timing/DOMWindowPerformance.h"
+ #include "core/timing/Performance.h"
+ #include "core/workers/SharedWorkerRepositoryClient.h"
+-#include "core/xml/parser/XMLDocumentParser.h"
+ #include "platform/DateComponents.h"
+ #include "platform/EventDispatchForbiddenScope.h"
+ #include "platform/Histogram.h"
+@@ -4609,11 +4606,6 @@ void Document::popCurrentScript()
+     m_currentScriptStack.removeLast();
+ }
+ 
+-void Document::setTransformSource(std::unique_ptr<TransformSource> source)
+-{
+-    m_transformSource = std::move(source);
+-}
+-
+ String Document::designMode() const
+ {
+     return inDesignMode() ? "on" : "off";
+diff --git a/third_party/WebKit/Source/core/dom/Document.h b/third_party/WebKit/Source/core/dom/Document.h
+index c1100a4..ff21099 100644
+--- a/third_party/WebKit/Source/core/dom/Document.h
++++ b/third_party/WebKit/Source/core/dom/Document.h
+@@ -165,7 +165,6 @@ class Text;
+ class TextAutosizer;
+ class Touch;
+ class TouchList;
+-class TransformSource;
+ class TreeWalker;
+ class VisitedLinkState;
+ class VisualViewport;
+@@ -812,9 +811,6 @@ public:
+     void pushCurrentScript(Element*);
+     void popCurrentScript();
+ 
+-    void setTransformSource(std::unique_ptr<TransformSource>);
+-    TransformSource* transformSource() const { return m_transformSource.get(); }
+-
+     void incDOMTreeVersion() { DCHECK(m_lifecycle.stateAllowsTreeMutations()); m_domTreeVersion = ++s_globalTreeVersion; }
+     uint64_t domTreeVersion() const { return m_domTreeVersion; }
+ 
+@@ -1301,8 +1297,6 @@ private:
+ 
+     HeapVector<Member<Element>> m_currentScriptStack;
+ 
+-    std::unique_ptr<TransformSource> m_transformSource;
+-
+     String m_xmlEncoding;
+     String m_xmlVersion;
+     unsigned m_xmlStandalone : 2;
+diff --git a/third_party/WebKit/Source/core/dom/DocumentFragment.cpp b/third_party/WebKit/Source/core/dom/DocumentFragment.cpp
+index 3aff85f..0c4913b 100644
+--- a/third_party/WebKit/Source/core/dom/DocumentFragment.cpp
++++ b/third_party/WebKit/Source/core/dom/DocumentFragment.cpp
+@@ -24,7 +24,6 @@
+ 
+ #include "core/dom/Document.h"
+ #include "core/html/parser/HTMLDocumentParser.h"
+-#include "core/xml/parser/XMLDocumentParser.h"
+ 
+ namespace blink {
+ 
+diff --git a/third_party/WebKit/Source/core/editing/VisibleUnits.cpp b/third_party/WebKit/Source/core/editing/VisibleUnits.cpp
+index 7b30823..2d2a0e2 100644
+--- a/third_party/WebKit/Source/core/editing/VisibleUnits.cpp
++++ b/third_party/WebKit/Source/core/editing/VisibleUnits.cpp
+@@ -514,18 +514,18 @@ static TextBreakIterator* wordBreakIteratorForMaxOffsetBoundary(const VisiblePos
+ 
+ static bool isLogicalStartOfWord(TextBreakIterator* iter, int position, bool hardLineBreak)
+ {
+-    bool boundary = hardLineBreak ? true : iter->isBoundary(position);
++    bool boundary = hardLineBreak ? true : ubrk_isBoundary(iter, position);
+     if (!boundary)
+         return false;
+ 
+-    iter->following(position);
++    ubrk_following(iter, position);
+     // isWordTextBreak returns true after moving across a word and false after moving across a punctuation/space.
+     return isWordTextBreak(iter);
+ }
+ 
+ static bool islogicalEndOfWord(TextBreakIterator* iter, int position, bool hardLineBreak)
+ {
+-    bool boundary = iter->isBoundary(position);
++    bool boundary = ubrk_isBoundary(iter, position);
+     return (hardLineBreak || boundary) && isWordTextBreak(iter);
+ }
+ 
+@@ -579,7 +579,7 @@ static VisiblePosition visualWordPosition(const VisiblePosition& visiblePosition
+         if (!iter)
+             break;
+ 
+-        iter->first();
++        ubrk_first(iter);
+         int offsetInIterator = offsetInBox - textBox->start() + previousBoxLength;
+ 
+         bool isWordBreak;
+@@ -1404,7 +1404,7 @@ static unsigned startSentenceBoundary(const UChar* characters, unsigned length,
+ {
+     TextBreakIterator* iterator = sentenceBreakIterator(characters, length);
+     // FIXME: The following function can return -1; we don't handle that.
+-    return iterator->preceding(length);
++    return ubrk_preceding(iterator, length);
+ }
+ 
+ template <typename Strategy>
+@@ -1426,7 +1426,7 @@ VisiblePositionInFlatTree startOfSentence(const VisiblePositionInFlatTree& c)
+ static unsigned endSentenceBoundary(const UChar* characters, unsigned length, unsigned, BoundarySearchContextAvailability, bool&)
+ {
+     TextBreakIterator* iterator = sentenceBreakIterator(characters, length);
+-    return iterator->next();
++    return ubrk_next(iterator);
+ }
+ 
+ // TODO(yosin) This includes the space after the punctuation that marks the end
+@@ -1452,7 +1452,7 @@ static unsigned previousSentencePositionBoundary(const UChar* characters, unsign
+     // FIXME: This is identical to startSentenceBoundary. I'm pretty sure that's not right.
+     TextBreakIterator* iterator = sentenceBreakIterator(characters, length);
+     // FIXME: The following function can return -1; we don't handle that.
+-    return iterator->preceding(length);
++    return ubrk_preceding(iterator, length);
+ }
+ 
+ VisiblePosition previousSentencePosition(const VisiblePosition& c)
+@@ -1466,7 +1466,7 @@ static unsigned nextSentencePositionBoundary(const UChar* characters, unsigned l
+     // FIXME: This is identical to endSentenceBoundary. This isn't right, it needs to
+     // move to the equivlant position in the following sentence.
+     TextBreakIterator* iterator = sentenceBreakIterator(characters, length);
+-    return iterator->following(0);
++    return ubrk_following(iterator, 0);
+ }
+ 
+ VisiblePosition nextSentencePosition(const VisiblePosition& c)
+diff --git a/third_party/WebKit/Source/core/editing/spellcheck/TextCheckingHelper.cpp b/third_party/WebKit/Source/core/editing/spellcheck/TextCheckingHelper.cpp
+index 19c2e95..796e50d 100644
+--- a/third_party/WebKit/Source/core/editing/spellcheck/TextCheckingHelper.cpp
++++ b/third_party/WebKit/Source/core/editing/spellcheck/TextCheckingHelper.cpp
+@@ -74,9 +74,9 @@ static void findMisspellings(TextCheckerClient& client, const UChar* text, int s
+     TextBreakIterator* iterator = wordBreakIterator(text + start, length);
+     if (!iterator)
+         return;
+-    int wordStart = iterator->current();
++    int wordStart = ubrk_current(iterator);
+     while (0 <= wordStart) {
+-        int wordEnd = iterator->next();
++        int wordEnd = ubrk_next(iterator);
+         if (wordEnd < 0)
+             break;
+         int wordLength = wordEnd - wordStart;
+diff --git a/third_party/WebKit/Source/core/html/forms/EmailInputType.cpp b/third_party/WebKit/Source/core/html/forms/EmailInputType.cpp
+index 4f0c64e..9968b142 100644
+--- a/third_party/WebKit/Source/core/html/forms/EmailInputType.cpp
++++ b/third_party/WebKit/Source/core/html/forms/EmailInputType.cpp
+@@ -58,9 +58,9 @@ std::unique_ptr<ScriptRegexp> EmailInputType::createEmailRegexp()
+ 
+ String EmailInputType::convertEmailAddressToASCII(const ScriptRegexp& regexp, const String& address)
+ {
+-    if (address.containsOnlyASCII())
++    //if (address.containsOnlyASCII())
+         return address;
+-
++#if 0
+     size_t atPosition = address.find('@');
+     if (atPosition == kNotFound)
+         return address;
+@@ -86,6 +86,7 @@ String EmailInputType::convertEmailAddressToASCII(const ScriptRegexp& regexp, co
+     builder.append(domainName.getBuffer(), domainName.length());
+     String asciiEmail = builder.toString();
+     return isValidEmailAddress(regexp, asciiEmail) ? asciiEmail : address;
++#endif
+ }
+ 
+ String EmailInputType::convertEmailAddressToUnicode(const String& address) const
+diff --git a/third_party/WebKit/Source/core/layout/LayoutText.cpp b/third_party/WebKit/Source/core/layout/LayoutText.cpp
+index 8aa720a..f393b0d 100644
+--- a/third_party/WebKit/Source/core/layout/LayoutText.cpp
++++ b/third_party/WebKit/Source/core/layout/LayoutText.cpp
+@@ -123,8 +123,8 @@ static void makeCapitalized(String* string, UChar previous)
+     result.reserveCapacity(length);
+ 
+     int32_t endOfWord;
+-    int32_t startOfWord = boundary->first();
+-    for (endOfWord = boundary->next(); endOfWord != TextBreakDone; startOfWord = endOfWord, endOfWord = boundary->next()) {
++    int32_t startOfWord = ubrk_first(boundary);
++    for (endOfWord = ubrk_next(boundary); endOfWord != TextBreakDone; startOfWord = endOfWord, endOfWord = ubrk_next(boundary)) {
+         if (startOfWord) // Ignore first char of previous string
+             result.append(input[startOfWord - 1] == noBreakSpaceCharacter ? noBreakSpaceCharacter : toTitleCase(stringWithPrevious[startOfWord]));
+         for (int i = startOfWord + 1; i < endOfWord; i++)
+diff --git a/third_party/WebKit/Source/core/layout/line/AbstractInlineTextBox.cpp b/third_party/WebKit/Source/core/layout/line/AbstractInlineTextBox.cpp
+index 5315569..4928a2e 100644
+--- a/third_party/WebKit/Source/core/layout/line/AbstractInlineTextBox.cpp
++++ b/third_party/WebKit/Source/core/layout/line/AbstractInlineTextBox.cpp
+@@ -141,9 +141,9 @@ void AbstractInlineTextBox::wordBoundaries(Vector<WordBoundaries>& words) const
+     if (!iterator)
+         return;
+ 
+-    int pos = iterator->first();
++    int pos = ubrk_first(iterator);
+     while (pos >= 0 && pos < len) {
+-        int next = iterator->next();
++        int next = ubrk_next(iterator);
+         if (isWordTextBreak(iterator))
+             words.append(WordBoundaries(pos, next));
+         pos = next;
+diff --git a/third_party/WebKit/Source/core/loader/FrameLoader.cpp b/third_party/WebKit/Source/core/loader/FrameLoader.cpp
+index 8417c01..6cf5a71 100644
+--- a/third_party/WebKit/Source/core/loader/FrameLoader.cpp
++++ b/third_party/WebKit/Source/core/loader/FrameLoader.cpp
+@@ -78,10 +78,10 @@
+ #include "core/page/CreateWindow.h"
+ #include "core/page/FrameTree.h"
+ #include "core/page/Page.h"
++#include "core/dom/ScriptableDocumentParser.h"
+ #include "core/page/WindowFeatures.h"
+ #include "core/page/scrolling/ScrollingCoordinator.h"
+ #include "core/svg/graphics/SVGImage.h"
+-#include "core/xml/parser/XMLDocumentParser.h"
+ #include "platform/Logging.h"
+ #include "platform/PluginScriptForbiddenScope.h"
+ #include "platform/RuntimeEnabledFeatures.h"
+diff --git a/third_party/WebKit/Source/core/page/TouchAdjustment.cpp b/third_party/WebKit/Source/core/page/TouchAdjustment.cpp
+index 57c1e3c..ea28b70 100644
+--- a/third_party/WebKit/Source/core/page/TouchAdjustment.cpp
++++ b/third_party/WebKit/Source/core/page/TouchAdjustment.cpp
+@@ -171,11 +171,11 @@ static inline void appendContextSubtargetsForNode(Node* node, SubtargetGeometryL
+         // Make subtargets out of every word.
+         String textValue = textNode->data();
+         TextBreakIterator* wordIterator = wordBreakIterator(textValue, 0, textValue.length());
+-        int lastOffset = wordIterator->first();
++        int lastOffset = ubrk_first(wordIterator);
+         if (lastOffset == -1)
+             return;
+         int offset;
+-        while ((offset = wordIterator->next()) != -1) {
++        while ((offset = ubrk_next(wordIterator)) != -1) {
+             if (isWordTextBreak(wordIterator)) {
+                 Vector<FloatQuad> quads;
+                 textLayoutObject->absoluteQuadsForRange(quads, lastOffset, offset);
+diff --git a/third_party/WebKit/Source/core/svg/SVGUseElement.cpp b/third_party/WebKit/Source/core/svg/SVGUseElement.cpp
+index e6d6b6eb..921febb 100644
+--- a/third_party/WebKit/Source/core/svg/SVGUseElement.cpp
++++ b/third_party/WebKit/Source/core/svg/SVGUseElement.cpp
+@@ -28,6 +28,7 @@
+ #include "core/SVGNames.h"
+ #include "core/XLinkNames.h"
+ #include "core/dom/Document.h"
++#include "core/dom/ScriptableDocumentParser.h"
+ #include "core/dom/ElementTraversal.h"
+ #include "core/dom/StyleChangeReason.h"
+ #include "core/dom/shadow/ElementShadow.h"
+@@ -41,7 +42,6 @@
+ #include "core/svg/SVGLengthContext.h"
+ #include "core/svg/SVGSVGElement.h"
+ #include "core/svg/SVGSymbolElement.h"
+-#include "core/xml/parser/XMLDocumentParser.h"
+ #include "wtf/Vector.h"
+ 
+ namespace blink {
+diff --git a/third_party/WebKit/Source/platform/fonts/ScriptRunIterator.cpp b/third_party/WebKit/Source/platform/fonts/ScriptRunIterator.cpp
+index 7bd62d3..18578b4 100644
+--- a/third_party/WebKit/Source/platform/fonts/ScriptRunIterator.cpp
++++ b/third_party/WebKit/Source/platform/fonts/ScriptRunIterator.cpp
+@@ -41,7 +41,7 @@ void ICUScriptData::getScripts(UChar32 ch, Vector<UScriptCode>& dst) const
+     }
+     UScriptCode primaryScript = uscript_getScript(ch, &status);
+ 
+-    if (U_FAILURE(status)) {
++    if (U_FAILURE(status) || count <= 0) {
+         DLOG(ERROR) << "Could not get icu script data: " << status << " for 0x" << std::hex << ch;
+         dst.clear();
+         return;
+diff --git a/third_party/WebKit/Source/platform/fonts/shaping/ShapeResultBuffer.cpp b/third_party/WebKit/Source/platform/fonts/shaping/ShapeResultBuffer.cpp
+index 3685991..188ec18 100644
+--- a/third_party/WebKit/Source/platform/fonts/shaping/ShapeResultBuffer.cpp
++++ b/third_party/WebKit/Source/platform/fonts/shaping/ShapeResultBuffer.cpp
+@@ -60,10 +60,10 @@ inline unsigned countGraphemesInCluster(const UChar* str, unsigned strLength,
+     ASSERT(static_cast<unsigned>(startIndex + length) <= strLength);
+     TextBreakIterator* cursorPosIterator = cursorMovementIterator(&str[startIndex], length);
+ 
+-    int cursorPos = cursorPosIterator->current();
++    int cursorPos = ubrk_current(cursorPosIterator);
+     int numGraphemes = -1;
+     while (0 <= cursorPos) {
+-        cursorPos = cursorPosIterator->next();
++        cursorPos = ubrk_next(cursorPosIterator);
+         numGraphemes++;
+     }
+     return std::max(0, numGraphemes);
+diff --git a/third_party/WebKit/Source/platform/text/LocaleICU.cpp b/third_party/WebKit/Source/platform/text/LocaleICU.cpp
+index 300416e..c1caeb7 100644
+--- a/third_party/WebKit/Source/platform/text/LocaleICU.cpp
++++ b/third_party/WebKit/Source/platform/text/LocaleICU.cpp
+@@ -159,7 +159,7 @@ UDateFormat* LocaleICU::openDateFormatForStandAloneMonthLabels(bool isShort)  co
+     const UChar monthPattern[4] = {'L', 'L', 'L', 'L'};
+     UErrorCode status = U_ZERO_ERROR;
+     UDateFormat* formatter = udat_open(UDAT_PATTERN, UDAT_PATTERN, m_locale.data(), 0, -1, monthPattern, isShort ? 3 : 4, &status);
+-    udat_setContext(formatter, UDISPCTX_CAPITALIZATION_FOR_STANDALONE, &status);
++    //udat_setContext(formatter, UDISPCTX_CAPITALIZATION_FOR_STANDALONE, &status);
+     ASSERT(U_SUCCESS(status));
+     return formatter;
+ }
+diff --git a/third_party/WebKit/Source/platform/text/TextBoundaries.cpp b/third_party/WebKit/Source/platform/text/TextBoundaries.cpp
+index acc324a..ceae503 100644
+--- a/third_party/WebKit/Source/platform/text/TextBoundaries.cpp
++++ b/third_party/WebKit/Source/platform/text/TextBoundaries.cpp
+@@ -63,26 +63,26 @@ int findNextWordFromIndex(const UChar* chars, int len, int position, bool forwar
+     TextBreakIterator* it = wordBreakIterator(chars, len);
+ 
+     if (forward) {
+-        position = it->following(position);
++        position = ubrk_following(it, position);
+         while (position != TextBreakDone) {
+             // We stop searching when the character preceeding the break
+             // is alphanumeric.
+             if (position < len && isAlphanumeric(chars[position - 1]))
+                 return position;
+ 
+-            position = it->following(position);
++            position = ubrk_following(it, position);
+         }
+ 
+         return len;
+     } else {
+-        position = it->preceding(position);
++        position = ubrk_preceding(it, position);
+         while (position != TextBreakDone) {
+             // We stop searching when the character following the break
+             // is alphanumeric.
+             if (position > 0 && isAlphanumeric(chars[position]))
+                 return position;
+ 
+-            position = it->preceding(position);
++            position = ubrk_preceding(it, position);
+         }
+ 
+         return 0;
+@@ -92,17 +92,17 @@ int findNextWordFromIndex(const UChar* chars, int len, int position, bool forwar
+ void findWordBoundary(const UChar* chars, int len, int position, int* start, int* end)
+ {
+     TextBreakIterator* it = wordBreakIterator(chars, len);
+-    *end = it->following(position);
++    *end = ubrk_following(it, position);
+     if (*end < 0)
+-        *end = it->last();
+-    *start = it->previous();
++        *end = ubrk_last(it);
++    *start = ubrk_previous(it);
+ }
+ 
+ int findWordEndBoundary(const UChar* chars, int len, int position)
+ {
+     TextBreakIterator* it = wordBreakIterator(chars, len);
+-    int end = it->following(position);
+-    return end < 0 ? it->last() : end;
++    int end = ubrk_following(it, position);
++    return end < 0 ? ubrk_last(it) : end;
+ }
+ 
+ } // namespace blink
+diff --git a/third_party/WebKit/Source/platform/text/TextBreakIterator.cpp b/third_party/WebKit/Source/platform/text/TextBreakIterator.cpp
+index 2f3387f..9344950 100644
+--- a/third_party/WebKit/Source/platform/text/TextBreakIterator.cpp
++++ b/third_party/WebKit/Source/platform/text/TextBreakIterator.cpp
+@@ -304,7 +304,7 @@ static inline int nextBreakablePosition(LazyLineBreakIterator& lazyBreakIterator
+                 if (i || priorContextLength) {
+                     TextBreakIterator* breakIterator = lazyBreakIterator.get(priorContextLength);
+                     if (breakIterator) {
+-                        nextBreak = breakIterator->following(i - 1 + priorContextLength);
++                        nextBreak = ubrk_following(breakIterator, i - 1 + priorContextLength);
+                         if (nextBreak >= 0) {
+                             nextBreak -= priorContextLength;
+                         }
+@@ -352,7 +352,7 @@ static inline int nextBreakablePositionKeepAllInternal(LazyLineBreakIterator& la
+                 if (i || priorContextLength) {
+                     TextBreakIterator* breakIterator = lazyBreakIterator.get(priorContextLength);
+                     if (breakIterator) {
+-                        nextBreak = breakIterator->following(i - 1 + priorContextLength);
++                        nextBreak = ubrk_following(breakIterator, i - 1 + priorContextLength);
+                         if (nextBreak >= 0) {
+                             nextBreak -= priorContextLength;
+                         }
+diff --git a/third_party/WebKit/Source/platform/text/TextBreakIterator.h b/third_party/WebKit/Source/platform/text/TextBreakIterator.h
+index 584d685..f7a5845 100644
+--- a/third_party/WebKit/Source/platform/text/TextBreakIterator.h
++++ b/third_party/WebKit/Source/platform/text/TextBreakIterator.h
+@@ -26,11 +26,11 @@
+ #include "wtf/text/AtomicString.h"
+ #include "wtf/text/Unicode.h"
+ 
+-#include <unicode/brkiter.h>
++#include <unicode/ubrk.h>
+ 
+ namespace blink {
+ 
+-typedef icu::BreakIterator TextBreakIterator;
++typedef struct UBreakIterator TextBreakIterator;
+ 
+ // Note: The returned iterator is good only until you get another iterator, with the exception of acquireLineBreakIterator.
+ 
+diff --git a/third_party/WebKit/Source/platform/text/TextBreakIteratorICU.cpp b/third_party/WebKit/Source/platform/text/TextBreakIteratorICU.cpp
+index eae10b8..f7e079e 100644
+--- a/third_party/WebKit/Source/platform/text/TextBreakIteratorICU.cpp
++++ b/third_party/WebKit/Source/platform/text/TextBreakIteratorICU.cpp
+@@ -32,6 +32,8 @@
+ #include <unicode/rbbi.h>
+ #include <unicode/ubrk.h>
+ 
++struct UBreakIterator {};
++
+ using namespace WTF;
+ 
+ namespace blink {
+@@ -48,9 +50,9 @@ public:
+ 
+     static std::unique_ptr<LineBreakIteratorPool> create() { return wrapUnique(new LineBreakIteratorPool); }
+ 
+-    icu::BreakIterator* take(const AtomicString& locale)
++    UBreakIterator* take(const AtomicString& locale)
+     {
+-        icu::BreakIterator* iterator = 0;
++        UBreakIterator* iterator = 0;
+         for (size_t i = 0; i < m_pool.size(); ++i) {
+             if (m_pool[i].first == locale) {
+                 iterator = m_pool[i].second;
+@@ -62,12 +64,12 @@ public:
+         if (!iterator) {
+             UErrorCode openStatus = U_ZERO_ERROR;
+             bool localeIsEmpty = locale.isEmpty();
+-            iterator = icu::BreakIterator::createLineInstance(localeIsEmpty ? icu::Locale(currentTextBreakLocaleID()) : icu::Locale(locale.utf8().data()), openStatus);
++            iterator = ubrk_open(UBRK_LINE, localeIsEmpty ? currentTextBreakLocaleID() : locale.utf8().data(), NULL, 0, &openStatus);
+             // locale comes from a web page and it can be invalid, leading ICU
+             // to fail, in which case we fall back to the default locale.
+             if (!localeIsEmpty && U_FAILURE(openStatus)) {
+                 openStatus = U_ZERO_ERROR;
+-                iterator = icu::BreakIterator::createLineInstance(icu::Locale(currentTextBreakLocaleID()), openStatus);
++                iterator = ubrk_open(UBRK_LINE, currentTextBreakLocaleID(), NULL, 0, &openStatus);
+             }
+ 
+             if (U_FAILURE(openStatus)) {
+@@ -81,12 +83,12 @@ public:
+         return iterator;
+     }
+ 
+-    void put(icu::BreakIterator* iterator)
++    void put(UBreakIterator* iterator)
+     {
+         DCHECK(m_vendedIterators.contains(iterator));
+ 
+         if (m_pool.size() == capacity) {
+-            delete(m_pool[0].second);
++            ubrk_close(m_pool[0].second);
+             m_pool.remove(0);
+         }
+ 
+@@ -98,10 +100,10 @@ private:
+ 
+     static const size_t capacity = 4;
+ 
+-    typedef std::pair<AtomicString, icu::BreakIterator*> Entry;
++    typedef std::pair<AtomicString, UBreakIterator*> Entry;
+     typedef Vector<Entry, capacity> Pool;
+     Pool m_pool;
+-    HashMap<icu::BreakIterator*, AtomicString> m_vendedIterators;
++    HashMap<UBreakIterator*, AtomicString> m_vendedIterators;
+ 
+     friend WTF::ThreadSpecific<LineBreakIteratorPool>::operator LineBreakIteratorPool*();
+ };
+@@ -475,7 +477,7 @@ static TextBreakIterator* wordBreakIterator(const LChar* string, int length)
+     UErrorCode errorCode = U_ZERO_ERROR;
+     static TextBreakIterator* breakIter = 0;
+     if (!breakIter) {
+-        breakIter = icu::BreakIterator::createWordInstance(icu::Locale(currentTextBreakLocaleID()), errorCode);
++        breakIter = ubrk_open(UBRK_WORD, currentTextBreakLocaleID(), NULL, 0, &errorCode);
+         DCHECK(U_SUCCESS(errorCode)) << "ICU could not open a break iterator: " << u_errorName(errorCode) << " (" << errorCode << ")";
+         if (!breakIter)
+             return 0;
+@@ -494,7 +496,7 @@ static TextBreakIterator* wordBreakIterator(const LChar* string, int length)
+     }
+ 
+     UErrorCode setTextStatus = U_ZERO_ERROR;
+-    breakIter->setText(text, setTextStatus);
++    ubrk_setUText(breakIter, text, &setTextStatus);
+     if (U_FAILURE(setTextStatus))
+         DLOG(ERROR) << "BreakIterator::seText failed with status " << setTextStatus;
+ 
+@@ -510,7 +512,7 @@ static void setText16(TextBreakIterator* iter, const UChar* string, int length)
+     utext_openUChars(&uText, string, length, &errorCode);
+     if (U_FAILURE(errorCode))
+         return;
+-    iter->setText(&uText, errorCode);
++    ubrk_setUText(iter, &uText, &errorCode);
+ }
+ 
+ TextBreakIterator* wordBreakIterator(const UChar* string, int length)
+@@ -518,7 +520,7 @@ TextBreakIterator* wordBreakIterator(const UChar* string, int length)
+     UErrorCode errorCode = U_ZERO_ERROR;
+     static TextBreakIterator* breakIter = 0;
+     if (!breakIter) {
+-        breakIter = icu::BreakIterator::createWordInstance(icu::Locale(currentTextBreakLocaleID()), errorCode);
++        breakIter = ubrk_open(UBRK_WORD, currentTextBreakLocaleID(), NULL, 0, &errorCode);
+         DCHECK(U_SUCCESS(errorCode)) << "ICU could not open a break iterator: " << u_errorName(errorCode) << " (" << errorCode << ")";
+         if (!breakIter)
+             return 0;
+@@ -555,7 +557,7 @@ TextBreakIterator* acquireLineBreakIterator(const LChar* string, int length, con
+     }
+ 
+     UErrorCode setTextStatus = U_ZERO_ERROR;
+-    iterator->setText(text, setTextStatus);
++    ubrk_setUText(iterator, text, &setTextStatus);
+     if (U_FAILURE(setTextStatus)) {
+         DLOG(ERROR) << "ubrk_setUText failed with status " << setTextStatus;
+         return 0;
+@@ -582,7 +584,7 @@ TextBreakIterator* acquireLineBreakIterator(const UChar* string, int length, con
+     }
+ 
+     UErrorCode setTextStatus = U_ZERO_ERROR;
+-    iterator->setText(text, setTextStatus);
++    ubrk_setUText(iterator, text, &setTextStatus);
+     if (U_FAILURE(setTextStatus)) {
+         DLOG(ERROR) << "ubrk_setUText failed with status " << setTextStatus;
+         return 0;
+@@ -649,11 +651,9 @@ void NonSharedCharacterBreakIterator::createIteratorForBuffer(const UChar* buffe
+     bool createdIterator = m_iterator && compareAndSwapNonSharedCharacterBreakIterator(m_iterator, 0);
+     if (!createdIterator) {
+         UErrorCode errorCode = U_ZERO_ERROR;
+-        m_iterator = icu::BreakIterator::createCharacterInstance(icu::Locale(currentTextBreakLocaleID()), errorCode);
++        m_iterator = ubrk_open(UBRK_CHARACTER, currentTextBreakLocaleID(), buffer, length, &errorCode);
+         DCHECK(U_SUCCESS(errorCode)) << "ICU could not open a break iterator: " << u_errorName(errorCode) << " (" << errorCode << ")";
+     }
+-
+-    setText16(m_iterator, buffer, length);
+ }
+ 
+ NonSharedCharacterBreakIterator::~NonSharedCharacterBreakIterator()
+@@ -661,13 +661,13 @@ NonSharedCharacterBreakIterator::~NonSharedCharacterBreakIterator()
+     if (m_is8Bit)
+         return;
+     if (!compareAndSwapNonSharedCharacterBreakIterator(0, m_iterator))
+-        delete m_iterator;
++        ubrk_close(m_iterator);
+ }
+ 
+ int NonSharedCharacterBreakIterator::next()
+ {
+     if (!m_is8Bit)
+-        return m_iterator->next();
++        return ubrk_next(m_iterator);
+ 
+     if (m_offset >= m_length)
+         return TextBreakDone;
+@@ -679,21 +679,21 @@ int NonSharedCharacterBreakIterator::next()
+ int NonSharedCharacterBreakIterator::current()
+ {
+     if (!m_is8Bit)
+-        return m_iterator->current();
++        return ubrk_current(m_iterator);
+     return m_offset;
+ }
+ 
+ bool NonSharedCharacterBreakIterator::isBreak(int offset) const
+ {
+     if (!m_is8Bit)
+-        return m_iterator->isBoundary(offset);
++        return ubrk_isBoundary(m_iterator, offset);
+     return !isLFAfterCR(offset);
+ }
+ 
+ int NonSharedCharacterBreakIterator::preceding(int offset) const
+ {
+     if (!m_is8Bit)
+-        return m_iterator->preceding(offset);
++        return ubrk_preceding(m_iterator, offset);
+     if (offset <= 0)
+         return TextBreakDone;
+     if (isLFAfterCR(offset))
+@@ -704,7 +704,7 @@ int NonSharedCharacterBreakIterator::preceding(int offset) const
+ int NonSharedCharacterBreakIterator::following(int offset) const
+ {
+     if (!m_is8Bit)
+-        return m_iterator->following(offset);
++        return ubrk_following(m_iterator, offset);
+     if (static_cast<unsigned>(offset) >= m_length)
+         return TextBreakDone;
+     return offset + clusterLengthStartingAt(offset);
+@@ -715,20 +715,18 @@ TextBreakIterator* sentenceBreakIterator(const UChar* string, int length)
+     UErrorCode openStatus = U_ZERO_ERROR;
+     static TextBreakIterator* iterator = 0;
+     if (!iterator) {
+-        iterator =  icu::BreakIterator::createSentenceInstance(icu::Locale(currentTextBreakLocaleID()), openStatus);
++        iterator =  ubrk_open(UBRK_SENTENCE, currentTextBreakLocaleID(), string, length, &openStatus);
+         DCHECK(U_SUCCESS(openStatus)) << "ICU could not open a break iterator: " << u_errorName(openStatus) << " (" << openStatus << ")";
+         if (!iterator)
+             return 0;
+     }
+ 
+-    setText16(iterator, string, length);
+     return iterator;
+ }
+ 
+ bool isWordTextBreak(TextBreakIterator* iterator)
+ {
+-    icu::RuleBasedBreakIterator* ruleBasedBreakIterator = static_cast<icu::RuleBasedBreakIterator*>(iterator);
+-    int ruleStatus = ruleBasedBreakIterator->getRuleStatus();
++    int ruleStatus = ubrk_getRuleStatus(iterator);
+     return ruleStatus != UBRK_WORD_NONE;
+ }
+ 
+@@ -744,13 +742,12 @@ static TextBreakIterator* setUpIteratorWithRules(const char* breakRules, const U
+         Vector<UChar> rules;
+         String(breakRules).appendTo(rules);
+ 
+-        iterator = new icu::RuleBasedBreakIterator(icu::UnicodeString(rules.data(), rules.size()), parseStatus, openStatus);
++        iterator = ubrk_openRules(rules.data(), rules.size(), string, length, &parseStatus, &openStatus);
+         DCHECK(U_SUCCESS(openStatus)) << "ICU could not open a break iterator: " << u_errorName(openStatus) << " (" << openStatus << ")";
+         if (!iterator)
+             return 0;
+     }
+ 
+-    setText16(iterator, string, length);
+     return iterator;
+ }
+ 
+diff --git a/third_party/WebKit/Source/wtf/text/StringImpl.cpp b/third_party/WebKit/Source/wtf/text/StringImpl.cpp
+index e7004b92..6afdfe8 100644
+--- a/third_party/WebKit/Source/wtf/text/StringImpl.cpp
++++ b/third_party/WebKit/Source/wtf/text/StringImpl.cpp
+@@ -768,6 +768,7 @@ PassRefPtr<StringImpl> StringImpl::lower(const AtomicString& localeIdentifier)
+ 
+ PassRefPtr<StringImpl> StringImpl::upper(const AtomicString& localeIdentifier)
+ {
++#if 0
+     // Use the more-optimized code path most of the time.
+     // Only Turkic (tr and az) languages and Greek require locale-specific
+     // lowercasing rules.
+@@ -804,6 +805,9 @@ PassRefPtr<StringImpl> StringImpl::upper(const AtomicString& localeIdentifier)
+     translit->transliterate(target);
+ 
+     return create(target.getBuffer(), target.length());
++#else
++    return upper();
++#endif
+ }
+ 
+ PassRefPtr<StringImpl> StringImpl::fill(UChar character)
+diff --git a/third_party/expat/BUILD.gn b/third_party/expat/BUILD.gn
+index 642cd7a..a457d36 100644
+--- a/third_party/expat/BUILD.gn
++++ b/third_party/expat/BUILD.gn
+@@ -26,9 +26,9 @@ if (is_linux && !is_chromecast && !use_libfuzzer) {
+   static_library("expat") {
+     sources = [
+       "files/lib/expat.h",
+-      "files/lib/xmlparse.c",
+-      "files/lib/xmlrole.c",
+-      "files/lib/xmltok.c",
++      #"files/lib/xmlparse.c",
++      #"files/lib/xmlrole.c",
++      #"files/lib/xmltok.c",
+     ]
+ 
+     public_configs = [ ":expat_config" ]
+diff --git a/third_party/harfbuzz-ng/src/hb-icu.cc b/third_party/harfbuzz-ng/src/hb-icu.cc
+index ee54721..9c16b4c 100644
+--- a/third_party/harfbuzz-ng/src/hb-icu.cc
++++ b/third_party/harfbuzz-ng/src/hb-icu.cc
+@@ -39,6 +39,8 @@
+ #include <unicode/utf16.h>
+ #include <unicode/uversion.h>
+ 
++#undef U_ICU_VERSION_MAJOR_NUM
++#define U_ICU_VERSION_MAJOR_NUM 48
+ 
+ hb_script_t
+ hb_icu_script_to_script (UScriptCode script)
+diff --git a/third_party/sqlite/android_sqlite.c b/third_party/sqlite/android_sqlite.c
+index 42ed660..242e2c1 100644
+--- a/third_party/sqlite/android_sqlite.c
++++ b/third_party/sqlite/android_sqlite.c
+@@ -144,7 +144,7 @@ SQLITE_API int SQLITE_STDCALL sqlite3_initialize(void) {
+   int i;
+   if (g_libsqlite) return 0;
+ 
+-  g_libsqlite = dlopen("libsqlite.so", RTLD_LOCAL);
++  g_libsqlite = dlopen("libsqlite.so", RTLD_LAZY);
+   if (!g_libsqlite) {
+     __android_log_print(ANDROID_LOG_ERROR, "xwalk-sqlite", "couldn't open libsqlite.so: %s", dlerror());
+     exit(-1);
+diff --git a/ui/base/l10n/l10n_util_collator.h b/ui/base/l10n/l10n_util_collator.h
+index 504bb90..b7f7c06 100644
+--- a/ui/base/l10n/l10n_util_collator.h
++++ b/ui/base/l10n/l10n_util_collator.h
+@@ -24,19 +24,19 @@ namespace l10n_util {
+ template <class T, class Method>
+ class StringMethodComparatorWithCollator {
+  public:
+-  StringMethodComparatorWithCollator(icu::Collator* collator, Method method)
++  StringMethodComparatorWithCollator(UCollator* collator, Method method)
+       : collator_(collator),
+         method_(method) { }
+ 
+   // Returns true if lhs preceeds rhs.
+   bool operator() (T* lhs_t, T* rhs_t) {
+     return base::i18n::CompareString16WithCollator(
+-               *collator_, (lhs_t->*method_)(), (rhs_t->*method_)()) ==
++               collator_, (lhs_t->*method_)(), (rhs_t->*method_)()) ==
+            UCOL_LESS;
+   }
+ 
+  private:
+-  icu::Collator* collator_;
++  UCollator* collator_;
+   Method method_;
+ };
+ 
+@@ -64,9 +64,7 @@ void SortStringsUsingMethod(const std::string& locale,
+                             std::vector<T*>* elements,
+                             Method method) {
+   UErrorCode error = U_ZERO_ERROR;
+-  icu::Locale loc(locale.c_str());
+-  std::unique_ptr<icu::Collator> collator(
+-      icu::Collator::createInstance(loc, error));
++  UCollator* collator = ucol_open(locale.c_str(), &error);
+   if (U_FAILURE(error)) {
+     sort(elements->begin(), elements->end(),
+          StringMethodComparator<T, Method>(method));
+@@ -74,7 +72,8 @@ void SortStringsUsingMethod(const std::string& locale,
+   }
+ 
+   std::sort(elements->begin(), elements->end(),
+-      StringMethodComparatorWithCollator<T, Method>(collator.get(), method));
++      StringMethodComparatorWithCollator<T, Method>(collator, method));
++  ucol_close(collator);
+ }
+ 
+ // Compares two elements' string keys and returns true if the first element's
+@@ -85,7 +84,7 @@ void SortStringsUsingMethod(const std::string& locale,
+ template <class Element>
+ class StringComparator {
+  public:
+-  explicit StringComparator(icu::Collator* collator)
++  explicit StringComparator(UCollator* collator)
+       : collator_(collator) { }
+ 
+   // Returns true if lhs precedes rhs.
+@@ -98,7 +97,7 @@ class StringComparator {
+   }
+ 
+  private:
+-  icu::Collator* collator_;
++  UCollator* collator_;
+ };
+ 
+ // Specialization of operator() method for base::string16 version.
+@@ -110,7 +109,7 @@ UI_BASE_EXPORT inline bool StringComparator<base::string16>::operator()(
+   // string compare.
+   if (!collator_)
+     return lhs < rhs;
+-  return base::i18n::CompareString16WithCollator(*collator_, lhs, rhs) ==
++  return base::i18n::CompareString16WithCollator(collator_, lhs, rhs) ==
+          UCOL_LESS;
+ }
+ 
+@@ -128,12 +127,8 @@ void SortVectorWithStringKey(const std::string& locale,
+   DCHECK_LT(begin_index, end_index);
+   DCHECK_LE(end_index, elements->size());
+   UErrorCode error = U_ZERO_ERROR;
+-  icu::Locale loc(locale.c_str());
+-  std::unique_ptr<icu::Collator> collator(
+-      icu::Collator::createInstance(loc, error));
+-  if (U_FAILURE(error))
+-    collator.reset();
+-  StringComparator<Element> c(collator.get());
++  UCollator* collator = ucol_open(locale.c_str(), &error);
++  StringComparator<Element> c(collator);
+   if (needs_stable_sort) {
+     stable_sort(elements->begin() + begin_index,
+                 elements->begin() + end_index,
+@@ -141,6 +136,7 @@ void SortVectorWithStringKey(const std::string& locale,
+   } else {
+     sort(elements->begin() + begin_index, elements->begin() + end_index, c);
+   }
++  ucol_close(collator);
+ }
+ 
+ template <class Element>
+diff --git a/ui/base/models/table_model.cc b/ui/base/models/table_model.cc
+index d98cdb2..45afc1b 100644
+--- a/ui/base/models/table_model.cc
++++ b/ui/base/models/table_model.cc
+@@ -40,7 +40,7 @@ TableColumn::TableColumn(const TableColumn& other) = default;
+ // TableModel -----------------------------------------------------------------
+ 
+ // Used for sorting.
+-static icu::Collator* collator = NULL;
++static UCollator* collator = NULL;
+ 
+ gfx::ImageSkia TableModel::GetIcon(int row) {
+   return gfx::ImageSkia();
+@@ -77,24 +77,24 @@ int TableModel::CompareValues(int row1, int row2, int column_id) {
+          row2 >= 0 && row2 < RowCount());
+   base::string16 value1 = GetText(row1, column_id);
+   base::string16 value2 = GetText(row2, column_id);
+-  icu::Collator* collator = GetCollator();
++  UCollator* collator = GetCollator();
+ 
+   if (collator)
+-    return base::i18n::CompareString16WithCollator(*collator, value1, value2);
++    return base::i18n::CompareString16WithCollator(collator, value1, value2);
+ 
+   NOTREACHED();
+   return 0;
+ }
+ 
+ void TableModel::ClearCollator() {
+-  delete collator;
++  ucol_close(collator);
+   collator = NULL;
+ }
+ 
+-icu::Collator* TableModel::GetCollator() {
++UCollator* TableModel::GetCollator() {
+   if (!collator) {
+     UErrorCode create_status = U_ZERO_ERROR;
+-    collator = icu::Collator::createInstance(create_status);
++    collator = ucol_open(NULL, &create_status);
+     if (!U_SUCCESS(create_status)) {
+       collator = NULL;
+       NOTREACHED();
+diff --git a/ui/base/models/table_model.h b/ui/base/models/table_model.h
+index c7172f4..26d4db5 100644
+--- a/ui/base/models/table_model.h
++++ b/ui/base/models/table_model.h
+@@ -87,7 +87,7 @@ class UI_BASE_EXPORT TableModel {
+   virtual ~TableModel() {}
+ 
+   // Returns the collator used by CompareValues.
+-  icu::Collator* GetCollator();
++  UCollator* GetCollator();
+ };
+ 
+ // TableColumn specifies the title, alignment and size of a particular column.
