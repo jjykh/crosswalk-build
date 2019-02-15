@@ -1,0 +1,248 @@
+
+#define CRYPTO_LIST(F, S) \
+  S(CRYPTO_library_init) \
+  S(OPENSSL_cleanse) \
+  S(AES_encrypt) \
+  S(AES_ctr128_encrypt) \
+  S(AES_set_encrypt_key) \
+  S(DES_set_key) \
+  S(DES_ecb_encrypt) \
+  S(i2c_ASN1_INTEGER) \
+  S(ASN1_STRING_to_UTF8) \
+  S(ASN1_STRING_length) \
+  S(ASN1_STRING_data) \
+  S(GENERAL_NAMES_free) \
+\
+  S(HMAC) \
+\
+  S(ERR_get_error) \
+  S(ERR_put_error) \
+  S(ERR_clear_error) \
+  S(ERR_peek_error) \
+  S(ERR_get_error_line) \
+  S(ERR_get_next_error_library) \
+\
+  S(EC_KEY_get0_public_key) \
+  S(EC_KEY_get0_group) \
+  S(EC_POINT_get_affine_coordinates_GFp) \
+  S(EC_POINT_point2oct) \
+  S(EC_POINT_point2cbb) \
+  S(EC_POINT_oct2point) \
+  S(EC_POINT_free) \
+  S(EC_POINT_new) \
+  S(EC_GROUP_get0_order) \
+  S(EC_KEY_generate_key) \
+  S(EC_KEY_free) \
+  S(EC_KEY_new_by_curve_name) \
+  S(EC_KEY_check_key) \
+  S(EC_KEY_set_ex_data) \
+  S(EC_KEY_get_ex_data) \
+  S(EC_KEY_get_ex_new_index) \
+  S(EC_KEY_new_method) \
+  S(ECDH_compute_key) \
+  S(ECDSA_SIG_from_bytes) \
+  S(ECDSA_SIG_free) \
+  S(ECDSA_size) \
+  S(ECDSA_do_sign) \
+  S(i2d_ECPrivateKey) \
+  S(d2i_ECPrivateKey) \
+\
+  S(EVP_aes_128_cbc) \
+  S(EVP_aes_256_cbc) \
+  S(EVP_md5_sha1) \
+  S(EVP_aead_chacha20_poly1305) \
+  S(EVP_aead_aes_128_gcm) \
+  S(EVP_PKEY_CTX_set_rsa_pss_saltlen) \
+  S(EVP_PKEY_CTX_set_rsa_mgf1_md) \
+  S(EVP_PKEY_CTX_set_rsa_padding) \
+  S(EVP_PKEY_CTX_set_signature_md) \
+  S(EVP_PKEY_CTX_free) \
+  S(EVP_PKEY_CTX_new) \
+  S(EVP_PKEY_set1_RSA) \
+  S(EVP_PKEY_sign) \
+  S(EVP_PKEY_sign_init) \
+  S(EVP_PKEY_decrypt_init) \
+  S(EVP_CIPHER_CTX_cleanup) \
+  S(EVP_CipherFinal_ex) \
+  S(EVP_CipherUpdate) \
+  S(EVP_CipherInit_ex) \
+  S(EVP_CIPHER_CTX_init) \
+  S(EVP_AEAD_CTX_cleanup) \
+  S(EVP_AEAD_CTX_seal) \
+  S(EVP_AEAD_CTX_init) \
+  S(EVP_AEAD_CTX_open) \
+  S(EVP_AEAD_max_overhead) \
+  S(EVP_sha1) \
+  S(EVP_sha256) \
+  S(EVP_sha384) \
+  S(EVP_sha512) \
+  S(EVP_md5) \
+  S(EVP_has_aes_hardware) \
+  S(EVP_DigestVerifyInit) \
+  S(EVP_DigestVerifyUpdate) \
+  S(EVP_DigestVerifyFinal) \
+  S(EVP_DigestSignFinal) \
+  S(EVP_DigestSignUpdate) \
+  S(EVP_DigestSignInit) \
+  S(EVP_Digest) \
+  S(EVP_DigestUpdate) \
+  S(EVP_DigestFinal_ex) \
+  S(EVP_DigestInit_ex) \
+  S(EVP_MD_CTX_destroy) \
+  S(EVP_MD_CTX_create) \
+  S(EVP_MD_type) \
+  S(EVP_MD_CTX_size) \
+  S(EVP_PKEY_id) \
+  S(EVP_PKEY_free) \
+  S(EVP_PKEY_size) \
+  S(EVP_PKEY_bits) \
+  S(EVP_PKEY_new) \
+  S(EVP_PKEY_decrypt) \
+  S(EVP_PKEY_encrypt) \
+  S(EVP_PKEY_encrypt_init) \
+  S(EVP_PKEY_up_ref) \
+  S(EVP_PKEY_cmp) \
+  S(EVP_PKEY_get0_EC_KEY) \
+  S(EVP_PKEY_set1_EC_KEY) \
+  S(EVP_parse_public_key) \
+  S(EVP_marshal_public_key) \
+  S(EVP_marshal_private_key) \
+\
+  S(SHA256_Init) \
+  S(SHA256_Update) \
+  S(SHA256_Final) \
+\
+  S(BN_new) \
+  S(BN_free) \
+  S(BN_set_word) \
+  S(BN_bn2bin_padded) \
+  S(BN_num_bytes) \
+\
+  S(BIO_set_callback) \
+  S(BIO_set_callback_arg) \
+  S(BIO_get_callback_arg) \
+  S(BIO_get_callback) \
+  S(BIO_new_bio_pair_external_buf) \
+  S(BIO_zero_copy_get_write_buf) \
+  S(BIO_zero_copy_get_read_buf) \
+  S(BIO_ctrl_get_read_request) \
+  S(BIO_zero_copy_get_write_buf_done) \
+  S(BIO_zero_copy_get_read_buf_done) \
+  S(BIO_wpending) \
+  S(BIO_free_all) \
+\
+  S(OBJ_obj2nid) \
+  S(OBJ_nid2sn) \
+\
+  S(sk_new_null) \
+  S(sk_push) \
+  S(sk_num) \
+  S(sk_value) \
+  S(sk_pop_free) \
+\
+  S(RSA_free) \
+  S(RSA_new) \
+  S(RSA_generate_key_ex) \
+  S(RSA_get_ex_data) \
+  S(RSA_set_ex_data) \
+  S(RSA_get_ex_new_index) \
+  S(RSA_new_method) \
+  S(RSA_size) \
+  S(RAND_bytes) \
+  S(ENGINE_set_RSA_method) \
+  S(ENGINE_set_ECDSA_method) \
+  S(ENGINE_new) \
+\
+  S(i2d_X509) \
+  S(i2d_X509_NAME) \
+  S(d2i_X509) \
+  S(d2i_X509_NAME) \
+  S(X509_digest) \
+  S(X509_free) \
+  S(X509_up_ref) \
+  S(X509_chain_up_ref) \
+  S(X509_get_ex_new_index) \
+  S(X509_get_ex_data) \
+  S(X509_set_ex_data) \
+  S(X509_get_subject_name) \
+  S(X509_get_issuer_name) \
+  S(X509_get_serialNumber) \
+  S(X509_NAME_get_index_by_NID) \
+  S(X509_NAME_get_entry) \
+  S(X509_NAME_ENTRY_get_data) \
+  S(X509_NAME_ENTRY_get_object) \
+  S(X509_NAME_free) \
+  S(X509_NAME_cmp) \
+  S(X509_PUBKEY_get) \
+  S(X509_STORE_CTX_get_ex_data) \
+  S(X509V3_EXT_d2i) \
+  S(X509_get_ext) \
+  S(X509_get_ext_by_NID) \
+  S(X509_get_pubkey) \
+  S(X25519_public_from_private) \
+  S(X25519) \
+  S(ED25519_verify) \
+\
+  S(CBB_cleanup) \
+  S(CBB_add_bytes) \
+  S(CBB_add_asn1) \
+  S(CBB_add_u8) \
+  S(CBB_add_u16) \
+  S(CBB_zero) \
+  S(CBB_did_write) \
+  S(CBB_flush) \
+  S(CBB_finish) \
+  S(CBB_reserve) \
+  S(CBB_data) \
+  S(CBB_len) \
+  S(CBB_add_u16_length_prefixed) \
+  S(CBB_add_u8_length_prefixed) \
+  S(CBB_init) \
+\
+  S(CBS_get_asn1) \
+  S(CBS_get_any_asn1_element) \
+  S(CBS_get_optional_asn1) \
+  S(CBS_get_u8_length_prefixed) \
+  S(CBS_get_u8) \
+  S(CBS_data) \
+  S(CBS_len) \
+  S(CBS_init) \
+\
+S(EVP_PKEY_CTX_set0_rsa_oaep_label) \
+S(EVP_PKEY_CTX_set_rsa_oaep_md) \
+S(BN_bn2bin) \
+S(BN_bin2bn) \
+S(BN_cmp) \
+S(BN_sub) \
+S(BN_lshift) \
+S(BN_value_one) \
+S(BN_get_word) \
+S(BN_num_bits) \
+S(EVP_PKEY_get1_RSA) \
+S(RSA_check_key) \
+S(RSAPublicKey_dup) \
+S(PKCS5_PBKDF2_HMAC) \
+S(EVP_MD_block_size) \
+S(EVP_MD_size) \
+S(HKDF) \
+S(EC_GROUP_get_order) \
+S(ECDSA_SIG_to_bytes) \
+S(ECDSA_SIG_new) \
+S(EC_GROUP_get_degree) \
+S(EVP_parse_private_key) \
+S(EVP_PKEY_get1_EC_KEY) \
+S(EC_KEY_get0_private_key) \
+S(EC_KEY_set_private_key) \
+S(EC_KEY_set_public_key_affine_coordinates) \
+S(EC_GROUP_get_curve_name) \
+S(EVP_CIPHER_CTX_new) \
+S(EVP_CIPHER_CTX_free) \
+S(EVP_aes_128_ctr) \
+S(EVP_aes_256_ctr) \
+S(EVP_aead_aes_256_gcm) \
+S(EVP_aead_aes_128_key_wrap) \
+S(EVP_aead_aes_256_key_wrap) \
+S(EC_KEY_set_public_key) \
+S(EC_KEY_get_enc_flags) \
+S(EC_KEY_set_enc_flags) \
+
